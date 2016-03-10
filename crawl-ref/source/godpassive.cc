@@ -181,7 +181,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         {  3, passive_t::slime_mp, "items consumed by your fellow slimes restores your mana reserve" },
         {  4, passive_t::slime_hp, "items consumed by your fellow slimes restores your health" },
         {  5, passive_t::jellies_army, "GOD summons jellies to protect you" },
-        {  5, passive_t::unlock_slime_vault, "GOD grants you access to the hidden treasures of the Slime Pits" },
+        {  5, passive_t::unlock_slime_vaults, "GOD grants you access to the hidden treasures of the Slime Pits" },
     },
 
     // Fedhas
@@ -308,9 +308,9 @@ int chei_stat_boost(int piety)
 void jiyva_eat_offlevel_items()
 {
     // For wizard mode 'J' command
-    if (!has_passive(passive_t::slime_feed)
-        && !has_passive(passive_t::slime_mp)
-        && !has_passive(passive_t::slime_hp))
+    if (!have_passive(passive_t::slime_feed)
+        && !have_passive(passive_t::slime_mp)
+        && !have_passive(passive_t::slime_hp))
         return;
 
     if (crawl_state.game_is_sprint())

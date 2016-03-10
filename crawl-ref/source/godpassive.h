@@ -183,7 +183,7 @@ enum class passive_t
     /// Items consumed by your fellow slimes feed you
     slime_feed,
 
-    /// Jiyva protects your from corrosion
+    /// Jiyva protects you from corrosion
     resist_corrosion,
 
     /// Items consumed by your fellow slimes restores your mana reserve
