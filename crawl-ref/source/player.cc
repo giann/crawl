@@ -1544,7 +1544,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
 bool player::res_corr(bool calc_unid, bool items) const
 {
-    if (religion == GOD_JIYVA && piety >= piety_breakpoint(2))
+    if (has_passive(pasive_t::resist_corrosion))
         return true;
 
     if (get_form()->res_acid())

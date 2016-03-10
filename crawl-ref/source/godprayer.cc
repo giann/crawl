@@ -339,7 +339,9 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
 
 void jiyva_slurp_item_stack(const item_def& item, int quantity)
 {
-    ASSERT(you_worship(GOD_JIYVA));
+    ASSERT(has_passive(passive_t::slime_feed)
+           || has_passive(passive_t::slime_mp)
+           || has_passive(passive_t::slime_hp));
     if (quantity <= 0)
         quantity = item.quantity;
     slurp_gain gain(JS_NONE, PIETY_NONE);
