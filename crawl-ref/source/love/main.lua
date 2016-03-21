@@ -1,6 +1,7 @@
 function love.load()
 
   local websocket = require "websocket"
+  local serpent   = require "serpent"
 
   local client = websocket.client.sync({timeout=2})
 
@@ -13,7 +14,7 @@ function love.load()
 
   -- send data:
 
-  local ok = client:send('{ "msg": "token_login", "cookie" : "giann%2065640670665145144475876701010573309577" }')
+  local ok = client:send('{ "msg": "login", "username" : "giann", "password" : "je0316je" }')
   if ok then
     print('msg sent')
   else
@@ -24,7 +25,7 @@ function love.load()
 
   local message,opcode = client:receive()
   if message then
-    print('msg',message,opcode)
+    print(serpent.load(message))
   else
     print('connection closed')
   end
@@ -32,6 +33,8 @@ function love.load()
   -- close connection:
 
   local close_was_clean,close_code,close_reason = client:close(4001,'lost interest')
+
+  love.event.quit()
 
 end
 
