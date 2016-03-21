@@ -8,7 +8,7 @@ dgl_mode = True
 
 bind_nonsecure = True # Set to false to only use SSL
 bind_address = ""
-bind_port = 8080
+bind_port = 8082
 # Or listen on multiple address/port pairs (overriding the above) with:
 # bind_pairs = (
 #     ("127.0.0.1", 8080),

@@ -2,18 +2,18 @@ function love.load()
 
   local websocket = require "websocket"
 
-  local client = websocket.client.copas({timeout=2})
+  local client = websocket.client.sync({timeout=2})
 
   -- connect to the server:
 
-  local ok,err = client:connect('ws://localhost:12345','echo')
+  local ok,err = client:connect('ws://localhost:8082/socket','echo')
   if not ok then
     print('could not connect',err)
   end
 
   -- send data:
 
-  local ok = client:send('{ "msg" : { "token_login" : { "cookie" : "giann%2065640670665145144475876701010573309577" } } }\n')
+  local ok = client:send('{ "msg": "token_login", "cookie" : "giann%2065640670665145144475876701010573309577" }')
   if ok then
     print('msg sent')
   else
