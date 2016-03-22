@@ -10,17 +10,27 @@ function love.load()
 
   require "utils"
   require "comm"
+  require "client"
+
+  client = Client()
+
+  client.comm:send('login', {
+    username = 'giann',
+    password = 'je0316je'
+  })
+
+  client.comm:send('play', {
+    game_id = 'dcss-web-trunk'
+  })
+
+  client.comm.socket.sock:settimeout(0)
 
 end
 
 
 -- Called continuously
 function love.update(dt)
-  local message, opcode = client:receive()
-  if message then
-    print('* ' .. message)
-    --print(json.decode(message)["msgs"][1]["msg"])
-  end
+  client:receive()
 end
 
 -- Mouse pressed
@@ -59,5 +69,5 @@ end
 
 -- Quitting
 function love.quit()
-  local close_was_clean,close_code,close_reason = client:close(4001,'lost interest')
+
 end

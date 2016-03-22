@@ -37,9 +37,10 @@ end
 
 
 function Comm:send(msg, data)
+  print('Send: ' .. msg)
   data = data or {}
   data.msg = msg
-  self.socket:send(json_encode(data))
+  self.socket:send(json.encode(data))
 end
 
 
@@ -61,7 +62,7 @@ function Comm:handle_message(msg)
     return false
   end
 
-  handler(msg)
+  handler.handler(handler.context, msg)
 end
 
 
@@ -69,9 +70,8 @@ function Comm:handle_message_immediately(msg)
   local handler = self.immediate_handlers[msg.msg]
 
   if not handler then
-    print('Unknown message type: ' .. msg.msg)
     return false
   end
 
-  return handler(msg)
+  return handler.handler(handler.context, msg)
 end
