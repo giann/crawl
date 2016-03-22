@@ -27,6 +27,7 @@ local new = function(ws)
   end
   
   self.sock_close = function(self)
+    print('ws closed')
     self.sock:shutdown()
     self.sock:close()
   end

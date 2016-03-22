@@ -1,10 +1,10 @@
 function love.load()
 
   websocket  = require "websocket"
-  json       = require "json"
-  deflatelua = require "deflatelua"
+  json       = require "lib/json"
+  deflatelua = require "lib/deflatelua"
 
-  client = websocket.client.sync({timeout=2})
+  client = websocket.client.sync({timeout=nil})
 
   -- connect to the server:
 
@@ -13,22 +13,56 @@ function love.load()
     print('could not connect',err)
   end
 
-  -- we don't block while reading the server
-  client.sock:settimeout(0)
-
   -- send data:
+  local message, opcode
 
-  local login = {
+  print('->go_lobby')
+  client:send(json.encode({
+    msg = 'go_lobby'
+  }))
+
+  message, opcode = client:receive()
+  print(message)
+
+  print('->pong')
+  client:send(json.encode({
+    msg = 'pong'
+  }))
+
+  message, opcode = client:receive()
+  print(message)
+
+  print('->login')
+  client:send(json.encode({
     msg = 'login',
     username = 'giann',
     password = 'je0316je'
-  }
-  local ok = client:send(json.encode(login))
-  if ok then
-    print('msg sent')
-  else
-    print('connection closed')
-  end
+  }))
+
+  repeat
+    message, opcode = client:receive()
+    print('# ' .. message)
+  until json.decode(message)["msgs"][1]["msg"] == 'login_success'
+
+  print('->go_lobby')
+  client:send(json.encode({
+    msg = 'go_lobby'
+  }))
+
+  message, opcode = client:receive()
+  print(message)
+
+  print('->play')
+  client:send(json.encode({
+    msg = 'play',
+    game_id = 'dcss-web-trunk'
+  }))
+
+  message, opcode = client:receive()
+  print(message)
+
+  -- we don't block while reading the server
+  client.sock:settimeout(0)
 
 end
 
@@ -37,8 +71,8 @@ end
 function love.update(dt)
   local message, opcode = client:receive()
   if message then
-    print(message)
-    print(json.decode(message)["msgs"][1]["msg"])
+    print('* ' .. message)
+    --print(json.decode(message)["msgs"][1]["msg"])
   end
 end
 
