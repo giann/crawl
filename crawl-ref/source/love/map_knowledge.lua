@@ -71,7 +71,7 @@ function MapKnowledge:print()
       if self.cells[x] and self.cells[x][y] then
         line = line .. self.cells[x][y].g
       else
-        line = line .. ' '
+        line = line .. '-'
       end
     end
     line = line .. '\n'
