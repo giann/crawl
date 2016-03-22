@@ -1,9 +1,9 @@
 function love.load()
 
-  local websocket = require "websocket"
-  local json      = require "json"
+  websocket = require "websocket"
+  json      = require "json"
 
-  local client = websocket.client.sync({timeout=2})
+  client = websocket.client.sync({timeout=2})
 
   -- connect to the server:
 
@@ -12,39 +12,33 @@ function love.load()
     print('could not connect',err)
   end
 
+  -- we don't block while reading the server
+  client.sock:settimeout(0)
+
   -- send data:
 
-  local ok = client:send('{ "msg": "login", "username" : "giann", "password" : "je0316je" }')
+  local login = {
+    msg = 'login',
+    username = 'giann',
+    password = 'je0316je'
+  }
+  local ok = client:send(json.encode(login))
   if ok then
     print('msg sent')
   else
     print('connection closed')
   end
 
-  -- receive data:
-
-  while true do
-    local message, opcode = client:receive()
-    if message then
-      print(message)
-      print(json.decode(message)["msgs"][1]["msg"])
-    else
-      print('connection closed')
-      break
-    end
-  end
-
-  -- close connection:
-
-  local close_was_clean,close_code,close_reason = client:close(4001,'lost interest')
-
-  love.event.quit()
-
 end
 
 
 -- Called continuously
 function love.update(dt)
+  local message, opcode = client:receive()
+  if message then
+    print(message)
+    print(json.decode(message)["msgs"][1]["msg"])
+  end
 end
 
 -- Mouse pressed
@@ -83,5 +77,5 @@ end
 
 -- Quitting
 function love.quit()
-
+  local close_was_clean,close_code,close_reason = client:close(4001,'lost interest')
 end
