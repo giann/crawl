@@ -2,6 +2,7 @@ Client = Class {
 
   init = function (self)
     self.comm = Comm()
+    self.history = {}
     self.messages_queue = {}
     self.message_inhibit = 0
 
@@ -51,7 +52,7 @@ Client = Class {
 function Client:receive()
   local message, opcode = self.comm.socket:receive()
   if message then
-    print('* ' .. message)
+    table.insert(self.history, 1, message)
 
     message = json.decode(message)
     local msgs = message.msgs

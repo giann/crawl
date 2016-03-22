@@ -1,5 +1,7 @@
 function love.load()
 
+  --require "lib/cupid"
+
   websocket  = require "websocket"
   json       = require "lib/json"
   deflatelua = require "lib/deflatelua"
@@ -75,7 +77,7 @@ end
 
 -- Drawing
 function love.draw()
-
+  love.graphics.print(client.history[1] .. '\n' .. (client.history[2] or '') .. '\n' .. (client.history[3] or ''), 10, 10)
 end
 
 -- Quitting
