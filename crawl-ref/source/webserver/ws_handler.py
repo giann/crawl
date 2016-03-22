@@ -123,7 +123,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.id = current_id
         current_id += 1
 
-        self.deflate = True
+        self.deflate = False
         self._compressobj = zlib.compressobj(zlib.Z_DEFAULT_COMPRESSION,
                                              zlib.DEFLATED,
                                              -zlib.MAX_WBITS)
@@ -132,7 +132,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.uncompressed_bytes_sent = 0
         self.message_queue = []
 
-        self.subprotocol = None
+        self.subprotocol = "no-compression"
 
         self.logger = logging.LoggerAdapter(logging.getLogger(), {})
         self.logger.process = self._process_log_msg

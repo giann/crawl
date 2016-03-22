@@ -1,7 +1,7 @@
 function love.load()
 
   local websocket = require "websocket"
-  local serpent   = require "serpent"
+  local json      = require "json"
 
   local client = websocket.client.sync({timeout=2})
 
@@ -25,7 +25,8 @@ function love.load()
 
   local message,opcode = client:receive()
   if message then
-    print(serpent.load(message))
+    print(message)
+    print(json.decode(message)["msgs"][1]["msg"])
   else
     print('connection closed')
   end
