@@ -16,6 +16,7 @@ function love.load()
   require "comm"
   require "client"
   require "map"
+  require "map_knowledge"
 
   light = LightWorld({
       ambient = {70, 70, 70},
@@ -24,6 +25,7 @@ function love.load()
   })
   client = Client()
   map = Map()
+  history = {}
 
 
   -- TOREMOVE: quick connect and start
@@ -77,7 +79,12 @@ end
 
 -- Drawing
 function love.draw()
-  love.graphics.print(client.history[1] .. '\n' .. (client.history[2] or '') .. '\n' .. (client.history[3] or ''), 10, 10)
+  local log = ''
+  for i = 1, math.min(#history, 10) do
+    log = log .. '\n' .. history[i]
+  end
+
+  love.graphics.print(log, 10, 10)
 end
 
 -- Quitting

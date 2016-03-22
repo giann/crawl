@@ -90,14 +90,9 @@ Map = Class {
         self.map = {}
         self.light = nil
 
-        Utils.assign(self, options)
+        self.map_knowledge = MapKnowledge()
 
-        for i = 1, self.width do
-            self.map[i] = {}
-            for j = 1, self.height do
-                self.map[i][j] = nil
-            end
-        end
+        Utils.assign(self, options)
 
         client.comm:register_message_handlers({
             map = { handler = self.handle_map_message, context = self }
@@ -112,7 +107,9 @@ function Map:handle_map_message(data)
   end
 
   -- update map knowledge
-  print(data)
+  self.map_knowledge:merge(data.cells)
+
+  self.map_knowledge:print()
 end
 
 function Map:clear()
