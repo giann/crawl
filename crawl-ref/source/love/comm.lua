@@ -45,12 +45,12 @@ end
 
 
 function Comm:register_message_handlers(dict)
-  self.messages_handlers = table.merge(self.message_handlers, dict)
+  self.message_handlers = table.merge(self.message_handlers, dict)
 end
 
 
 function Comm:register_immediate_handlers(dict)
-  self.messages_handlers = table.merge(self.immediate_handlers, dict)
+  self.immediate_handlers = table.merge(self.immediate_handlers, dict)
 end
 
 
@@ -73,5 +73,7 @@ function Comm:handle_message_immediately(msg)
     return false
   end
 
-  return handler.handler(handler.context, msg)
+  handler.handler(handler.context, msg)
+
+  return true
 end

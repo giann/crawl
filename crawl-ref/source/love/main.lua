@@ -8,12 +8,23 @@ function love.load()
   Signal     = require "lib/hump.signal"
   Timer      = require "lib/hump.timer"
 
+  LightWorld = require "lib/light"
+
   require "utils"
   require "comm"
   require "client"
+  require "map"
 
+  light = LightWorld({
+      ambient = {70, 70, 70},
+      refractionStrength = 10.0,
+      reflectionVisibility = 0,
+  })
   client = Client()
+  map = Map()
 
+
+  -- TOREMOVE: quick connect and start
   client.comm:send('login', {
     username = 'giann',
     password = 'je0316je'

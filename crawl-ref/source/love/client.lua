@@ -3,18 +3,18 @@ Client = Class {
   init = function (self)
     self.comm = Comm()
     self.messages_queue = {}
-    self.message_inhibit = {}
+    self.message_inhibit = 0
 
     self.comm:register_immediate_handlers({
-        ping  = pong,
-        close = connection_closed,
+        ping  = { handler = self.pong, context = self },
+        close = { handler = self.connection_closed, context = self },
     })
 
     self.comm:register_message_handlers({
         multi            = { handler = self.handle_multi_message, context = self },
 
-        set_game_links   = function () end,
-        html             = function () end,
+        set_game_links   = { handler = function () end, context = {} },
+        html             = { handler = function () end, context = {} },
         show_dialog      = { handler = self.handle_dialog, context = self },
         hide_dialog      = { handler = self.hide_dialog, context = self },
 
@@ -73,7 +73,7 @@ end
 function Client:handle_messages_backlog()
   while #self.messages_queue > 0 and self.message_inhibit == 0 do
 
-    local msg = self.messages.remove(1)
+    local msg = table.remove(self.messages_queue, 1)
 
     self.comm:handle_message(msg)
 
@@ -83,7 +83,7 @@ end
 
 function Client:handle_multi_message(data)
   for i = 1, #data.msgs do
-    self.messages_queue.insert(1, data.msgs[i])
+    table.insert(self.messages_queue, 1, data.msgs[i])
   end
 end
 
