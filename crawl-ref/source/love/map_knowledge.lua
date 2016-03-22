@@ -25,14 +25,14 @@ function MapKnowledge:merge(cells)
     local cell = cells[i]
 
     if cell.x and cell.y then
-      self:set(cell.x, cell.y, cell)
+      self:set(cell.y, cell.x, cell)
 
       previous = cell
       since_previous = 0
     elseif previous then
       since_previous = since_previous + 1
 
-      self:set(previous.x + since_previous, previous.y, cell)
+      self:set(previous.y, previous.x + since_previous, cell)
     end
   end
 end
