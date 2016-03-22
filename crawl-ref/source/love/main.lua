@@ -1,7 +1,8 @@
 function love.load()
 
-  websocket = require "websocket"
-  json      = require "json"
+  websocket  = require "websocket"
+  json       = require "json"
+  deflatelua = require "deflatelua"
 
   client = websocket.client.sync({timeout=2})
 
