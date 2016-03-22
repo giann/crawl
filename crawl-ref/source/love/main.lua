@@ -23,12 +23,15 @@ function love.load()
 
   -- receive data:
 
-  local message,opcode = client:receive()
-  if message then
-    print(message)
-    print(json.decode(message)["msgs"][1]["msg"])
-  else
-    print('connection closed')
+  while true do
+    local message, opcode = client:receive()
+    if message then
+      print(message)
+      print(json.decode(message)["msgs"][1]["msg"])
+    else
+      print('connection closed')
+      break
+    end
   end
 
   -- close connection:
