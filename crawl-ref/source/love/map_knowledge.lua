@@ -25,14 +25,14 @@ function MapKnowledge:merge(cells)
     local cell = cells[i]
 
     if cell.x and cell.y then
-      self:set(cell.y, cell.x, cell)
+      self:set(cell.x, cell.y, cell)
 
       previous = cell
       since_previous = 0
     elseif previous then
       since_previous = since_previous + 1
 
-      self:set(previous.y, previous.x + since_previous, cell)
+      self:set(previous.x + since_previous, previous.y, cell)
     end
   end
 end
@@ -66,10 +66,14 @@ end
 
 function MapKnowledge:print()
   local line = ''
-  for x = self.bounds.left, self.bounds.right do
-    for y = self.bounds.top, self.bounds.bottom do
-      if self.cells[x] and self.cells[x][y] then
-        line = line .. self.cells[x][y].g
+  for y = self.bounds.top, self.bounds.bottom do
+    for x = self.bounds.left, self.bounds.right do
+      if self.cells[x] and self.cells[x][y] then--and self.cells[x][y].g then
+        if not self.cells[x][y].g then
+          print(json.encode(self.cells[x][y]))
+        else
+          line = line .. self.cells[x][y].g
+        end
       else
         line = line .. '-'
       end
