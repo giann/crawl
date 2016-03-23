@@ -1,56 +1,56 @@
 function love.load()
 
-  --require "lib/cupid"
+    --require "lib/cupid"
 
-  websocket  = require "websocket"
-  json       = require "lib/json"
-  deflatelua = require "lib/deflatelua"
-  Class      = require "lib/hump.class"
-  Gamestate  = require "lib/hump.gamestate"
-  Signal     = require "lib/hump.signal"
-  Timer      = require "lib/hump.timer"
+    websocket    = require "websocket"
+    json             = require "lib/json"
+    deflatelua = require "lib/deflatelua"
+    Class            = require "lib/hump.class"
+    Gamestate    = require "lib/hump.gamestate"
+    Signal         = require "lib/hump.signal"
+    Timer            = require "lib/hump.timer"
 
-  LightWorld = require "lib/light"
+    LightWorld = require "lib/light"
 
-  require "utils"
-  require "comm"
-  require "client"
-  require "map"
-  require "map_knowledge"
-  require "tileinfo-main"
+    require "utils"
+    require "comm"
+    require "client"
+    require "map"
+    require "map_knowledge"
+    require "tileinfo-main"
 
-  light = LightWorld({
-      ambient = {70, 70, 70},
-      refractionStrength = 10.0,
-      reflectionVisibility = 0,
-  })
-  client = Client()
-  map = Map()
-  history = {}
+    light = LightWorld({
+            ambient = {70, 70, 70},
+            refractionStrength = 10.0,
+            reflectionVisibility = 0,
+    })
+    client = Client()
+    map = Map()
+    history = {}
 
-  local defaultFont = love.graphics.newImageFont('fontbz-love.png', "☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ")
-  defaultFont:setLineHeight(1)
-  love.graphics.setFont(defaultFont)
+    local defaultFont = love.graphics.newImageFont('fontbz-love.png', "☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ")
+    defaultFont:setLineHeight(1)
+    love.graphics.setFont(defaultFont)
 
-  -- TOREMOVE: quick connect and start
-  client.comm:send('login', {
-    username = 'giann',
-    password = 'je0316je'
-  })
+    -- TOREMOVE: quick connect and start
+    client.comm:send('login', {
+        username = 'giann',
+        password = 'je0316je'
+    })
 
-  client.comm:send('play', {
-    game_id = 'dcss-web-trunk'
-  })
+    client.comm:send('play', {
+        game_id = 'dcss-web-trunk'
+    })
 
-  client.comm.socket.timeout = 0
-  client.comm.socket.sock:settimeout(0)
+    client.comm.socket.timeout = 0
+    client.comm.socket.sock:settimeout(0)
 
 end
 
 
 -- Called continuously
 function love.update(dt)
-  client:receive()
+    client:receive()
 end
 
 -- Mouse pressed
@@ -66,9 +66,9 @@ end
 -- Key pressed
 function love.keypressed(key)
 
-    if key == "escape" then
-        love.event.quit()
-    end
+        if key == "escape" then
+                love.event.quit()
+        end
 
 end
 
@@ -84,12 +84,12 @@ end
 
 -- Drawing
 function love.draw()
-  local log = ''
-  for i = 1, math.min(#history, 10) do
-    log = log .. '\n' .. history[i]
-  end
+    local log = ''
+    for i = 1, math.min(#history, 10) do
+        log = log .. '\n' .. history[i]
+    end
 
-  love.graphics.print(log, 10, 10)
+    love.graphics.print(log, 10, 10)
 end
 
 -- Quitting
