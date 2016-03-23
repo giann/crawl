@@ -60,8 +60,8 @@ function SpriteSheet:generateImages()
         local h = info.ey - info.sy
 
         local canvas = love.graphics.newCanvas(
-            w * self.x_scale,
-           (h + ey - pos_ey_adjust) * self.y_scale
+            w,
+            h + ey - pos_ey_adjust
         )
         love.graphics.setCanvas(canvas)
         love.graphics.draw(
@@ -71,8 +71,7 @@ function SpriteSheet:generateImages()
                 w, h + ey - pos_ey_adjust,
                 imageWidth, imageHeight
             ),
-            0 + total_x_offset * self.x_scale,
-            0 + sy * self.y_scale
+            0, 0
         )
         love.graphics.setCanvas()
 

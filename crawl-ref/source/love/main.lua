@@ -95,7 +95,7 @@ function love.draw()
 
     love.graphics.print(log, 10, 10)
 
-    for i = 10, 15 do
+    for i = 10, 20 do
         if main_spritesheet.images[i] then
             love.graphics.draw(main_spritesheet.images[i], 10 + 32*i, y)
         end
