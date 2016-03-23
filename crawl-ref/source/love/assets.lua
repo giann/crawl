@@ -15,6 +15,11 @@ Assets.shaders = {
 
 local tileinfo_main = require "tileinfo-main"
 local tileinfo_player = require "tileinfo-player"
+local tileinfo_floor = require "tileinfo-floor"
+local tileinfo_wall = require "tileinfo-wall"
+local tileinfo_feat = require "tileinfo-feat"
+local tileinfo_icons = require "tileinfo-icons"
+local tileinfo_gui = require "tileinfo-gui"
 
 Assets.tile_info = {
     main = {
@@ -29,6 +34,41 @@ Assets.tile_info = {
         spritesheet = SpriteSheet({
                 image = love.graphics.newImage('dat/tiles/player.png'),
                 tileinfo = tileinfo_player
+        })
+    },
+    floor = {
+        tileinfo = tileinfo_floor,
+        spritesheet = SpriteSheet({
+                image = love.graphics.newImage('dat/tiles/floor.png'),
+                tileinfo = tileinfo_floor
+        })
+    },
+    wall = {
+        tileinfo = tileinfo_wall,
+        spritesheet = SpriteSheet({
+                image = love.graphics.newImage('dat/tiles/wall.png'),
+                tileinfo = tileinfo_wall
+        })
+    },
+    feat = {
+        tileinfo = tileinfo_feat,
+        spritesheet = SpriteSheet({
+                image = love.graphics.newImage('dat/tiles/feat.png'),
+                tileinfo = tileinfo_feat
+        })
+    },
+    icons = {
+        tileinfo = tileinfo_icons,
+        spritesheet = SpriteSheet({
+                image = love.graphics.newImage('dat/tiles/icons.png'),
+                tileinfo = tileinfo_icons
+        })
+    },
+    gui = {
+        tileinfo = tileinfo_gui,
+        spritesheet = SpriteSheet({
+                image = love.graphics.newImage('dat/tiles/gui.png'),
+                tileinfo = tileinfo_gui
         })
     }
 }

@@ -103,6 +103,26 @@ function love.draw()
         if Assets.tile_info.player.spritesheet.images[i] then
             love.graphics.draw(Assets.tile_info.player.spritesheet.images[i], 10 + 32*i, 50)
         end
+
+        if Assets.tile_info.floor.spritesheet.images[i] then
+            love.graphics.draw(Assets.tile_info.floor.spritesheet.images[i], 10 + 32*i, 100)
+        end
+
+        if Assets.tile_info.wall.spritesheet.images[i] then
+            love.graphics.draw(Assets.tile_info.wall.spritesheet.images[i], 10 + 32*i, 150)
+        end
+
+        if Assets.tile_info.feat.spritesheet.images[i] then
+            love.graphics.draw(Assets.tile_info.feat.spritesheet.images[i], 10 + 32*i, 200)
+        end
+
+        if Assets.tile_info.icons.spritesheet.images[i] then
+            love.graphics.draw(Assets.tile_info.icons.spritesheet.images[i], 10 + 32*i, 250)
+        end
+
+        if Assets.tile_info.gui.spritesheet.images[i] then
+            love.graphics.draw(Assets.tile_info.gui.spritesheet.images[i], 10 + 32*i, 300)
+        end
     end
 end
 
