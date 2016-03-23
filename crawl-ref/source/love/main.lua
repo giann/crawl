@@ -86,47 +86,60 @@ end
 
 -- Drawing
 function love.draw()
-    game:draw()
+    -- game:draw()
 
     love.graphics.setCanvas()
     love.graphics.setColor(255, 255, 255)
+    if game.map.bounds.right > 0 then
+        love.graphics.translate(game.map.bounds.left * 32, game.map.bounds.top * 32)
 
-    local log = ''
-    for i = 1, math.min(#history, 10) do
-        log = log .. '\n' .. history[i]
+        game.map:drawBack(
+            game.map.bounds.left,
+            game.map.bounds.top,
+            game.map.bounds.right - game.map.bounds.left,
+            game.map.bounds.bottom - game.map.bounds.top
+        )
     end
 
-    love.graphics.print(log, 10, 10)
+    -- love.graphics.setCanvas()
+    -- love.graphics.setColor(255, 255, 255)
 
-    for i = 10, 20 do
-        if Assets.tile_info.main.spritesheet.images[i] then
-            love.graphics.draw(Assets.tile_info.main.spritesheet.images[i], 10 + 32*i, 10)
-        end
+    -- local log = ''
+    -- for i = 1, math.min(#history, 10) do
+    --     log = log .. '\n' .. history[i]
+    -- end
 
-        if Assets.tile_info.player.spritesheet.images[i] then
-            love.graphics.draw(Assets.tile_info.player.spritesheet.images[i], 10 + 32*i, 50)
-        end
+    -- love.graphics.print(log, 10, 10)
 
-        if Assets.tile_info.floor.spritesheet.images[i] then
-            love.graphics.draw(Assets.tile_info.floor.spritesheet.images[i], 10 + 32*i, 100)
-        end
+    -- for i = 10, 20 do
+    --     if Assets.tile_info.main.spritesheet.images[i] then
+    --         love.graphics.draw(Assets.tile_info.main.spritesheet.images[i], 10 + 32*i, 10)
+    --     end
 
-        if Assets.tile_info.wall.spritesheet.images[i] then
-            love.graphics.draw(Assets.tile_info.wall.spritesheet.images[i], 10 + 32*i, 150)
-        end
+    --     if Assets.tile_info.player.spritesheet.images[i] then
+    --         love.graphics.draw(Assets.tile_info.player.spritesheet.images[i], 10 + 32*i, 50)
+    --     end
 
-        if Assets.tile_info.feat.spritesheet.images[i] then
-            love.graphics.draw(Assets.tile_info.feat.spritesheet.images[i], 10 + 32*i, 200)
-        end
+    --     if Assets.tile_info.floor.spritesheet.images[i] then
+    --         love.graphics.draw(Assets.tile_info.floor.spritesheet.images[i], 10 + 32*i, 100)
+    --     end
 
-        if Assets.tile_info.icons.spritesheet.images[i] then
-            love.graphics.draw(Assets.tile_info.icons.spritesheet.images[i], 10 + 32*i, 250)
-        end
+    --     if Assets.tile_info.wall.spritesheet.images[i] then
+    --         love.graphics.draw(Assets.tile_info.wall.spritesheet.images[i], 10 + 32*i, 150)
+    --     end
 
-        if Assets.tile_info.gui.spritesheet.images[i] then
-            love.graphics.draw(Assets.tile_info.gui.spritesheet.images[i], 10 + 32*i, 300)
-        end
-    end
+    --     if Assets.tile_info.feat.spritesheet.images[i] then
+    --         love.graphics.draw(Assets.tile_info.feat.spritesheet.images[i], 10 + 32*i, 200)
+    --     end
+
+    --     if Assets.tile_info.icons.spritesheet.images[i] then
+    --         love.graphics.draw(Assets.tile_info.icons.spritesheet.images[i], 10 + 32*i, 250)
+    --     end
+
+    --     if Assets.tile_info.gui.spritesheet.images[i] then
+    --         love.graphics.draw(Assets.tile_info.gui.spritesheet.images[i], 10 + 32*i, 300)
+    --     end
+    -- end
 end
 
 -- Quitting

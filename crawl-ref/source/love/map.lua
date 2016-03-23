@@ -256,7 +256,10 @@ function Map:drawBack(x, y, w, h)
             for j = y, math.min(y + h, self.bounds.bottom) do
                 local cell = self.map[i][j]
                 if cell and not cell.castShadow then
-                    cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+                    cell:draw(
+                        (i - 1) * cell.width,
+                        (j - 1) * cell.height
+                    )
                 end
             end
         end
@@ -282,7 +285,10 @@ function Map:drawExplored(x, y, w, h)
             for j = y, math.min(y + h, self.bounds.bottom) do
                 local cell = self.map[i][j]
                 if cell and not cell.visible and cell.explored then
-                    cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+                    cell:draw(
+                        (i - 1) * cell.width,
+                        (j - 1) * cell.height
+                    )
                 end
             end
         end
@@ -308,7 +314,10 @@ function Map:drawFront(x, y, w, h)
             for j = y, math.min(y + h, self.bounds.bottom) do
                 local cell = self.map[i][j]
                 if cell and cell.castShadow then
-                    cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+                    cell:draw(
+                        (i - 1) * cell.width,
+                        (j - 1) * cell.height
+                    )
                 end
             end
         end

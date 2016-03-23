@@ -344,10 +344,11 @@ function Game:draw()
     self.light.post_shader:drawWith(self.light.render_buffer, self.viewport.x, self.viewport.y, self.viewport.scale)
 
     love.graphics.push()
-    love.graphics.translate(self.viewport.x, self.viewport.y)
+    -- love.graphics.translate(self.viewport.x, self.viewport.y)
+    love.graphics.translate(self.map.bounds.left * 32, self.map.bounds.top * 32)
     love.graphics.scale(self.viewport.scale)
 
-    self.map:drawExplored(self.player.x - vp.width/2, self.player.y - vp.height/2, vp.width, vp.height)
+    -- self.map:drawExplored(self.player.x - vp.width/2, self.player.y - vp.height/2, vp.width, vp.height)
 
     self:drawUnitsUi()
 
