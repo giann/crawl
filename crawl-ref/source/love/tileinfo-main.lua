@@ -6501,15 +6501,15 @@ tileinfo._basetiles =
 }
 
 tileinfo.get_tile_info = function (idx)
-    return tile_info[idx - 0]
+    return tileinfo.tile_info[idx - 0]
 end
 
 tileinfo.tile_count = function (idx)
-    return _tile_count[idx - 0]
+    return tileinfo._tile_count[idx - 0]
 end
 
 tileinfo.basetile = function (idx)
-    return _basetiles[idx - 0] + 0;
+    return tileinfo._basetiles[idx - 0] + 0;
 end
 
 tileinfo.get_img = function (idx)

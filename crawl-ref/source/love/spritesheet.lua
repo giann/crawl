@@ -1,6 +1,6 @@
 SpriteSheet = Class {
 
-    init = function (self)
+    init = function (self, options)
         self.image = nil
         self.tileinfo = nil
         self.images = {}
@@ -18,6 +18,9 @@ SpriteSheet = Class {
 function SpriteSheet:generateImages()
     local imageWidth = self.image:getWidth()
     local imageHeight = self.image:getHeight()
+
+    self.x_scale = 1
+    self.y_scale = 1
 
     for i = 1, #self.tileinfo.tile_info do
 
@@ -45,18 +48,21 @@ function SpriteSheet:generateImages()
 
         local total_x_offset = ((ofsx or 0) + info.ox + size_ox)
 
-        if total_x_offset < self.current_left_overlap then
-            self.current_left_overlap = total_x_offset
-        end
+        -- if total_x_offset < self.current_left_overlap then
+        --     self.current_left_overlap = total_x_offset
+        -- end
 
-        if sy < self.current_sy then
-            self.current_sy = sy
-        end
+        -- if sy < self.current_sy then
+        --     self.current_sy = sy
+        -- end
 
         local w = info.ex - info.sx
         local h = info.ey - info.sy
 
-        local canvas = love.graphics.newCanvas(self.spriteWidth, self.spriteHeight)
+        local canvas = love.graphics.newCanvas(
+            w * self.x_scale,
+           (h + ey - pos_ey_adjust) * self.y_scale
+        )
         love.graphics.setCanvas(canvas)
         love.graphics.draw(
             self.image,
@@ -65,10 +71,12 @@ function SpriteSheet:generateImages()
                 w, h + ey - pos_ey_adjust,
                 imageWidth, imageHeight
             ),
-            0 + total_x_offset * this.x_scale,
-            0 + sy * this.y_scale
+            0 + total_x_offset * self.x_scale,
+            0 + sy * self.y_scale
         )
         love.graphics.setCanvas()
+
+        self.images[i] = canvas
 
     end
 

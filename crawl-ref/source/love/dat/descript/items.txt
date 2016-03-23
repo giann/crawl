@@ -1,0 +1,1512 @@
+%%%%
+akashic record
+
+The last and greatest work of the Warper Golubria, detailing the most powerful
+Translocations spells in existence. It is notoriously difficult to track down
+and understand, as copies of the book and their contents have a tendency to
+shift between planes at a moment's notice.
+%%%%
+amulet of dismissal
+
+This amulet generates a field of translocational energy that will teleport away
+creatures that harm you, one time in ten. It takes a few moments to get used
+to the translocational energy field, initially disorienting the wearer for a
+few turns.
+%%%%
+amulet of faith
+
+This is a talisman crafted to call the attention of the gods to its wearer.
+This divine attention makes it easier to please your god, but your god will
+also take more notice of your transgressions. The amulet will drain some of
+your divine favour when removed.
+%%%%
+amulet of guardian spirit
+
+This amulet contains a protective spirit which will cause any damage taken to
+be divided between the wearer's reserves of health and magic.
+%%%%
+amulet of harm
+
+This unholy amulet contains a vicious spirit that increases damage dealt
+to and by its wearer by one fourth. The spirit wants only to spread harm, and
+removing the amulet will cause the spirit to punish the wearer with draining.
+%%%%
+amulet of inaccuracy
+
+This amulet makes its wearer less accurate in melee combat and when targeting
+monsters via ranged attacks or spells.
+%%%%
+amulet of magic regeneration
+
+This amulet substantially increases the wearer's normal rate of magic
+regeneration. In order to function, it must first attune itself to the wearer's
+body with full reserves of magic.
+%%%%
+amulet of nothing
+
+This amulet has no base properties.
+%%%%
+amulet of rage
+
+This amulet enables its wearer to attempt to enter a state of berserk rage.
+%%%%
+amulet of reflection
+
+These carefully-faceted amulets exert a force that blocks some incoming attacks.
+More miraculously, it also will reflect ranged attacks back towards the
+attackers, making them particularly prized by travellers, merchants, and others
+who fear ambush by bandits.
+%%%%
+amulet of regeneration
+
+This amulet increases the wearer's natural regeneration rate. In order to
+function, it must first attune itself to the wearer's body at full health.
+%%%%
+amulet of the gourmand
+
+This amulet allows its wearer to eat fresh raw meat when not hungry, and
+drastically increases nutrition gained from them. These effects on the wearer's
+digestion are cumulative over time and are initially small.
+%%%%
+animal skin
+
+A large piece of thick skin covered in fur, cut from the corpse of an animal
+and worn as a primitive garment. It offers rudimentary protection against harm,
+but, having never been tanned, it carries a light stench of rotting flesh.
+%%%%
+arbalest
+
+A large piece of machinery used for firing bolts, braced with steel and cranked
+with a windlass. It takes some time to load and fire.
+%%%%
+arrow
+
+A long shafted projectile intended to be shot with a short- or longbow, fletched
+with feathers at one end and a point at the other.
+%%%%
+bardiche
+
+A long pole with an enormous, cleaving blade on one end.
+%%%%
+battleaxe
+
+A large war axe with a formidable double-sided head.
+%%%%
+beef jerky
+
+A strip of preserved dead cow or bull.
+%%%%
+blowgun
+
+A long, light tube, open at both ends, through which various types of needles
+are propelled by puffs of breath at enemies. It makes very little noise.
+%%%%
+bolt
+
+A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
+%%%%
+book of air
+
+A primer on the elemental magics of Air. The pages throw off brief sparks as
+they are separated.
+%%%%
+book of alchemy
+
+A book focusing on alchemical processes and their use in magic spells,
+collecting the wisdom of many ancient alchemists. When the book is opened, the
+text is revealed as the ink condenses from the air onto the pages.
+%%%%
+book of annihilations
+
+Blood leaks from the tattered pages of this book, and even an illiterate will
+feel the sheer impact of arcane fury contained within. It is sought after by
+sorcerers, for it allows the gifted and resourceful to command destruction with
+ease. Feeble wizards, however, may well meet their doom when trying to read
+this opus.
+%%%%
+book of battle
+
+A book of spells used by skalds, whose battle songs grant them magical help.
+%%%%
+book of beasts
+
+A book of spells focused on the magical production of beasts, with pages made
+from animal skins and covers lined with teeth.
+%%%%
+book of burglary
+
+A book containing many diverse spells useful for theft, breaking and entering,
+and other miscellaneous larceny.
+%%%%
+book of callings
+
+An introductory text on the magical summoning of beasts and beings from other
+realms.
+%%%%
+book of cantrips
+
+A book containing a small selection of very basic magic spells, intended for
+beginners who wish to learn the rudiments of one of the featured magical
+schools. Nonetheless, even experienced mages can still find use for the spells
+contained therein.
+%%%%
+book of changes
+
+A student's primer to the magic arts of Transmutations, with many lavish
+illustrations from the school's early experimental history:
+half-wizard-half-Spiders, wizards with Blade Noses, or beaked tentacles instead
+of legs. The text is full of reassurances that this kind of thing doesn't
+happen anymore.
+%%%%
+book of clouds
+
+A book of magic spells for creating an assortment of clouds.
+%%%%
+book of conjurations
+
+A book containing an introduction to the destructive magical arts of
+Conjurations. It shudders with barely-contained power when it is opened.
+%%%%
+book of death
+
+A ghoulishly illuminated manuscript containing dark spells of Necromancy,
+written with inks distilled from corpses. Each page is filled with grotesque
+art depicting scenes of disgusting decay and horrifying death.
+%%%%
+book of debilitation
+
+A book containing Hexes useful for an Arcane Marksman. Many of the pages inside
+are filled with holes, as if they had been used as archery targets before being
+inscribed and bound. This occult technique supposedly gives the spells an
+affinity for being used with ranged weapons, though, in practice, they appear
+to work no differently from the variants found in less-perforated texts.
+%%%%
+book of dreams
+
+A record of the somniloquent utterings of an entranced mystic, describing a
+number of spells reflecting the mystic's dream state. Critics of the work argue
+that the spells are functionally no different from ones already known, but the
+book remains popular for its uniquely bizarre imagery and cryptic digressions.
+%%%%
+book of enchantments
+
+A spellbook containing an assortment of magical Hexes and Charms, which
+sparkles and shimmers as the pages are flipped. The quaintly anachronistic
+title reflects an earlier, more incomplete arcane understanding of these two
+schools of magic.
+%%%%
+book of envenomations
+
+A book of magic spells, glowing with a sickly green light. This book was first
+written by Olgreb, the infamous Venom Mage, who murdered many of his rivals by
+sending them highly poisonous copies as gifts. Current editions are fortunately
+harmless.
+%%%%
+book of fire
+
+A book containing advanced spells in the elemental school of Fire.
+%%%%
+book of fixed level
+
+A book of magic spells.
+%%%%
+book of fixed theme
+
+A book of magic spells.
+%%%%
+book of flames
+
+The standard text used in arcane academies by students of the elemental magic
+of Fire. The pages are inscribed with sigils of flame that glow with flickering
+light to read by.
+%%%%
+book of frost
+
+A book of magic spells, often used as an introduction to the elemental magics
+of Ice. The mystic runes are written in a flowing, jagged style, reminiscent of
+frost covering a window.
+%%%%
+book of geomancy
+
+A book containing basic spells involving the element of Earth. The pages appear
+to be made of thin sheets of mica.
+%%%%
+book of hinderance
+
+A mystic manual dedicated to the art of slowing the minds and bodies of one's
+foes, written in a cramped, nearly incomprehensible script on very rigid pages.
+%%%%
+book of ice
+
+A book of advanced magical spells using the element of Ice. The pages are
+covered in flakes of frost.
+%%%%
+book of maledictions
+
+This spellbook teaches Enchanters how to weaken and confound their enemies with
+Hexes before finishing them off. The frontispiece contains a depiction of an
+evil eye, an ancient cursed symbol; this has occasioned numerous tales of
+adventurers who met bad ends after carrying this book into the dungeon. Though,
+as sceptics point out, pretty much everybody who enters the dungeon meets a bad
+end.
+%%%%
+book of minor magic
+
+A spellbook containing a variety of simple but useful magical incantations.
+Many prominent spellcasters used this book to begin their arcane studies.
+%%%%
+book of necromancy
+
+A macabre book of magic spells, often the very first grimoire a beginning
+Necromancer will learn from. Considering the hazards that can come with
+dabbling in necromantic magic, this is also sometimes the very *last* grimoire
+a beginning Necromancer will study.
+%%%%
+book of party tricks
+
+This book contains a number of fun spells guaranteed to liven up any wizarding
+party, as well as a number of toasts, jokes, and party games.
+%%%%
+book of power
+
+A book of powerful magic spells, coveted by ambitious wizards who seek to gain
+ascendance over their rivals. It crackles and shudders with barely-contained
+energies.
+%%%%
+book of spatial translocations
+
+The classic text of the magical field of Translocations, written by the
+archmage and accomplished Warper Golubria two centuries ago. This book can
+still be found in magical libraries all across the world, although sometimes
+not on the same shelf where the librarian left it.
+%%%%
+book of summonings
+
+An advanced treatise on Summoning magics, detailing ways of summoning and
+binding creatures from all manners of horrible realms. There are a number of
+dire warnings with graphic illustrations of the dangers of summoning such
+monsters, since not all of them will be friendly.
+%%%%
+book of the dragon
+
+A magical book of spells which allow some command over dragons and their
+aspects. Every page has a lavish illustration of a different variety of dragon,
+both real and imaginary.
+%%%%
+book of the earth
+
+A textbook for experienced Earth Elementalists.
+%%%%
+book of the sky
+
+A magical book containing powerful elemental spells of Air. The coruscating
+runes within are written in flickering lightning.
+%%%%
+book of the tempests
+
+This book contains magic spells which command some of the most destructive
+forces of nature.
+%%%%
+book of the warp
+
+A book of Translocations spells for experienced Warpers. Some of its pages seem
+to have three sides, or only one, or have fractional numbers of corners. The
+effect can be disconcerting.
+%%%%
+book of transfigurations
+
+An advanced book of Transmutations spells.
+%%%%
+book of unlife
+
+This unholy book describes a variety of magical methods for the creation and
+command of undead servants. The dreadful book radiates a malignant aura, and
+its parchment pages sometimes twitch and shudder on their own.
+%%%%
+box of beasts
+
+A box filled with the bizarre leftovers of a depraved wizard's magical
+experimentations. Opening it might set loose a friendly mutant beast: bizarre
+creatures, each with their own combination of traits. Increased skill with
+Evocations will allow stronger beasts to be released.
+%%%%
+bread ration
+
+A filling meal of stale, but hearty, bread.
+%%%%
+broad axe
+
+A war axe improved with langets, spikes, a lengthed haft and a single-bladed
+crescent head.
+%%%%
+buckler
+
+A small piece of wood and metal, to be strapped on one arm for defence. It is
+somewhat cumbersome to wear, and, without a little training, slightly slows the
+rate at which a warrior attacks.
+%%%%
+centaur barding
+
+An armour made for centaurs, to wear over their equine half.
+%%%%
+chain mail
+
+A suit made entirely out of tiny metal rings. Offering strong protection
+against weapons, claws and carnassials, chain mail hinders quick and stealthy
+movement.
+%%%%
+chunk of flesh
+
+A piece of raw meat found in the dungeon. It won't stay fresh for long.
+%%%%
+cloak
+
+A cloth cloak.
+%%%%
+club
+
+A heavy piece of wood. While clubs are rather primitive weapons, bashing
+someone's skull in with one remains a very popular and effective means of
+dispute resolution.
+%%%%
+corpse
+
+A corpse. You can butcher it to produce chunks of meat.
+%%%%
+crystal ball of energy
+
+A magical device which can be used to restore magical energy, with its
+effectiveness increasing with Evocations skill. However, it may fail and drain
+all of those energies completely, or cause other negative mental effects. When
+used with low reserves of magic it becomes increasingly likely to deplete those
+reserves.
+%%%%
+crystal plate armour
+
+An incredibly heavy but extremely effective suit of crystalline armour.
+%%%%
+cutlass
+
+A broad curved short sword.
+%%%%
+dagger
+
+A double-edged fighting knife with a sharp point.
+%%%%
+decaying skeleton
+
+A decaying skeleton.
+%%%%
+deck of changes
+
+A deck of magical cards which induce changes in the user's environment or in
+the user themself.
+%%%%
+deck of defence
+
+A deck of magical cards, most of which defend the user from harm in various
+ways.
+%%%%
+deck of destruction
+
+A deck of magical cards, most of which hurl death and destruction at one's foes
+(or, if unlucky, at oneself).
+%%%%
+deck of escape
+
+A deck of magical cards, mainly dealing with various forms of escape.
+%%%%
+deck of oddities
+
+A deck of magical cards that have the strangest tendency to get mixed in with
+other decks.
+%%%%
+deck of punishment
+
+A deck of magical cards which wreak havoc on the user.
+%%%%
+deck of summoning
+
+A deck of magical cards, depicting a range of weird and wondrous creatures.
+%%%%
+deck of war
+
+A deck of magical cards which are useful before and during battle.
+%%%%
+deck of wonders
+
+A deck of highly mysterious and magical cards, which can alter the drawer's
+physical and mental condition, for better or worse.
+%%%%
+demon blade
+
+A terrible weapon, forged in the fires of Hell.
+%%%%
+demon trident
+
+A terrible three-pronged weapon, moulded by fire and brimstone.
+%%%%
+demon whip
+
+A terrible weapon, woven in the depths of the inferno.
+%%%%
+dire flail
+
+A flail with long spikes and a heavier head.
+%%%%
+disc of storms
+
+This extremely powerful item can unleash a destructive storm of electricity.
+Its effectiveness greatly improves in the hands of one skilled in using magical
+devices.
+%%%%
+double sword
+
+A magical weapon with two razor-sharp blades.
+%%%%
+eggplant
+
+A rotten eggplant which you can throw at the Crawl developers. It's a bug if
+you ever see this message.
+%%%%
+eudemon blade
+
+A sacred blade from the forges of Heaven, inhabited by a good spirit. It is a
+favoured weapon of the Shining One's servants, and cannot be wielded by the
+forces of evil.
+%%%%
+eveningstar
+
+The opposite of a morningstar.
+%%%%
+executioner's axe
+
+A fearsome weapon covered in dried blood and crude engravings of torture and
+death, bearing an enormous axehead.
+%%%%
+falchion
+
+A long single-edged sword with a slightly curved blade.
+%%%%
+fan of gales
+
+An enchanted fan inhabited by benevolent air spirits. Swinging the fan
+unleashes a blast of wind around the bearer and sets the spirits free to sweep
+away the bearer's enemies.
+%%%%
+fen folio
+
+A collection of spells once used by the great swamp civilizations. Their towers
+have crumbled and decayed, but this book remains, pages flecked with peat
+and moss.
+%%%%
+figurine of a ziggurat
+
+A small figurine made of some strange material, shaped like a stepped pyramid.
+It's remarkably detailed - almost like a real, vast structure, shrunk somehow
+smaller than a human hand.
+%%%%
+fire dragon armour
+
+Armour made from the scales of a fire-breathing dragon. It provides great
+protection from the effects of fire, while rendering its wearer more
+susceptible to the effects of cold.
+%%%%
+fire dragon hide
+
+The scaly skin of a common true dragon. It can be fashioned into proper armour,
+but even in its raw form it provides great protection from the effects of fire
+while rendering its wearer susceptible to cold.
+%%%%
+flail
+
+A mace with a short chain connecting the head to the haft.
+%%%%
+fruit
+
+A delicious edible flower ovary.
+%%%%
+giant club
+
+A giant lump of wood.
+%%%%
+giant spiked club
+
+A giant lump of wood with sharp spikes at one end.
+%%%%
+glaive
+
+A pole with a large, heavy blade on one end.
+%%%%
+gold dragon armour
+
+Armour made from the scales of a gold dragon. It is much heavier than most
+dragon scale armours, and grants its wearer resistance to poison, fire and
+cold.
+%%%%
+gold dragon hide
+
+The hide of a gold dragon, covered in extremely hard golden scales. In its raw
+form it does not provide much protection beyond resistance to poison, fire and
+cold, but with magical means it may be used to make excellent armour.
+%%%%
+gold piece
+
+A pile of glittering gold coins.
+%%%%
+grand grimoire
+
+The pages of this book describe how the mighty among summoners can bend to
+their will the terrible things from betwixt the planes. Many have been the
+unwary souls, however, who have toyed with this tome and been driven mad by
+unimaginable eldritch horrors.
+%%%%
+great mace
+
+An enormous metal war club, of great cumbrousness.
+%%%%
+greatsling
+
+A large piece of cloth and leather, reinforced with a rigid frame for extra
+rock-lobbing power. Does more damage when launching purpose-made projectiles,
+rather than stones found on the floor.
+%%%%
+great sword
+
+A sword with a very long, heavy blade and a long handle.
+%%%%
+halberd
+
+A polearm consisting of an axe blade topped with a spike, mounted on a long
+shaft.
+%%%%
+hand axe
+
+A small axe.
+%%%%
+hand crossbow
+
+A compact piece of machinery, used for firing bolts. It takes some time to load
+and fire.
+%%%%
+hat
+
+A cloth or leather hat.
+%%%%
+helmet
+
+A piece of metal headgear.
+%%%%
+horn of Geryon
+
+The horn belonging to Geryon, guardian of the Vestibule of Hell. Legends say
+this unholy item has the power to call forth the aid of demonic beasts. It is
+also said, however, that the alliances of these monsters are not certain.
+%%%%
+hunting sling
+
+A piece of cloth and leather for launching stones. Does more damage when
+launching purpose-made projectiles, rather than rocks found on the floor.
+Adequate for hunting small game, like rabbits or goblins.
+%%%%
+ice dragon armour
+
+Armour made from the scales of a cold-breathing dragon. It provides great
+protection from the effects of cold while rendering its wearer more susceptible
+to the effects of fire.
+%%%%
+ice dragon hide
+
+The scaly skin of a cold-breathing dragon. It can be fashioned into proper
+armour, but even in its raw form it provides great protection from the effects
+of cold while rendering its wearer susceptible to fire.
+%%%%
+inedible chunk of flesh
+
+<chunk of flesh>
+%%%%
+iron rod
+
+This rod allows its wielder to fire powerful blasts of metallic shrapnel.
+%%%%
+javelin
+
+This lightweight spear is designed for throwing and can cause serious injury.
+{{
+    if you.race() == "Halfling"
+        or you.race() == "Kobold"
+        or you.race() == "Spriggan"
+    then
+        return "Unfortunately, it is too long and awkward for you to use."
+    else
+        return ""
+    end
+}}
+%%%%
+lajatang
+
+A very rare and extremely effective imported weapon, featuring a pole with
+half-moon blades at both ends.
+%%%%
+lamp of fire
+
+A magical lamp inhabited by benevolent fire spirits. Unlatching the case sets
+the spirits free to dance about in a blaze upon the bearer's enemies.
+%%%%
+lantern of shadows
+
+An unholy device which calls forth flickering shadows to assist its wielder. It
+shrouds the wielder in unnatural darkness, making them unstealthy and
+significantly reducing the power of their spells.
+%%%%
+large rock
+
+A very large and very heavy stone. {{
+    if you.race() == "Ogre"
+       or you.race() == "Troll"
+   then
+       return ""
+   else
+       return "Only large creatures are capable of throwing it."
+   end
+}}
+%%%%
+large shield
+
+A large piece of wood and metal, to be strapped on one arm for defence. {{
+    if you.race() == "Ogre"
+       or you.race() == "Troll"
+       or you.race() == "Naga"
+       or you.race() == "Centaur"
+       or you.race() == "Formicid"
+    then
+        return "It looks like it would fit you well."
+    else
+        return "It is very cumbersome to wear, and, without a great " ..
+               "deal of training, greatly slows the rate at which a " ..
+               "warrior attacks."
+    end
+}}
+%%%%
+leather armour
+
+A suit made from layers of tanned animal hide, this light armour provides basic
+protection with almost no hindrance to elaborate gestures or swift, stealthy
+movement.
+%%%%
+lightning rod
+
+This rod allows its wielder to fire continuous lightning: the discharge is
+sustained, and can be redirected to new targets by evoking the rod in
+subsequent turns (failing to do so will release the trigger). The rod takes a
+moment to warm up, making short bursts rather ineffective.
+%%%%
+long sword
+
+A sword with a long, slashing blade.
+%%%%
+longbow
+
+A long, strong bow made of yew.
+%%%%
+mace
+
+A short club with a metal head.
+%%%%
+manual
+
+A valuable book which allows one to practise a certain skill more efficiently
+when carried.
+%%%%
+meat ration
+
+A filling ration of dried and preserved meats.
+%%%%
+morningstar
+
+A mace with a head covered in short spikes.
+%%%%
+mottled dragon armour
+
+Armour made from the scales of a mottled dragon. Although it does not provide
+its wearer with as much protection as the armour made from the scales of some
+larger dragons, it is somewhat lighter and less encumbering. It is also
+remarkably smooth, letting sticky flames flow off it like water.
+%%%%
+mottled dragon hide
+
+The weirdly-patterned scaly skin of a mottled dragon. It may be turned into
+proper armour by magical means. Its smooth surface lets sticky flames flow off
+it like water.
+%%%%
+mutagenic chunk of flesh
+
+<chunk of flesh>
+%%%%
+naga barding
+
+A special armour made for nagas, to wear over their tails.
+%%%%
+necronomicon
+
+An extremely rare book, powerful and sinister. Many foolhardy magicians have
+tried to study this tome, only to find themselves entangled within necromantic
+forces they could not hope to control.
+%%%%
+needle
+
+A thin piece of metal, typically coated in some harmful substance. When
+launched from a blowgun it can deliver its toxins into the bloodstream of a
+living or demonic being.
+%%%%
+orb of zot
+
+Once you have escaped to the surface with this invaluable artefact, your quest
+is complete.
+%%%%
+pair of boots
+
+A pair of boots.
+%%%%
+pair of gloves
+
+A pair of gloves.
+%%%%
+pearl dragon armour
+
+Armour made from the nacreous scales of a pearl dragon. It grants its wearer
+resistance to negative energies.
+%%%%
+pearl dragon hide
+
+The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
+form it does not provide much protection beyond resistance to negative energy.
+By magical means, however, it may be used to make excellent armour.
+%%%%
+phantom mirror
+
+A hand mirror which can create a reflection of a nearby creature, shattering
+in the process. The reflection's duration increases with Evocations skill and
+decreases with the magic resistance of the target. It is, invariably, slightly
+weaker than the creature it mirrors.
+%%%%
+phial of floods
+
+An enchanted vessel brimming over with elemental water. Removing the stopper
+unleashes a torrent of water from the phial and sets free the water spirits
+that dwell within it.
+%%%%
+plate armour
+
+A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
+and greaves. It provides excellent protection.
+%%%%
+potion of agility
+
+A magic potion which greatly increases the dexterity and evasiveness of one who
+drinks it.
+%%%%
+potion of ambrosia
+
+A strange substance, produced by ghost moths. Consuming it causes regeneration
+of health and magic, along with total befuddlement. The two effects are
+fundamentally linked - the regeneration ends the moment the confusion does.
+%%%%
+potion of beneficial mutation
+
+A potion which gives you a supposedly good mutation.
+%%%%
+potion of berserk rage
+
+A potion which can send one into an incoherent rage.
+%%%%
+potion of blood
+
+A potion containing the essence of life. Vampires find it... vital.
+%%%%
+potion of brilliance
+
+A magic potion which greatly increases the intelligence and magical power of
+one who drinks it.
+%%%%
+potion of cancellation
+
+A potion which ends most magical effects, good or bad, affecting you. It also
+reduces your level of magical contamination.
+%%%%
+potion of cure mutation
+
+A potion which removes some or all of any mutations which may be afflicting
+you.
+%%%%
+potion of curing
+
+A potion which heals some wounds, clears the mind and cures poison and disease.
+It can also slightly repair rotting.
+%%%%
+potion of degeneration
+
+A noxious concotion which reduces strength, intelligence and dexterity.
+%%%%
+potion of experience
+
+A truly wonderful and very rare drink.
+%%%%
+potion of flight
+
+A potion which confers great buoyancy on one who consumes it.
+%%%%
+potion of heal wounds
+
+A magical healing elixir which causes wounds to close and heal almost
+instantly. It can also repair rotting.
+%%%%
+potion of invisibility
+
+A potion which hides you from the sight of others.
+%%%%
+potion of lignification
+
+A potion which temporarily transforms the imbiber into an animated tree with
+branches capable of holding weapons. Such a tree is very resilient, although it
+is rooted in place for the duration and cannot teleport.
+%%%%
+potion of magic
+
+A valuable potion which grants an infusion of magical energy.
+%%%%
+potion of might
+
+A magic potion which greatly increases the strength and physical power of one
+who drinks it.
+%%%%
+potion of mutation
+
+A potion which does very strange things to you.
+%%%%
+potion of resistance
+
+A potion which grants you temporary resistance to a variety of harmful effects:
+fire, cold, electricity, poison, and acid.
+%%%%
+potion of haste
+
+An enchanted beverage which speeds the actions of anyone who drinks it.
+%%%%
+quad damage
+
+A mysterious item resembling a rune of some kind. Once evoked, it will make the
+user glow blue and add a reverb to all sound... and there may be other effects
+as well.
+%%%%
+quarterstaff
+
+A sturdy wooden pole, meant for fighting.
+%%%%
+quicksilver dragon armour
+
+Armour made from the scales of a quicksilver dragon. Although it does not
+provide its wearer with as much protection as the armour made from the scales
+of some heavier dragons, it is somewhat lighter and less encumbering. It is
+excellent at repelling enchantments - and therefore cannot be enchanted
+beyond its current form.
+%%%%
+quicksilver dragon hide
+
+The sinuous hide of a quicksilver dragon, covered in mercurial scales. In its
+raw form it does not provide much protection beyond resistance to hostile
+enchantments, but with magical means, it may be used to make excellent armour.
+%%%%
+quick blade
+
+This carefully wrought dagger is preternaturally well-balanced, making it
+much easier for even inexperienced handlers to attack with it quickly.
+%%%%
+rapier
+
+A slender, sharply pointed sword, with an uncommonly elegant design.
+%%%%
+ring mail
+
+A light leather suit reinforced with a covering of metal rings. It is
+protective in combat, but slightly uncomfortable due to the added weight.
+%%%%
+ring of dexterity
+
+This ring increases or decreases the dexterity of its wearer, depending on the
+degree to which it has been enchanted.
+%%%%
+ring of evasion
+
+This ring makes its wearer either more or less capable of avoiding attacks,
+depending on its degree of enchantment.
+%%%%
+ring of fire
+
+This ring brings its wearer more in contact with the powers of fire. The wearer
+gains resistance to heat and can use fire magic more effectively, but becomes
+less effective at the use of ice magic and more vulnerable to the effects of
+cold.
+%%%%
+ring of flight
+
+This ring allows its wearer to fly. The ring's power cannot be evoked while
+already airborne, making it ill-suited for longer trips above deadly liquid.
+%%%%
+ring of ice
+
+This ring brings its wearer more in contact with the powers of cold and ice.
+The wearer gains resistance to cold and can use ice magic more effectively, but
+becomes less effective at the use of fire magic and more vulnerable to the
+effects of fire.
+%%%%
+ring of intelligence
+
+This ring increases or decreases the mental ability of its wearer, depending on
+the degree to which it has been enchanted.
+%%%%
+ring of resist corrosion
+
+This ring protects the wearer from acid damage and from corrosion caused by
+acids, although not infallibly so.
+%%%%
+ring of loudness
+
+This ring causes the wearer's movements to be particularly loud, making them
+less stealthy.
+%%%%
+ring of magical power
+
+This ring increases its wearer's reserves of magical power.
+%%%%
+ring of poison resistance
+
+This ring provides protection from the effects of poisons and venom.
+%%%%
+ring of positive energy
+
+This ring protects the life-force of its wearer from negative energy, making
+them partially immune to the draining effects of undead and necromantic magic.
+%%%%
+ring of protection
+
+This ring either protects its wearer from harm or makes them more vulnerable to
+injury, to a degree dependent on its power.
+%%%%
+ring of protection from cold
+
+This ring provides protection from cold.
+%%%%
+ring of protection from fire
+
+This ring provides protection from fire.
+%%%%
+ring of protection from magic
+
+This ring increases its wearer's resistance to hostile enchantments.
+%%%%
+ring of see invisible
+
+This ring allows its wearer to see those things hidden from view by magic.
+%%%%
+ring of slaying
+
+This ring increases or decreases the wearer's effectiveness with ranged weapons
+and melee attacks.
+%%%%
+ring of stealth
+
+This ring allows the wearer to move quietly, making them more stealthy.
+%%%%
+ring of strength
+
+This ring increases or decreases the physical strength of its wearer, to a
+degree dependent on its power.
+%%%%
+ring of sustain attributes
+
+This ring protects its wearer from the loss of their strength, dexterity and
+intelligence.
+%%%%
+ring of teleportation
+
+This ring occasionally exerts its power to teleport its wearer next to
+monsters.
+%%%%
+ring of wizardry
+
+This ring increases the ability of its wearer to use magical spells.
+%%%%
+robe
+
+A large, loose-fitting, wide-sleeved outer garment made of light cloth. It
+offers little protection against physical harm, but does not hinder evasion or
+spellcasting.
+%%%%
+rod of clouds
+
+This rod allows its wielder to blast a cone-shaped area in front of them with
+various destructive clouds, their lethality increasing with the evocation
+ability of the wielder.
+%%%%
+rod of ignition
+
+This rod allows its wielder to launch a fiery bolt of explosive energy.
+%%%%
+rod of inaccuracy
+
+This rod allows its wielder to fire a powerful but extremely inaccurate bolt of
+power.
+%%%%
+rod of shadows
+
+This rod weaves creatures from shadows and ethereal matter.
+%%%%
+royal jelly
+
+A particularly rich and golden gelatinous thing.
+%%%%
+rune of zot
+
+A talisman which allows entry into Zot's domain.
+%%%%
+sack of spiders
+
+A woven silk bag. Opening this bag will release a number of spiders friendly to
+your cause. You might need to dust off the cobwebs afterwards, however.
+%%%%
+sacred scourge
+
+A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
+a favoured weapon of the Shining One's servants.
+%%%%
+scale mail
+
+A leather suit covered with metal plates attached to each other in overlapping
+rows to provide full protection, but at the cost of reduced freedom of
+movement.
+%%%%
+scimitar
+
+A long sword with a wide, curved blade.
+%%%%
+scroll of acquirement
+
+This wonderful scroll causes the creation of a valuable item, with the reader
+choosing the type of item to be created. Items produced are heavily biased
+towards something fitting the reader's skills, and also towards gear that
+hasn't been seen yet, but, alas, nothing is guaranteed.
+%%%%
+scroll of amnesia
+
+This scroll allows its reader to selectively erase one spell from memory to
+recapture the magical energy bound up with it.
+%%%%
+scroll of blinking
+
+This scroll allows its reader to teleport a short distance, with precise
+control. Be wary that controlled teleports will cause the subject to become
+contaminated with magical energy.
+%%%%
+scroll of brand weapon
+
+This scroll imbues a weapon with a random brand, such as flame, freezing, or
+venom. Any existing brand will be replaced. Blowguns and artefacts cannot be
+branded in this way.
+%%%%
+scroll of curse armour
+
+This scroll places a curse on a worn piece of armour.
+%%%%
+scroll of curse jewellery
+
+This scroll places a curse on an equipped amulet or a ring.
+%%%%
+scroll of curse weapon
+
+This scroll places a curse on a wielded weapon.
+%%%%
+scroll of enchant armour
+
+This scroll places an enchantment on a piece of armour. Body armour and
+bardings can be enchanted up to the same value as their base AC. Bucklers,
+shields and large shields can be enchanted up to +3, +5 or +8 respectively, and
+other armour can be enchanted up to +2. The scroll also removes any curse on the
+item. Magical artefacts cannot be enchanted at all, though a curse may be
+removed in this fashion.
+
+It can also be used to enchant the hides of certain exotic creatures.
+%%%%
+scroll of enchant weapon
+
+This scroll places an enchantment on a weapon chosen by the reader, increasing
+both accuracy and damage. Weapons can be enchanted up to +9. The scroll also
+removes any curse on the item. Magical artefacts cannot be enchanted at all,
+though a curse may be removed in this fashion.
+%%%%
+scroll of fear
+
+This scroll causes great fear in those who see the one who reads it.
+%%%%
+scroll of fog
+
+This scroll surrounds the reader with a dense cloud of fog.
+%%%%
+scroll of holy word
+
+This scroll calls on the good gods to cause great damage to any nearby undead
+or demonic creature — possibly including you! It will briefly daze monsters
+that are affected.
+%%%%
+scroll of identify
+
+This useful magic scroll allows you to determine the properties of any object.
+
+If used on a deck of cards, this scroll will also give away the top card.
+%%%%
+scroll of immolation
+
+This scroll fills the creatures around the reader with an unstable and powerful
+inner flame.
+%%%%
+scroll of magic mapping
+
+This scroll reveals the surroundings of the one who reads it.
+%%%%
+scroll of noise
+
+This prank scroll, often slipped into a wizard's backpack by a devious
+apprentice, causes a loud noise.
+%%%%
+scroll of random uselessness
+
+It is easy to be blinded to the essential uselessness of this scroll by the
+sense of achievement you get from getting it to work at all.
+%%%%
+scroll of recharging
+
+This scroll restores the charges of any magical wand or rod chosen by its
+reader. When used on a rod, it increases the rod's maximum charges and
+increases the rate at which it regenerates power.
+%%%%
+scroll of remove curse
+
+Reading this scroll removes curses from the items you are using.
+%%%%
+scroll of silence
+
+Eliminates all sound near the reader. This makes reading scrolls, casting
+spells, invoking divine abilities, or shouting impossible in the caster's
+vicinity. The scroll's oppressive, unnatural effect will greatly hamper
+stealth.
+
+Certain monsters have demonic or angelic abilities which can be activated
+without speaking, and innate magical or special abilities will also still be
+usable while silenced.
+
+The effect starts out with a large radius, which will then shrink, eventually
+covering only the reader, before it times out.
+%%%%
+scroll of summoning
+
+This scroll calls forth several creatures woven from shadow into the shapes of
+those beings found within the reader's immediate vicinity.
+%%%%
+scroll of teleportation
+
+Reading the words on this scroll translocates you to a random position after a
+short delay.
+%%%%
+scroll of torment
+
+This scroll calls on the powers of darkness to inflict great pain on any nearby
+creature — including you! This halves the resilience of all living creatures,
+although it is never directly fatal.
+%%%%
+scroll of vulnerability
+
+This briefly halves the resistance to hostile enchantments of the reader and
+nearby beings. The scroll cannot affect beings fully immune to magic.
+%%%%
+scythe
+
+A farm implement, usually only used by untrained mobs in combat.
+%%%%
+shield
+
+A piece of wood and metal, to be strapped on one arm for defence. It is
+cumbersome to wear, and, without training, slows the rate at which a warrior
+attacks.
+%%%%
+shortbow
+
+A curved piece of wood and string, for shooting arrows.
+%%%%
+short sword
+
+Also known as a 'small sword'; a personal stabbing weapon with a short grip.
+%%%%
+slice of pizza
+
+A slice of pizza: a flatbread with tomato sauce, mozzarella di bufala, and
+basil.
+%%%%
+sling bullet
+
+A small, heavy projectile specially shaped for use with slings. It is more
+effective as ammunition than simple stones.
+%%%%
+spear
+
+A hunting weapon consisting of a wooden shaft with a pointed metal head
+fastened on one end.
+%%%%
+staff of air
+
+This staff increases the power of air spells cast by its wielder, but decreases
+that of earth spells. It insulates the wielder from electricity. If the wielder
+is skilled in Evocations and Air Magic, they can shock those struck by it.
+%%%%
+staff of cold
+
+This staff increases the power of ice spells cast by its wielder, but decreases
+that of fire spells. It protects the wielder from the effects of cold. If the
+wielder is skilled in Evocations and Ice Magic, they can freeze those struck by
+it.
+%%%%
+staff of conjuration
+
+This staff increases the power of conjurations cast by its wielder.
+%%%%
+staff of death
+
+This staff increases the power of necromantic spells cast by its wielder, and
+protects them from negative energy. If the wielder is skilled in Evocations and
+Necromancy, they can inflict great pain on those living souls they strike.
+%%%%
+staff of earth
+
+This staff increases the power of earth spells cast by its wielder, but
+decreases that of air spells. If the wielder is skilled in Evocations and Earth
+magic, they can crush those struck by it.
+%%%%
+staff of energy
+
+This staff allows its wielder to control magical energy: casting spells no
+longer causes hunger, and ambient magic can be channeled for the wielder's
+purposes.
+%%%%
+staff of fire
+
+This staff increases the power of fire spells cast by its wielder, but
+decreases that of cold spells. It protects the wielder from the effects of
+fire. If the wielder is skilled in Evocations and Fire Magic, they can burn
+those struck by it.
+%%%%
+staff of poison
+
+This staff increases the power of poisoning spells cast by its wielder, and
+protects them from the effects of poison. If the wielder is skilled in
+Evocations and Poison Magic, they can poison creatures struck by it — even if
+the victims are normally resistant.
+%%%%
+staff of power
+
+This staff provides an increased reservoir of magical power to its wielder.
+%%%%
+staff of summoning
+
+This staff increases the power of summonings cast by its wielder, and wards
+them from the attacks of summoned creatures.
+%%%%
+staff of wizardry
+
+This staff increases the ability of its wielder to use magical spells.
+%%%%
+steam dragon armour
+
+Armour made from the scales of a steam-breathing dragon. Unlike armour made
+from the scales of some larger dragons, it does not provide its wearer with
+much protection (beyond a resistance to scalding steam), but it is extremely
+light and supple.
+%%%%
+steam dragon hide
+
+The soft and supple scaly skin of a steam dragon. It provides protection
+against scalding steam, and may be turned into proper armour by magical means.
+%%%%
+stone
+
+A small chunk of dense but otherwise unremarkable natural mineral. It can be
+thrown by hand or launched with a sling.
+%%%%
+stone of tremors
+
+A polished stone inhabited by benevolent earth spirits. Raising it aloft will
+send powerful shockwaves through the dungeon as the spirits seek solid form
+within its rock. Those creatures standing near to walls will be pelted with
+falling rubble as the rocky surface heaves and crumbles, while others may be
+swallowed up by cracks in the earth itself.
+%%%%
+shadow dragon armour
+
+Armour made from the scales of a great umbral dragon. It is heavier than most
+dragon-scale armours, but despite this, blends in so well with the shadows
+as to provide a substantial benefit to the wearer's stealth.
+%%%%
+shadow dragon hide
+
+The hide of a great umbral dragon, covered in extremely hard blue-black scales.
+In its raw form it does not provide much protection beyond the ability to blend
+with the shadows. With magical means, however, it may be used to make excellent
+armour.
+%%%%
+storm dragon armour
+
+Armour made from the scales of a lightning-breathing dragon. It is heavier than
+most dragon scale armours, and gives its wearer great resistance to electrical
+discharges.
+%%%%
+storm dragon hide
+
+The hide of a lightning-breathing dragon, covered in extremely hard blue
+scales. In its raw form it does not provide much protection beyond resistance
+to electrical discharge, but with magical means it may be used to make
+excellent armour.
+%%%%
+swamp dragon armour
+
+Armour made from the scales of a swamp dragon. It confers resistance to poison
+on its wearer.
+%%%%
+swamp dragon hide
+
+# Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
+The slimy{{
+    if you.can_smell() then
+        return ", smelly"
+    end
+}} skin of a swamp-dwelling dragon. It confers resistance to poison on its
+wearer, and it may be turned into proper armour by magical means.
+%%%%
+throwing net
+
+A mesh of ropes knotted together with weights around the edge, used to entangle
+and entrap targets. Struggling victims can eventually destroy the net and break
+free, if they live long enough.
+%%%%
+tomahawk
+
+An small, axe-like item designed for throwing.
+%%%%
+trident
+
+A fishing spear improved with a longer shaft and a three-pronged metal head.
+%%%%
+triple crossbow
+
+Initially designed as a siege weapon and then scaled down, this crossbow uses
+three strings arranged in series to provide exceptional power. It takes a
+considerable amount of time to load and fire.
+%%%%
+triple sword
+
+A magical weapon with three great razor-sharp blades, requiring great skill to
+use effectively.
+%%%%
+trishula
+
+A blessed trident moulded by cleansing flame, with three points symbolising the
+combined might of the three holy gods. It is a favoured weapon of the Shining
+One's servants.
+%%%%
+troll hide
+
+The stiff and knobbly hide of a troll, with magical regenerative properties. It
+may be turned into armour by magical means.
+%%%%
+troll leather armour
+
+Armour made from the stiff and knobbly skin of a common troll. It magically
+regenerates its wearer's flesh.
+%%%%
+wand of acid
+
+A magical device which throws a bolt of corrosive acid.
+%%%%
+wand of confusion
+
+A magical device which induces confusion and bewilderment in a target creature.
+%%%%
+wand of digging
+
+A magical device which drills tunnels through unworked rock.
+%%%%
+wand of disintegration
+
+A magical device which disrupts the physical structure of anything but the
+hardest walls — even granite statues, to say nothing of flesh.
+%%%%
+wand of enslavement
+
+A magical device which causes slavish obedience in a creature.
+%%%%
+wand of flame
+
+A magical device which throws little puffs of flame.
+%%%%
+wand of iceblast
+
+A magical device which throws exploding shards of ice, partially harming even
+creatures resistant to cold.
+%%%%
+wand of hasting
+
+A magical device which casts enchantments to speed up the actions of a creature
+at which it is directed.
+%%%%
+wand of heal wounds
+
+A magical device which can heal a creature's wounds.
+%%%%
+wand of lightning
+
+A magical device which throws great bolts of lightning.
+%%%%
+wand of paralysis
+
+A magical device which can render a creature immobile, incapable of moving any
+of its limbs.
+%%%%
+wand of polymorph
+
+A magical device which causes a creature to be transmogrified into another
+form. It is especially effective against shape-changing creatures.
+%%%%
+wand of random effects
+
+A magical device which can produce a variety of effects.
+%%%%
+wand of slowing
+
+A magical device which casts enchantments to slow down the actions of a
+creature at which it is directed.
+%%%%
+wand of teleportation
+
+A magical device which causes a creature to be randomly translocated.
+%%%%
+war axe
+
+A military axe with a long haft and a single-bladed head.
+%%%%
+whip
+
+A long plaited strip of leather. Originally developed for use in disagreements
+with cattle, this simple weapon is now widely used to settle differences
+between all sorts of creatures.
+%%%%
+young poisoner's handbook
+
+A introductory book for the magic arts of poison.
+%%%%

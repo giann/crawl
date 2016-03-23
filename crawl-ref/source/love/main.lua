@@ -1,7 +1,5 @@
 function love.load()
 
-    --require "lib/cupid"
-
     websocket    = require "websocket"
     json             = require "lib/json"
     deflatelua = require "lib/deflatelua"
@@ -13,16 +11,22 @@ function love.load()
     LightWorld = require "lib/light"
 
     require "utils"
+    require "spritesheet"
     require "comm"
     require "client"
     require "map"
     require "map_knowledge"
-    require "tileinfo-main"
+
+    local tileinfo_main = require "tileinfo-main"
+    main_spritesheet = SpriteSheet({
+        image = love.graphics.newImage('dat/tiles/main.png'),
+        tileinfo = tileinfo_main
+    })
 
     light = LightWorld({
-            ambient = {70, 70, 70},
-            refractionStrength = 10.0,
-            reflectionVisibility = 0,
+        ambient = {70, 70, 70},
+        refractionStrength = 10.0,
+        reflectionVisibility = 0,
     })
     client = Client()
     map = Map()
@@ -90,6 +94,12 @@ function love.draw()
     end
 
     love.graphics.print(log, 10, 10)
+
+    for i = 10, 15 do
+        if main_spritesheet.images[i] then
+            love.graphics.draw(main_spritesheet.images[i], 10 + 32*i, y)
+        end
+    end
 end
 
 -- Quitting
