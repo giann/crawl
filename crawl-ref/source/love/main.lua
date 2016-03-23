@@ -12,17 +12,13 @@ function love.load()
 
     require "utils"
     require "spritesheet"
+    require "assets"
     require "comm"
     require "client"
     require "map"
     require "map_knowledge"
+    require "unit"
     require "game"
-
-    local tileinfo_main = require "tileinfo-main"
-    main_spritesheet = SpriteSheet({
-        image = love.graphics.newImage('dat/tiles/main.png'),
-        tileinfo = tileinfo_main
-    })
 
     client = Client()
     game = Game()
@@ -51,39 +47,47 @@ end
 -- Called continuously
 function love.update(dt)
     client:receive()
+    game:update(dt)
 end
 
 -- Mouse pressed
 function love.mousepressed(x, y, button)
-
+    game:mousepressed(x, y, button)
 end
 
 -- Mouse released
 function love.mousereleased(x, y, button)
-
+    game:mousereleased(x, y, button)
 end
 
 -- Key pressed
 function love.keypressed(key)
 
-        if key == "escape" then
-                love.event.quit()
-        end
+    if key == "escape" then
+        love.event.quit()
+    end
+
+    game:keypressed(key)
 
 end
 
 -- Key released
 function love.keyreleased(key)
-
+    game:keyreleased(key)
 end
 
 -- Text entered
 function love.textinput(t)
-
+    game:textinput(t)
 end
 
 -- Drawing
 function love.draw()
+    game:draw()
+
+    love.graphics.setCanvas()
+    love.graphics.setColor(255, 255, 255)
+
     local log = ''
     for i = 1, math.min(#history, 10) do
         log = log .. '\n' .. history[i]
@@ -92,13 +96,13 @@ function love.draw()
     love.graphics.print(log, 10, 10)
 
     for i = 10, 20 do
-        if main_spritesheet.images[i] then
-            love.graphics.draw(main_spritesheet.images[i], 10 + 32*i, y)
+        if Assets.tile_info.main.spritesheet.images[i] then
+            love.graphics.draw(Assets.tile_info.main.spritesheet.images[i], 10 + 32*i, y)
         end
     end
 end
 
 -- Quitting
 function love.quit()
-
+    game:leave()
 end

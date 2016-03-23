@@ -152,8 +152,8 @@ end
 
 -- TODO: Draw only within viewport
 function Map:drawBack(x, y, w, h)
-    local x = math.floor(x / self.decor.spriteWidth) + 1
-    local y = math.floor(y / self.decor.spriteHeight) + 1
+    local x = math.floor(x / 32) + 1
+    local y = math.floor(y / 32) + 1
 
     if x < 1 then
         x = 1
@@ -162,8 +162,8 @@ function Map:drawBack(x, y, w, h)
         y = 1
     end
 
-    local w = math.floor(w / self.decor.spriteWidth) + 1
-    local h = math.floor(h / self.decor.spriteHeight) + 1
+    local w = math.floor(w / 32) + 1
+    local h = math.floor(h / 32) + 1
 
     for i = x, math.min(x + w, self.width) do
         for j = y, math.min(y + h, self.height) do
@@ -176,8 +176,8 @@ function Map:drawBack(x, y, w, h)
 end
 
 function Map:drawExplored(x, y, w, h)
-    local x = math.floor(x / self.decor.spriteWidth) + 1
-    local y = math.floor(y / self.decor.spriteHeight) + 1
+    local x = math.floor(x / 32) + 1
+    local y = math.floor(y / 32) + 1
 
     if x < 1 then
         x = 1
@@ -186,8 +186,8 @@ function Map:drawExplored(x, y, w, h)
         y = 1
     end
 
-    local w = math.floor(w / self.decor.spriteWidth) + 1
-    local h = math.floor(h / self.decor.spriteHeight) + 1
+    local w = math.floor(w / 32) + 1
+    local h = math.floor(h / 32) + 1
 
     for i = x, math.min(x + w, self.width) do
         for j = y, math.min(y + h, self.height) do
@@ -200,8 +200,8 @@ function Map:drawExplored(x, y, w, h)
 end
 
 function Map:drawFront(x, y, w, h)
-    local x = math.floor(x / self.decor.spriteWidth) + 1
-    local y = math.floor(y / self.decor.spriteHeight) + 1
+    local x = math.floor(x / 32) + 1
+    local y = math.floor(y / 32) + 1
 
     if x < 1 then
         x = 1
@@ -210,8 +210,8 @@ function Map:drawFront(x, y, w, h)
         y = 1
     end
 
-    local w = math.floor(w / self.decor.spriteWidth) + 1
-    local h = math.floor(h / self.decor.spriteHeight) + 1
+    local w = math.floor(w / 32) + 1
+    local h = math.floor(h / 32) + 1
 
     for i = x, math.min(x + w, self.width) do
         for j = y, math.min(y + h, self.height) do
@@ -375,10 +375,10 @@ function Map:isFree(x, y)
 end
 
 function Map:pixelToMap(x, y)
-    return math.floor(x / self.decor.spriteWidth),
-        math.floor(y / self.decor.spriteHeight)
+    return math.floor(x / 32),
+        math.floor(y / 32)
 end
 
 function Map:pixelToMapRaw(x, y)
-    return x / self.decor.spriteWidth, y / self.decor.spriteHeight
+    return x / 32, y / 32
 end

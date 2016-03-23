@@ -57,6 +57,9 @@ Game = Class {
       -- Map
       self.map = Map()
 
+      -- temp
+      self.player = {x = 0, y = 0}
+
     end
 
 }
@@ -84,8 +87,8 @@ function Game:setVisible(x, y, visibility)
     for i = 1, #self.units do
         local u = self.units[i]
 
-        local px = math.floor(u.x / self.map.decor.spriteWidth) + 1
-        local py = math.floor(u.y / self.map.decor.spriteHeight) + 1
+        local px = math.floor(u.x / 32) + 1
+        local py = math.floor(u.y / 32) + 1
 
         if px == x and py == y then
             u.outOfSight = not visibility
@@ -98,11 +101,11 @@ function Game:setVisible(x, y, visibility)
         local count = 0
         for j = 1, #u.lights do
             local l = u.lights[j].light
-            local lx = math.floor(l.x / self.map.decor.spriteWidth) + 1
-            local ly = math.floor(l.y / self.map.decor.spriteHeight) + 1
+            local lx = math.floor(l.x / 32) + 1
+            local ly = math.floor(l.y / 32) + 1
 
             -- Light on if visible point in range of light
-            if u ~= self.player and Utils.distance(x, y, px, py) < l.range / self.map.decor.spriteWidth then
+            if u ~= self.player and Utils.distance(x, y, px, py) < l.range / 32 then
                 l:setVisible(visibility)
             end
         end
@@ -286,8 +289,6 @@ function Game:drawUnitsUi()
 
         u:drawUi()
     end
-
-    self.displayPool:draw()
 end
 
 function Game:drawParticles()
@@ -379,8 +380,6 @@ function Game:update(dt)
 
     love.audio.setPosition(self.player.x, self.player.y, 0)
 
-    self.displayPool:update(dt)
-
     -- Reset dt to 0 in order to ignore loading time
     if not self.gameStarted then
         self.gameStarted = true
@@ -450,8 +449,8 @@ end
 function Game:getUnitAt(x, y)
     for i = 1, #self.units do
         local u = self.units[i]
-        local ux = math.floor(u.rx / self.map.decor.spriteWidth) + 1
-        local uy = math.floor(u.ry / self.map.decor.spriteHeight) + 1
+        local ux = math.floor(u.rx / 32) + 1
+        local uy = math.floor(u.ry / 32) + 1
 
         if ux == x and uy == y then
             return u
@@ -466,8 +465,8 @@ function Game:getUnitsAt(x, y)
 
     for i = 1, #self.units do
         local u = self.units[i]
-        local ux = math.floor(u.rx / self.map.decor.spriteWidth) + 1
-        local uy = math.floor(u.ry / self.map.decor.spriteHeight) + 1
+        local ux = math.floor(u.rx / 32) + 1
+        local uy = math.floor(u.ry / 32) + 1
 
         if ux == x and uy == y then
             table.insert(units, u)
@@ -516,8 +515,6 @@ end
 
 function Game:leave()
     print('[Game] leave')
-
-    love.audio.stop(Assets.sounds.ambient)
 end
 
 function Game:shakeFor(amplitude, duration)
