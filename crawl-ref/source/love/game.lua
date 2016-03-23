@@ -47,10 +47,6 @@ Game = Class {
       -- Awesome green screen effect
       -- self.light.post_shader:toggleEffect('pip')
 
-      self.lights = {}
-      -- Particles
-      self.particles = {}
-
       -- Units
       self.units = {}
 
@@ -72,8 +68,6 @@ end
 
 function Game:clear()
     self.units = {}
-    self.lights = {}
-    self.particles = {}
 end
 
 function Game:centerViewport(x, y)
@@ -128,10 +122,6 @@ function Game:setAllVisible(visibility)
     end
 end
 
-
-function Game:addLight(light)
-    table.insert(self.lights, light)
-end
 
 function Game:addUnit(unit)
     local already = false
@@ -208,10 +198,6 @@ function Game:removeUnit(unit)
             break
         end
     end
-end
-
-function Game:addParticle(system)
-    table.insert(self.particles, system)
 end
 
 function Game:drawUnits()
@@ -291,13 +277,7 @@ function Game:drawUnitsUi()
     end
 end
 
-function Game:drawParticles()
-    for i = 1, #self.particles do
-        local p = self.particles[i]
-
-        love.graphics.draw(p)
-    end
-
+function Game:drawParticles()    
     for i = 1, #self.units do
         local u = self.units[i]
         for j = 1, #u.particles do
@@ -397,12 +377,6 @@ function Game:update(dt)
     self.viewport.y = self.viewport.oy + self.viewport.offY
 
     -- Graphic update
-    for i = 1, #self.particles do
-        local p = self.particles[i]
-
-        p:update(dt)
-    end
-
     for i = 1, #self.units do
         local u = self.units[i]
 

@@ -14,6 +14,8 @@ Cell = Class {
         self.target = nil
         self.passable = true
 
+        self.unit = nil
+
         Utils.assign(self, options)
 
         if self.image then
