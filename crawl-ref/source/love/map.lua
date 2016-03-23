@@ -115,19 +115,42 @@ function Map:handle_map_message(data)
 
     local previous = nil
     local since_previous = 0
-    for i = 1, #cells do
-        local cell = cells[i]
+    for i = 1, #data.cells do
+        local map_cell = data.cells[i]
+        local cell = map_cell.t
 
-        if cell.x and cell.y then
-            -- setCell
+        cell.fg = enums.prepare_fg_flags(cell.fg or 0)
+        cell.bg = enums.prepare_bg_flags(cell.bg or 0)
+        cell.cloud = enums.prepare_fg_flags(cell.cloud or 0)
+        cell.flv = cell.flv or {}
+        cell.flv.f = cell.flv.f or 0
+        cell.flv.s = cell.flv.s or 0
+        map_cell.g = map_cell.g or ' '
 
-            previous = cell
+        print(cell.fg, cell.bg, cell.cloud, unpack(cell.flv))
+
+        if not map_cell.col then
+            map_cell.col = 7
+        end
+
+        if map_cell.x and map_cell.y then
+            previous = map_cell
             since_previous = 0
         elseif previous then
             since_previous = since_previous + 1
-
-            -- setCell
+            map_cell.x = previous.x + since_previous
+            map_cell.y = previous.y
         end
+
+        -- self:setCell(Cell({
+        --     image = Assets.decor:getNamedSprite(cell),
+        --     normal = Assets.decorNormal:getNamedSprite(cell),
+        --     castShadow = not Utils.startsWith(cell, 'floor'),
+        --     passable = Utils.startsWith(cell, 'floor'),
+        --     lightWorld = self.light,
+        --     spriteCode = cell,
+        --     code = code
+        -- }), cell.x, cell.y)
     end
 end
 
@@ -243,6 +266,10 @@ function Map:drawFront(x, y, w, h)
 end
 
 function Map:setCell(cell, x, y)
+    if not self.map[x] then
+        self.map[x] = {}
+    end
+
     self.map[x][y] = cell
 end
 

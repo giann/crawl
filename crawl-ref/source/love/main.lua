@@ -13,6 +13,7 @@ function love.load()
     bit = require "websocket/bit"
 
     require "utils"
+    enums = require "enums"
     require "spritesheet"
     require "assets"
     require "comm"

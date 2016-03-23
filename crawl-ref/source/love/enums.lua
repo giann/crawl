@@ -1,4 +1,4 @@
-local exports = {}, val
+local exports = {}
 -- Various constants
 exports.gxm = 80
 exports.gym = 70
@@ -11,7 +11,7 @@ exports.ui.CRT      = 1
 exports.ui.VIEW_MAP = 2
 
 -- Mouse modes
-val = 0
+local val = 0
 exports.mouse_mode = {}
 exports.mouse_mode.NORMAL = val + 1
 val = val + 1
@@ -93,7 +93,7 @@ val = val + 1
 
 function array_and(arr1, arr2)
     local result = {}
-    for i = 0, math.min(arr1.length, arr2.length) do
+    for i = 1, math.min(#arr1, #arr2) do
         result[#result] = bit.band(arr1[i], arr2[i])
     end
     return result
@@ -101,17 +101,19 @@ end
 
 function array_equal(arr1, arr2)
     -- return (arr1 <= arr2) && (arr1 >= arr2)
-    for i = 0, math.max(arr1.length, arr2.length) do
+    for i = 1, math.max(#arr1, #arr2) do
         if (arr1[i] or 0) ~= (arr2[i] or 0) then
             return false
+        end
     end
     return true
 end
 
 function array_nonzero(arr)
-    for i = 0, arr.length do
+    for i = 1, #arr do
         if arr[i] ~= 0 then
             return true
+        end
     end
     return false
 end
@@ -123,29 +125,33 @@ function prepare_flags(tileidx, flagdata, cache)
         return tileidx
     end
 
-    while #tileidx < 2 do
-        tileidx[#tileidx] = 0
+    while true do
+        table.insert(tileidx, 0)
+
+        if #tileidx > 2 then
+            break
+        end
     end
 
-    -- if cache[[tileidx[0],tileidx[1]]] then
-    --     return cache[[tileidx[0],tileidx[1]]]
+    -- if cache[[tileidx[1],tileidx[1]]] then
+    --     return cache[[tileidx[1],tileidx[1]]]
     -- end
 
     for flagname, flagmask in pairs(flagdata.flags) do
         if (isNaN(flagmask)) then
             tileidx[flagname] = array_nonzero(array_and(tileidx, flagmask))
         else
-            tileidx[flagname] = bit.band(tileidx[0], flagmask) ~= 0
+            tileidx[flagname] = bit.band(tileidx[1], flagmask) ~= 0
         end
     end
 
-    for i = 1, flagdata.exclusive_flags.length do
+    for i = 1, #flagdata.exclusive_flags do
         local excl = flagdata.exclusive_flags[i]
         local val
         if (isNaN(excl.mask)) then
             val = array_and(tileidx, excl.mask)
         else
-            val = {bit.band(tileidx[0], excl.mask)}
+            val = {bit.band(tileidx[1], excl.mask)}
         end
 
         for flagname, value in pairs(excl) do
@@ -153,13 +159,14 @@ function prepare_flags(tileidx, flagdata, cache)
                 if isNaN(excl[flagname]) then
                     tileidx[flagname] = array_equal(val, excl[flagname])
                 else
-                    tileidx[flagname] = (val[0] == excl[flagname])
+                    tileidx[flagname] = (val[1] == excl[flagname])
+                end
             end
         end
     end
 
-    tileidx.value = bit.band(tileidx[0], flagdata.mask)
-    -- cache[[tileidx[0],tileidx[1]]] = tileidx
+    tileidx.value = bit.band(tileidx[1], flagdata.mask)
+    -- cache[[tileidx[1],tileidx[1]]] = tileidx
     -- cache.size++
     return tileidx
 end
@@ -167,28 +174,29 @@ end
 -- Hex literals are signed, so values with the highest bit set
 -- would have to be written in 2-complement this way is easier to
 -- read
-local highbit = 1 << 31
+-- 1 << 31
+local highbit = -2147483648
 
 -- Foreground flags
 
 -- 3 mutually exclusive flags for attitude.
-local fg_flags = { flags: {}, exclusive_flags: {} }
-fg_flags.exclusive_flags.push({
-    mask       : 0x00030000,
-    PET        : 0x00010000,
-    GD_NEUTRAL : 0x00020000,
-    NEUTRAL    : 0x00030000,
+local fg_flags = { flags = {}, exclusive_flags = {} }
+table.insert(fg_flags.exclusive_flags, {
+    mask       = 0x00030000,
+    PET        = 0x00010000,
+    GD_NEUTRAL = 0x00020000,
+    NEUTRAL    = 0x00030000,
 })
 
 fg_flags.flags.S_UNDER = 0x00040000
 fg_flags.flags.FLYING  = 0x00080000
 
 -- 3 mutually exclusive flags for behaviour.
-fg_flags.exclusive_flags.push({
-    mask       : 0x00300000,
-    STAB       : 0x00100000,
-    MAY_STAB   : 0x00200000,
-    FLEEING    : 0x00300000,
+table.insert(fg_flags.exclusive_flags, {
+    mask       = 0x00300000,
+    STAB       = 0x00100000,
+    MAY_STAB   = 0x00200000,
+    FLEEING    = 0x00300000,
 })
 
 fg_flags.flags.NET          = 0x00400000
@@ -199,60 +207,60 @@ fg_flags.flags.STICKY_FLAME = 0x04000000
 fg_flags.flags.BERSERK      = 0x08000000
 fg_flags.flags.INNER_FLAME  = 0x10000000
 fg_flags.flags.CONSTRICTED  = 0x20000000
-fg_flags.flags.SLOWED       = [0, 0x080]
-fg_flags.flags.PAIN_MIRROR  = [0, 0x100]
-fg_flags.flags.HASTED       = [0, 0x200]
-fg_flags.flags.MIGHT        = [0, 0x400]
-fg_flags.flags.PETRIFYING   = [0, 0x800]
-fg_flags.flags.PETRIFIED    = [0, 0x1000]
-fg_flags.flags.BLIND        = [0, 0x2000]
-fg_flags.flags.ANIM_WEP     = [0, 0x4000]
-fg_flags.flags.SUMMONED     = [0, 0x8000]
-fg_flags.flags.PERM_SUMMON  = [0, 0x10000]
-fg_flags.flags.DEATHS_DOOR  = [0, 0x20000]
-fg_flags.flags.RECALL       = [0, 0x40000]
-fg_flags.flags.DRAIN        = [0, 0x80000]
+fg_flags.flags.SLOWED       = {0, 0x080}
+fg_flags.flags.PAIN_MIRROR  = {0, 0x100}
+fg_flags.flags.HASTED       = {0, 0x200}
+fg_flags.flags.MIGHT        = {0, 0x400}
+fg_flags.flags.PETRIFYING   = {0, 0x800}
+fg_flags.flags.PETRIFIED    = {0, 0x1000}
+fg_flags.flags.BLIND        = {0, 0x2000}
+fg_flags.flags.ANIM_WEP     = {0, 0x4000}
+fg_flags.flags.SUMMONED     = {0, 0x8000}
+fg_flags.flags.PERM_SUMMON  = {0, 0x10000}
+fg_flags.flags.DEATHS_DOOR  = {0, 0x20000}
+fg_flags.flags.RECALL       = {0, 0x40000}
+fg_flags.flags.DRAIN        = {0, 0x80000}
 
 -- MDAM has 5 possibilities, so uses 3 bits.
-fg_flags.exclusive_flags.push({
-    mask       : [0x40000000 | highbit, 0x01],
-    MDAM_LIGHT : [0x40000000, 0x00],
-    MDAM_MOD   : [highbit, 0x00],
-    MDAM_HEAVY : [0x40000000 | highbit, 0x00],
-    MDAM_SEV   : [0x00000000, 0x01],
-    MDAM_ADEAD : [0x40000000 | highbit, 0x01],
+table.insert(fg_flags.exclusive_flags, {
+    mask       = {bit.bor(0x40000000, highbit), 0x01},
+    MDAM_LIGHT = {0x40000000, 0x00},
+    MDAM_MOD   = {highbit, 0x00},
+    MDAM_HEAVY = {bit.bor(0x40000000, highbit), 0x00},
+    MDAM_SEV   = {0x00000000, 0x01},
+    MDAM_ADEAD = {bit.bor(0x40000000, highbit), 0x01},
 })
 
 -- Demon difficulty has 5 possibilities, so uses 3 bits.
-fg_flags.exclusive_flags.push({
-    mask       : [0, 0x0E],
-    DEMON_5    : [0, 0x02],
-    DEMON_4    : [0, 0x04],
-    DEMON_3    : [0, 0x06],
-    DEMON_2    : [0, 0x08],
-    DEMON_1    : [0, 0x0E],
+table.insert(fg_flags.exclusive_flags, {
+    mask       = {0, 0x0E},
+    DEMON_5    = {0, 0x02},
+    DEMON_4    = {0, 0x04},
+    DEMON_3    = {0, 0x06},
+    DEMON_2    = {0, 0x08},
+    DEMON_1    = {0, 0x0E},
 })
 
 -- Mimics, 2 bits.
-fg_flags.exclusive_flags.push({
-    mask        : [0, 0x60],
-    MIMIC_INEPT : [0, 0x20],
-    MIMIC       : [0, 0x40],
-    MIMIC_RAVEN : [0, 0x60],
+table.insert(fg_flags.exclusive_flags, {
+    mask        = {0, 0x60},
+    MIMIC_INEPT = {0, 0x20},
+    MIMIC       = {0, 0x40},
+    MIMIC_RAVEN = {0, 0x60},
 })
 
 fg_flags.mask             = 0x0000FFFF
 
 -- Background flags
-local bg_flags = { flags: {}, exclusive_flags: {} }
+local bg_flags = { flags = {}, exclusive_flags = {} }
 bg_flags.flags.RAY        = 0x00010000
 bg_flags.flags.MM_UNSEEN  = 0x00020000
 bg_flags.flags.UNSEEN     = 0x00040000
-bg_flags.exclusive_flags.push({
-    mask       : 0x00180000,
-    CURSOR1    : 0x00180000,
-    CURSOR2    : 0x00080000,
-    CURSOR3    : 0x00100000,
+table.insert(bg_flags.exclusive_flags, {
+    mask       = 0x00180000,
+    CURSOR1    = 0x00180000,
+    CURSOR2    = 0x00080000,
+    CURSOR3    = 0x00100000,
 })
 bg_flags.flags.TUT_CURSOR = 0x00200000
 bg_flags.flags.TRAV_EXCL  = 0x00400000
@@ -266,33 +274,36 @@ bg_flags.flags.NEW_STAIR  = 0x08000000
 bg_flags.flags.KRAKEN_NW  = 0x20000000
 bg_flags.flags.KRAKEN_NE  = 0x40000000
 bg_flags.flags.KRAKEN_SE  = highbit
-bg_flags.flags.KRAKEN_SW  = [0, 0x01]
+bg_flags.flags.KRAKEN_SW  = {0, 0x01}
 
 -- Eldritch tentacle overlays.
-bg_flags.flags.ELDRITCH_NW = [0, 0x02]
-bg_flags.flags.ELDRITCH_NE = [0, 0x04]
-bg_flags.flags.ELDRITCH_SE = [0, 0x08]
-bg_flags.flags.ELDRITCH_SW = [0, 0x10]
-bg_flags.flags.LANDING     = [0, 0x200]
-bg_flags.flags.RAY_MULTI   = [0, 0x400]
+bg_flags.flags.ELDRITCH_NW = {0, 0x02}
+bg_flags.flags.ELDRITCH_NE = {0, 0x04}
+bg_flags.flags.ELDRITCH_SE = {0, 0x08}
+bg_flags.flags.ELDRITCH_SW = {0, 0x10}
+bg_flags.flags.LANDING     = {0, 0x200}
+bg_flags.flags.RAY_MULTI   = {0, 0x400}
 bg_flags.mask              = 0x0000FFFF
 
 -- Since the current flag implementation is really slow we use a trivial
 -- cache system for now.
-local fg_cache = { size : 0 }
+local fg_cache = { size = 0 }
 exports.prepare_fg_flags = function (tileidx)
-{
-    if (fg_cache.size >= 100)
-        fg_cache = { size : 0 }
+    if fg_cache.size >= 100 then
+        fg_cache = { size = 0 }
+    end
+
     return prepare_flags(tileidx, fg_flags, fg_cache)
-}
-local bg_cache = { size : 0 }
+end
+
+local bg_cache = { size = 0 }
 exports.prepare_bg_flags = function (tileidx)
-{
-    if (bg_cache.size >= 250)
-        bg_cache = { size : 0 }
+    if (bg_cache.size >= 250) then
+        bg_cache = { size = 0 }
+    end
+
     return prepare_flags(tileidx, bg_flags, bg_cache)
-}
+end
 
 -- Menu flags -- see menu.h
 local mf = {}
@@ -388,12 +399,12 @@ val = val + 1
 exports.MF_SKIP = val + 1
 val = val + 1
 
-exports.reverse_lookup = function (e, value) {
-    for (local prop in e)
-    {
-        if (e[prop] == value)
+exports.reverse_lookup = function (e, value)
+    for prop, v in pairs(e) do
+        if e[prop] == value then
             return prop
-    }
-}
+        end
+    end
+end
 
 return exports
