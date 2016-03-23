@@ -110,6 +110,23 @@ function Map:handle_map_message(data)
     self.map_knowledge:merge(data.cells)
     
     self.map_knowledge:print()
+
+    local previous = nil
+    local since_previous = 0
+    for i = 1, #cells do
+        local cell = cells[i]
+
+        if cell.x and cell.y then
+            -- setCell
+
+            previous = cell
+            since_previous = 0
+        elseif previous then
+            since_previous = since_previous + 1
+
+            -- setCell
+        end
+    end
 end
 
 function Map:clear()

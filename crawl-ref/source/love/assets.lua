@@ -50,6 +50,13 @@ Assets.tile_info = {
                 tileinfo = tileinfo_wall
         })
     },
+    dngn = {
+        tileinfo = tileinfo_dngn,
+        spritesheet = SpriteSheet({
+                image = nil, -- used only for it's functions
+                tileinfo = tileinfo_dngn
+        })
+    },
     feat = {
         tileinfo = tileinfo_feat,
         spritesheet = SpriteSheet({
