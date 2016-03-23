@@ -1,12 +1,12 @@
 function love.load()
 
-    websocket    = require "websocket"
-    json             = require "lib/json"
+    websocket  = require "websocket"
+    json       = require "lib/json"
     deflatelua = require "lib/deflatelua"
-    Class            = require "lib/hump.class"
-    Gamestate    = require "lib/hump.gamestate"
-    Signal         = require "lib/hump.signal"
-    Timer            = require "lib/hump.timer"
+    Class      = require "lib/hump.class"
+    Gamestate  = require "lib/hump.gamestate"
+    Signal     = require "lib/hump.signal"
+    Timer      = require "lib/hump.timer"
 
     LightWorld = require "lib/light"
 
@@ -16,6 +16,7 @@ function love.load()
     require "client"
     require "map"
     require "map_knowledge"
+    require "game"
 
     local tileinfo_main = require "tileinfo-main"
     main_spritesheet = SpriteSheet({
@@ -23,13 +24,8 @@ function love.load()
         tileinfo = tileinfo_main
     })
 
-    light = LightWorld({
-        ambient = {70, 70, 70},
-        refractionStrength = 10.0,
-        reflectionVisibility = 0,
-    })
     client = Client()
-    map = Map()
+    game = Game()
     history = {}
 
     local defaultFont = love.graphics.newImageFont('fontbz-love.png', "☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ")

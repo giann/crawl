@@ -213,3 +213,5 @@ icon.png
 /source/util/monster/monster
 /source/util/monster/vault_monster_data.h
 /source/util/monster/*.d
+
+.tern-port
