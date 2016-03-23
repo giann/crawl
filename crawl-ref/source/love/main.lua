@@ -97,7 +97,11 @@ function love.draw()
 
     for i = 10, 20 do
         if Assets.tile_info.main.spritesheet.images[i] then
-            love.graphics.draw(Assets.tile_info.main.spritesheet.images[i], 10 + 32*i, y)
+            love.graphics.draw(Assets.tile_info.main.spritesheet.images[i], 10 + 32*i, 10)
+        end
+
+        if Assets.tile_info.player.spritesheet.images[i] then
+            love.graphics.draw(Assets.tile_info.player.spritesheet.images[i], 10 + 32*i, 50)
         end
     end
 end

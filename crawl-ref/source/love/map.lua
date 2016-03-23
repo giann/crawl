@@ -102,14 +102,14 @@ Map = Class {
 }
 
 function Map:handle_map_message(data)
-  if data.clear then
-    self:clear()
-  end
-
-  -- update map knowledge
-  self.map_knowledge:merge(data.cells)
-
-  self.map_knowledge:print()
+    if data.clear then
+        self:clear()
+    end
+    
+    -- update map knowledge
+    self.map_knowledge:merge(data.cells)
+    
+    self.map_knowledge:print()
 end
 
 function Map:clear()

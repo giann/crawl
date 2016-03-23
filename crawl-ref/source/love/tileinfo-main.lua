@@ -2633,8 +2633,8 @@ tileinfo.ERROR = val + 1
 val = val + 1
 tileinfo.TODO = val + 1
 val = val + 1
-tileinfo.TILE_MAIN_MAX = val + 1
-tileinfo.MAIN_MAX = tileinfo.TILE_MAIN_MAX
+TILE_MAIN_MAX = val + 1
+MAIN_MAX = TILE_MAIN_MAX
 val = val + 1
 
 tileinfo.tile_info = {

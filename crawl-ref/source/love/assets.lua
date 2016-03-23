@@ -13,13 +13,22 @@ Assets.shaders = {
     ]]
 }
 
+local tileinfo_main = require "tileinfo-main"
+local tileinfo_player = require "tileinfo-player"
 
 Assets.tile_info = {
     main = {
-        tileinfo = require "tileinfo-main",
+        tileinfo = tileinfo_main,
         spritesheet = SpriteSheet({
                 image = love.graphics.newImage('dat/tiles/main.png'),
                 tileinfo = tileinfo_main
+        })
+    },
+    player = {
+        tileinfo = tileinfo_player,
+        spritesheet = SpriteSheet({
+                image = love.graphics.newImage('dat/tiles/player.png'),
+                tileinfo = tileinfo_player
         })
     }
 }

@@ -24,10 +24,10 @@ function SpriteSheet:generateImages()
 
     for i = 1, #self.tileinfo.tile_info do
 
-        local info = self.tileinfo.get_tile_info(i)
+        local info = self.tileinfo.tile_info[i]
         local img = self.image
         if not info then
-            print("Tile not found: " .. idx)
+            print("Tile not found: " .. i)
 
             return false
         end
@@ -75,6 +75,7 @@ function SpriteSheet:generateImages()
         )
         love.graphics.setCanvas()
 
+        -- print(i, self.tileinfo.get_img())
         self.images[i] = canvas
 
     end
