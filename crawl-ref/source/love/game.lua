@@ -2,59 +2,61 @@ Game = Class {
 
     init = function (self, save)
 
-      love.mouse.setVisible(false)
+        love.mouse.setVisible(false)
 
-      local w, h = love.graphics.getDimensions()
-      local s = 1
+        local w, h = love.graphics.getDimensions()
+        local s = 1
 
-      self.viewport = {
-        -- Actual viewport x,y
-        x = 0,
-        y = 0,
-        -- Reference viewport x,y
-        ox = 0,
-        oy = 0,
-        -- Offset applied on reference viewport to get actual viewport
-        offX = 0,
-        offY = 0,
-        shakeAmplitude = 0,
-        width = w / s,
-        height = h / s,
-        scale = s
-      }
+        self.viewport = {
+          -- Actual viewport x,y
+          x = 0,
+          y = 0,
+          -- Reference viewport x,y
+          ox = 0,
+          oy = 0,
+          -- Offset applied on reference viewport to get actual viewport
+          offX = 0,
+          offY = 0,
+          shakeAmplitude = 0,
+          width = w / s,
+          height = h / s,
+          scale = s
+        }
 
-      self.alphaTarget = 50
-      self:alpha(0)
+        self.alphaTarget = 50
+        self:alpha(0)
 
-      self.reflectionCanvas = love.graphics.newCanvas(self.viewport.width, self.viewport.height)
+        self.reflectionCanvas = love.graphics.newCanvas(self.viewport.width, self.viewport.height)
 
-      self.cursorColor = {41, 255, 12, 255}
+        self.cursorColor = {41, 255, 12, 255}
 
-      self.turn = 1
-      self.turnSpeed = 0.10
+        self.turn = 1
+        self.turnSpeed = 0.10
 
-      -- Lights
-      self.drawLights = true
+        -- Lights
+        self.drawLights = true
 
-      self.light = LightWorld({
-          ambient = {70, 70, 70},
-          refractionStrength = 10.0,
-          reflectionVisibility = 0,
-      })
+        self.light = LightWorld({
+            ambient = {70, 70, 70},
+            refractionStrength = 10.0,
+            reflectionVisibility = 0,
+        })
 
-      -- self.light.post_shader:addEffect('hdr_tv')
-      self.light.post_shader:addEffect('bloom', {2.0})
-      -- Awesome green screen effect
-      -- self.light.post_shader:toggleEffect('pip')
+        -- self.light.post_shader:addEffect('hdr_tv')
+        self.light.post_shader:addEffect('bloom', {2.0})
+        -- Awesome green screen effect
+        -- self.light.post_shader:toggleEffect('pip')
 
-      -- Units
-      self.units = {}
+        -- Units
+        self.units = {}
 
-      -- Map
-      self.map = Map()
+        -- Map
+        self.map = Map({
+            light = self.light
+        })
 
-      -- temp
-      self.player = {x = 0, y = 0}
+        -- temp
+        self.player = {x = 0, y = 0}
 
     end
 

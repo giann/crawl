@@ -31,7 +31,7 @@ Cell = Class {
 }
 
 function Cell:initLight(x, y)
-    if self.code ~= 'empty' then
+    if self.code ~= 'empty' and self.width > 0 and self.height > 0 then
         self.body = self.lightWorld:newRectangle(x and x + self.width/2 or 0, y and y + self.height/2 or 0, self.width, self.height)
         self.body:setVisible(false)
 
@@ -90,6 +90,12 @@ Map = Class {
         self.width = 0
         self.height = 0
         self.map = {}
+        self.bounds = {
+            left = 0,
+            right = 0,
+            top = 0,
+            bottom = 0
+        }
         self.light = nil
 
         self.map_knowledge = MapKnowledge()
@@ -110,8 +116,18 @@ function Map:handle_map_message(data)
     
     -- update map knowledge
     self.map_knowledge:merge(data.cells)
+
+    self.bounds = self.map_knowledge.bounds
     
     --self.map_knowledge:print()
+
+    local main   = Assets.tile_info.main.spritesheet
+    local player = Assets.tile_info.player.spritesheet
+    local floor  = Assets.tile_info.floor.spritesheet
+    local wall   = Assets.tile_info.wall.spritesheet
+    local feat   = Assets.tile_info.feat.spritesheet
+    local icons  = Assets.tile_info.icons.spritesheet
+    local gui    = Assets.tile_info.gui.spritesheet
 
     local previous = nil
     local since_previous = 0
@@ -143,12 +159,43 @@ function Map:handle_map_message(data)
         end
 
         -- TODO find background
+        local bg_idx = self:getBackground(cell)
+        local isFloor = bg_idx < FLOOR_MAX
+        local isWall = bg_idx >= FLOOR_MAX and bg_idx < WALL_MAX
+
+        if isFloor or isWall then
+            self:setCell(Cell({
+                image = isFloor and floor.images[bg_idx] or wall.images[bg_idx],
+                normal = nil,
+                castShadow = isWall,
+                passable = isFloor,
+                lightWorld = self.light,
+                spriteCode = bg_idx,
+                code = isFloor and 'floor' or 'wall'
+            }), map_cell.x, map_cell.y)
+        end
+
+        -- TODO overlays ? blood etc.
 
         -- TODO construct doll -> unit
 
-        -- TODO find foreground -> 
+        -- TODO find foreground
 
     end
+end
+
+
+function Map:getBackground(cell)
+    local bg = cell.bg;
+    local bg_idx = cell.bg.value
+
+    if cell.mangrove_water and bg_idx > Assets.tile_info.floor.tileinfo.DNGN_UNSEEN then
+        return Assets.tile_info.floor.tileinfo.DNGN_SHALLOW_WATER
+    elseif (bg_idx >= Assets.tile_info.wall.tileinfo.DNGN_FIRST_TRANSPARENT) then
+        return cell.flv.f-- f = floor
+    end
+
+    return bg_idx
 end
 
 function Map:clear()
@@ -191,72 +238,78 @@ end
 
 -- TODO: Draw only within viewport
 function Map:drawBack(x, y, w, h)
-    local x = math.floor(x / 32) + 1
-    local y = math.floor(y / 32) + 1
+    if self.bounds.right ~= 0 and self.bounds.bottom ~= 0 then
+        local x = math.floor(x / 32) + 1
+        local y = math.floor(y / 32) + 1
 
-    if x < 1 then
-        x = 1
-    end
-    if y < 1 then
-        y = 1
-    end
+        if x < self.bounds.left then
+            x = self.bounds.left
+        end
+        if y < self.bounds.top then
+            y = self.bounds.top
+        end
 
-    local w = math.floor(w / 32) + 1
-    local h = math.floor(h / 32) + 1
+        local w = math.floor(w / 32) + 1
+        local h = math.floor(h / 32) + 1
 
-    for i = x, math.min(x + w, self.width) do
-        for j = y, math.min(y + h, self.height) do
-            local cell = self.map[i][j]
-            if cell and not cell.castShadow then
-                cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+        for i = x, math.min(x + w, self.bounds.right) do
+            for j = y, math.min(y + h, self.bounds.bottom) do
+                local cell = self.map[i][j]
+                if cell and not cell.castShadow then
+                    cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+                end
             end
         end
     end
 end
 
 function Map:drawExplored(x, y, w, h)
-    local x = math.floor(x / 32) + 1
-    local y = math.floor(y / 32) + 1
+    if self.bounds.right ~= 0 and self.bounds.bottom ~= 0 then
+        local x = math.floor(x / 32) + 1
+        local y = math.floor(y / 32) + 1
 
-    if x < 1 then
-        x = 1
-    end
-    if y < 1 then
-        y = 1
-    end
+        if x < self.bounds.left then
+            x = self.bounds.left
+        end
+        if y < self.bounds.top then
+            y = self.bounds.top
+        end
 
-    local w = math.floor(w / 32) + 1
-    local h = math.floor(h / 32) + 1
+        local w = math.floor(w / 32) + 1
+        local h = math.floor(h / 32) + 1
 
-    for i = x, math.min(x + w, self.width) do
-        for j = y, math.min(y + h, self.height) do
-            local cell = self.map[i][j]
-            if cell and not cell.visible and cell.explored then
-                cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+        for i = x, math.min(x + w, self.bounds.right) do
+            for j = y, math.min(y + h, self.bounds.bottom) do
+                local cell = self.map[i][j]
+                if cell and not cell.visible and cell.explored then
+                    cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+                end
             end
         end
     end
 end
 
 function Map:drawFront(x, y, w, h)
-    local x = math.floor(x / 32) + 1
-    local y = math.floor(y / 32) + 1
+    if self.bounds.right ~= 0 and self.bounds.bottom ~= 0 then
+        local x = math.floor(x / 32) + 1
+        local y = math.floor(y / 32) + 1
 
-    if x < 1 then
-        x = 1
-    end
-    if y < 1 then
-        y = 1
-    end
+        if x < self.bounds.left then
+            x = self.bounds.left
+        end
+        if y < self.bounds.top then
+            y = self.bounds.top
+        end
 
-    local w = math.floor(w / 32) + 1
-    local h = math.floor(h / 32) + 1
+        local w = math.floor(w / 32) + 1
+        local h = math.floor(h / 32) + 1
 
-    for i = x, math.min(x + w, self.width) do
-        for j = y, math.min(y + h, self.height) do
-            local cell = self.map[i][j]
-            if cell and cell.castShadow then
-                cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+        for i = x, math.min(x + w, self.bounds.right) do
+            for j = y, math.min(y + h, self.bounds.bottom) do
+                local cell = self.map[i][j]
+                if cell and cell.castShadow then
+                    cell:draw((i - 1) * cell.width, (j - 1) * cell.height)
+                end
             end
         end
     end
