@@ -24,9 +24,9 @@ local receive = function(self)
   while true do
     local chunk,err = self:sock_receive(bytes)
 
-    -- beware of real timeout !
-    while err == 'timeout' do
-      chunk, err = self:sock_receive(bytes)
+    -- If timeout is 0, don't close the socket, just return an empty response
+    if err == 'timeout' and self.timeout == 0 then
+      return nil, nil
     end
 
     if err then

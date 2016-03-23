@@ -62,6 +62,7 @@ function Comm:handle_message(msg)
     return false
   end
 
+  print('Handling ' .. msg.msg)
   handler.handler(handler.context, msg)
 end
 

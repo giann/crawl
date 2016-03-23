@@ -41,6 +41,7 @@ function love.load()
     game_id = 'dcss-web-trunk'
   })
 
+  client.comm.socket.timeout = 0
   client.comm.socket.sock:settimeout(0)
 
 end
