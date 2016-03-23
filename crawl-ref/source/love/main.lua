@@ -17,6 +17,7 @@ function love.load()
   require "client"
   require "map"
   require "map_knowledge"
+  require "tileinfo-main"
 
   light = LightWorld({
       ambient = {70, 70, 70},

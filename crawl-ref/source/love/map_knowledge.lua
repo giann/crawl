@@ -13,11 +13,6 @@ MapKnowledge = Class {
 }
 
 
-function MapKnowledge:get_bounds()
-  
-end
-
-
 function MapKnowledge:merge(cells)
   local previous = nil
   local since_previous = 0
@@ -68,15 +63,15 @@ function MapKnowledge:print()
   local line = ''
   for y = self.bounds.top, self.bounds.bottom do
     for x = self.bounds.left, self.bounds.right do
-      if self.cells[x] and self.cells[x][y] then--and self.cells[x][y].g then
-        if not self.cells[x][y].g then
-          print(json.encode(self.cells[x][y]))
-        else
-          line = line .. self.cells[x][y].g
-        end
+
+      if self.cells[x] and self.cells[x][y] and self.cells[x][y].g then
+        print(json.encode(self.cells[x][y]))
+        
+        line = line .. self.cells[x][y].g
       else
         line = line .. '-'
       end
+
     end
     line = line .. '\n'
   end
