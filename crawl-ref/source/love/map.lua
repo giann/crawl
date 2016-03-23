@@ -127,8 +127,6 @@ function Map:handle_map_message(data)
         cell.flv.s = cell.flv.s or 0
         map_cell.g = map_cell.g or ' '
 
-        print(cell.fg, cell.bg, cell.cloud, unpack(cell.flv))
-
         if not map_cell.col then
             map_cell.col = 7
         end

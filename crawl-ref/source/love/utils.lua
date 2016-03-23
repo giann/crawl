@@ -521,5 +521,5 @@ function Utils.tlength(table)
 end
 
 function isNaN(n)
-    return n ~= n
+    return type(n) ~= 'number' or n ~= n
 end
