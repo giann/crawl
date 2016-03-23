@@ -10,6 +10,8 @@ function love.load()
 
     LightWorld = require "lib/light"
 
+    bit = require "websocket/bit"
+
     require "utils"
     require "spritesheet"
     require "assets"

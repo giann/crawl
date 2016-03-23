@@ -519,3 +519,7 @@ function Utils.tlength(table)
     
     return count
 end
+
+function isNaN(n)
+    return n ~= n
+end
