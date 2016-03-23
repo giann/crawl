@@ -111,7 +111,7 @@ function Map:handle_map_message(data)
     -- update map knowledge
     self.map_knowledge:merge(data.cells)
     
-    self.map_knowledge:print()
+    --self.map_knowledge:print()
 
     local previous = nil
     local since_previous = 0
@@ -127,6 +127,8 @@ function Map:handle_map_message(data)
         cell.flv.s = cell.flv.s or 0
         map_cell.g = map_cell.g or ' '
 
+        print(json.encode(cell))
+
         if not map_cell.col then
             map_cell.col = 7
         end
@@ -140,15 +142,12 @@ function Map:handle_map_message(data)
             map_cell.y = previous.y
         end
 
-        -- self:setCell(Cell({
-        --     image = Assets.decor:getNamedSprite(cell),
-        --     normal = Assets.decorNormal:getNamedSprite(cell),
-        --     castShadow = not Utils.startsWith(cell, 'floor'),
-        --     passable = Utils.startsWith(cell, 'floor'),
-        --     lightWorld = self.light,
-        --     spriteCode = cell,
-        --     code = code
-        -- }), cell.x, cell.y)
+        -- TODO find background
+
+        -- TODO construct doll -> unit
+
+        -- TODO find foreground -> 
+
     end
 end
 
