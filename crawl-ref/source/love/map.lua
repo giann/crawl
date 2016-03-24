@@ -72,7 +72,8 @@ function Cell:draw(x, y)
         love.graphics.setColor(255, 255, 255, 255)
     elseif self.code ~= 'empty' then
         love.graphics.setColor(90, 90, 90, 255)
-        love.graphics.draw(self.imageBW, x, y)
+        -- love.graphics.draw(self.imageBW, x, y)
+        love.graphics.draw(self.image, x, y)
         love.graphics.setColor(255, 255, 255, 255)
     end
 end
@@ -125,6 +126,8 @@ function Map:handle_map_message(data)
     local player = Assets.tile_info.player.spritesheet
     local floor  = Assets.tile_info.floor.spritesheet
     local wall   = Assets.tile_info.wall.spritesheet
+    local floor_normal  = Assets.tile_info.floor.spritesheet_normal
+    local wall_normal   = Assets.tile_info.wall.spritesheet_normal
     local feat   = Assets.tile_info.feat.spritesheet
     local icons  = Assets.tile_info.icons.spritesheet
     local gui    = Assets.tile_info.gui.spritesheet
@@ -166,12 +169,14 @@ function Map:handle_map_message(data)
         if isFloor or isWall then
             self:setCell(Cell({
                 image = isFloor and floor.images[bg_idx] or wall.images[bg_idx],
-                normal = nil,
+                normal = isFloor and floor_normal.images[bg_idx] or wall_normal.images[bg_idx],
                 castShadow = isWall,
                 passable = isFloor,
                 lightWorld = self.light,
                 spriteCode = bg_idx,
-                code = isFloor and 'floor' or 'wall'
+                code = isFloor and 'floor' or 'wall',
+                visible = true,
+                explored = true
             }), map_cell.x, map_cell.y)
         end
 

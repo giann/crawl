@@ -86,20 +86,7 @@ end
 
 -- Drawing
 function love.draw()
-    -- game:draw()
-
-    love.graphics.setCanvas()
-    love.graphics.setColor(255, 255, 255)
-    if game.map.bounds.right > 0 then
-        love.graphics.translate(game.map.bounds.left * 32, game.map.bounds.top * 32)
-
-        game.map:drawBack(
-            game.map.bounds.left,
-            game.map.bounds.top,
-            game.map.bounds.right - game.map.bounds.left,
-            game.map.bounds.bottom - game.map.bounds.top
-        )
-    end
+    game:draw()
 
     -- love.graphics.setCanvas()
     -- love.graphics.setColor(255, 255, 255)

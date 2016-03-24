@@ -25,50 +25,58 @@ Assets.tile_info = {
     main = {
         tileinfo = tileinfo_main,
         spritesheet = SpriteSheet({
-                image = love.graphics.newImage('dat/tiles/main.png'),
-                tileinfo = tileinfo_main
+            image = love.graphics.newImage('dat/tiles/main.png'),
+            tileinfo = tileinfo_main
         })
     },
     player = {
         tileinfo = tileinfo_player,
         spritesheet = SpriteSheet({
-                image = love.graphics.newImage('dat/tiles/player.png'),
-                tileinfo = tileinfo_player
+            image = love.graphics.newImage('dat/tiles/player.png'),
+            tileinfo = tileinfo_player
         })
     },
     floor = {
         tileinfo = tileinfo_floor,
         spritesheet = SpriteSheet({
-                image = love.graphics.newImage('dat/tiles/floor.png'),
-                tileinfo = tileinfo_floor
+            image = love.graphics.newImage('dat/tiles/floor.png'),
+            tileinfo = tileinfo_floor
+        }),
+        spritesheet_normal = SpriteSheet({
+            image = love.graphics.newImage('dat/tiles/floor_NORMALS.png'),
+            tileinfo = tileinfo_floor
         })
     },
     wall = {
         tileinfo = tileinfo_wall,
         spritesheet = SpriteSheet({
-                image = love.graphics.newImage('dat/tiles/wall.png'),
-                tileinfo = tileinfo_wall
+            image = love.graphics.newImage('dat/tiles/wall.png'),
+            tileinfo = tileinfo_wall
+        }),
+        spritesheet_normal = SpriteSheet({
+            image = love.graphics.newImage('dat/tiles/wall_NORMALS.png'),
+            tileinfo = tileinfo_wall
         })
     },
     dngn = {
         tileinfo = tileinfo_dngn,
         spritesheet = SpriteSheet({
-                image = nil, -- used only for it's functions
-                tileinfo = tileinfo_dngn
+            image = nil, -- used only for it's functions
+            tileinfo = tileinfo_dngn
         })
     },
     feat = {
         tileinfo = tileinfo_feat,
         spritesheet = SpriteSheet({
-                image = love.graphics.newImage('dat/tiles/feat.png'),
-                tileinfo = tileinfo_feat
+            image = love.graphics.newImage('dat/tiles/feat.png'),
+            tileinfo = tileinfo_feat
         })
     },
     icons = {
         tileinfo = tileinfo_icons,
         spritesheet = SpriteSheet({
-                image = love.graphics.newImage('dat/tiles/icons.png'),
-                tileinfo = tileinfo_icons
+            image = love.graphics.newImage('dat/tiles/icons.png'),
+            tileinfo = tileinfo_icons
         })
     },
     gui = {
