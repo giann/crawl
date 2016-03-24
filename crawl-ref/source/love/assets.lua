@@ -39,7 +39,7 @@ Assets.tile_info = {
     floor = {
         tileinfo = tileinfo_floor,
         spritesheet = SpriteSheet({
-            image = love.graphics.newImage('dat/tiles/floor.png'),
+            image = love.graphics.newImage('dat/tiles/floor_light.png'),
             tileinfo = tileinfo_floor
         }),
         spritesheet_normal = SpriteSheet({

@@ -2,9 +2,9 @@ local tileinfo = {}
 
 local val = TILE_FLOOR_MAX;
 tileinfo.WALL_BRICK_DARK_1 = val + 1
+tileinfo.WALL_BRICK_DARK = val + 1
+tileinfo.WALL_NORMAL = val + 1
 val = val + 1
-tileinfo.WALL_BRICK_DARK = val
-tileinfo.WALL_NORMAL = val
 tileinfo.WALL_BRICK_DARK_1_1 = val + 1
 val = val + 1
 tileinfo.WALL_BRICK_DARK_1_2 = val + 1

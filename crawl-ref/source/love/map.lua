@@ -74,17 +74,17 @@ function Cell:draw(x, y)
         love.graphics.setColor(255, 255, 255, 255)
     end
 
-    if self.knowledge and self.knowledge.g then
-        love.graphics.setColor(255, 255, 255, 255)
+    -- if self.knowledge and self.knowledge.g then
+    --     love.graphics.setColor(255, 255, 255, 255)
 
-        if (self.knowledge.g == '#' and not self.castShadow) or (self.knowledge.g == '.' and self.castShadow) then
-            love.graphics.setColor(255, 0, 0, 255)
-        end
+    --     if (self.knowledge.g == '#' and not self.castShadow) or (self.knowledge.g == '.' and self.castShadow) then
+    --         love.graphics.setColor(255, 0, 0, 255)
+    --     end
        
-        love.graphics.print(self.knowledge.g, x + self.width/2, y + self.height/2)
+    --     love.graphics.print(self.knowledge.g .. self.code, x + self.width/2, y + self.height/2)
 
-        love.graphics.setColor(255, 255, 255, 255)
-    end
+    --     love.graphics.setColor(255, 255, 255, 255)
+    -- end
 end
 
 function Cell:setVisible(visible)
@@ -172,19 +172,19 @@ function Map:handle_map_message(data)
 
         -- TODO find background
         local bg_idx = self:getBackground(cell)
-        local isFloor = bg_idx < FLOOR_MAX
+        local isFloor = bg_idx < TILE_FLOOR_MAX - 1
         -- TODO find a better test
-        local isWall = map_cell.g == '#' --bg_idx >= FLOOR_MAX and bg_idx < WALL_MAX
+        local isWall = bg_idx >= FLOOR_MAX - 1 and bg_idx < WALL_MAX - 1
 
         if isFloor or isWall then
             self:setCell(Cell({
-                image      = isFloor and floor.images[bg_idx] or wall.images[bg_idx - TILE_FLOOR_MAX + 1],
-                normal     = isFloor and floor_normal.images[bg_idx] or wall_normal.images[bg_idx - TILE_FLOOR_MAX + 1],
+                image      = isFloor and floor.images[bg_idx + 2] or wall.images[bg_idx - TILE_FLOOR_MAX + 2],
+                normal     = isFloor and floor_normal.images[bg_idx + 2] or wall_normal.images[bg_idx - TILE_FLOOR_MAX +  2],
                 castShadow = isWall,
                 passable   = isFloor,
                 lightWorld = self.light,
                 spriteCode = bg_idx,
-                code       = isFloor and 'floor' or 'wall',
+                code       = isFloor and bg_idx or bg_idx - TILE_FLOOR_MAX + 2,
                 visible    = true,
                 explored   = true,
                 knowledge  = map_cell
