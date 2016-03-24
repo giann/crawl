@@ -13,6 +13,7 @@ Cell = Class {
         self.code = 'empty'
         self.target = nil
         self.passable = true
+        self.knowledge = nil
 
         self.unit = nil
 
@@ -76,6 +77,18 @@ function Cell:draw(x, y)
         love.graphics.draw(self.image, x, y)
         love.graphics.setColor(255, 255, 255, 255)
     end
+
+    if self.knowledge and self.knowledge.g then
+        love.graphics.setColor(255, 255, 255, 255)
+
+        if (self.knowledge.g == '#' and not self.castShadow) or (self.knowledge.g == '.' and self.castShadow) then
+            love.graphics.setColor(255, 0, 0, 255)
+        end
+       
+        love.graphics.print(self.knowledge.g, x + self.width/2, y + self.height/2)
+
+        love.graphics.setColor(255, 255, 255, 255)
+    end
 end
 
 function Cell:setVisible(visible)
@@ -120,7 +133,7 @@ function Map:handle_map_message(data)
 
     self.bounds = self.map_knowledge.bounds
     
-    --self.map_knowledge:print()
+    -- self.map_knowledge:print()
 
     local main   = Assets.tile_info.main.spritesheet
     local player = Assets.tile_info.player.spritesheet
@@ -164,21 +177,21 @@ function Map:handle_map_message(data)
         -- TODO find background
         local bg_idx = self:getBackground(cell)
         local isFloor = bg_idx < FLOOR_MAX
-        local isWall = bg_idx >= FLOOR_MAX and bg_idx < WALL_MAX
+        -- TODO find a better test
+        local isWall = map_cell.g == '#' --bg_idx >= FLOOR_MAX and bg_idx < WALL_MAX
 
         if isFloor or isWall then
-            print(bg_idx, floor.images[bg_idx], wall.images[bg_idx])
-
             self:setCell(Cell({
-                image = isFloor and floor.images[bg_idx] or wall.images[bg_idx],
-                normal = isFloor and floor_normal.images[bg_idx] or wall_normal.images[bg_idx],
+                image      = isFloor and floor.images[bg_idx] or wall.images[bg_idx - TILE_FLOOR_MAX + 1],
+                normal     = isFloor and floor_normal.images[bg_idx] or wall_normal.images[bg_idx - TILE_FLOOR_MAX + 1],
                 castShadow = isWall,
-                passable = isFloor,
+                passable   = isFloor,
                 lightWorld = self.light,
                 spriteCode = bg_idx,
-                code = isFloor and 'floor' or 'wall',
-                visible = true,
-                explored = true
+                code       = isFloor and 'floor' or 'wall',
+                visible    = true,
+                explored   = true,
+                knowledge  = map_cell
             }), map_cell.x, map_cell.y)
         end
 
@@ -199,7 +212,6 @@ function Map:getBackground(cell)
     if cell.mangrove_water and bg_idx > Assets.tile_info.floor.tileinfo.DNGN_UNSEEN then
         return Assets.tile_info.floor.tileinfo.DNGN_SHALLOW_WATER
     elseif (bg_idx >= Assets.tile_info.wall.tileinfo.DNGN_FIRST_TRANSPARENT) then
-        print('floor')
         return cell.flv.f-- f = floor
     end
 

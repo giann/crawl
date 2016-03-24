@@ -426,6 +426,8 @@ function Game:keypressed(key, isrepeat)
     end
 end
 
+function Game:keyreleased(key)
+end
 
 function Game:isFree(x, y)
     return self.map:isFree(x, y)

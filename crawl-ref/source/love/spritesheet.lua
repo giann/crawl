@@ -26,11 +26,6 @@ function SpriteSheet:generateImages()
 
         local info = self.tileinfo.tile_info[i]
         local img = self.image
-        if not info then
-            print("Tile not found: " .. i)
-
-            return false
-        end
 
         local size_ox = 32 / 2 - info.w / 2
         local size_oy = 32 - info.h
