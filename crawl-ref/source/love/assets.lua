@@ -27,6 +27,10 @@ Assets.tile_info = {
         spritesheet = SpriteSheet({
             image = love.graphics.newImage('dat/tiles/main.png'),
             tileinfo = tileinfo_main
+        }),
+        spritesheet_normal = SpriteSheet({
+            image = love.graphics.newImage('dat/tiles/main_NORMALS.png'),
+            tileinfo = tileinfo_main
         })
     },
     player = {

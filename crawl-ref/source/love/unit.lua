@@ -3,7 +3,7 @@ Unit = Class {
     init = function (self, options)
         self.name = name or nil
         
-        self.game = nil
+        self.lightWorld = nil
         self.light = nil
         self.ox = nil
         self.oy = nil
@@ -49,16 +49,14 @@ Unit = Class {
 
 }
 
-function Unit:populate(game)
-    self.game = game
-
+function Unit:populate()
     if not self.populated then
 
         if #self.lights > 0 then
             for j = 1, #self.lights do
                 local light = self.lights[j].light
 
-                self.lights[j].light = game.light:newLight(light[1], light[2], light[3], light[4], light[5], light[6])
+                self.lights[j].light = self.lightWorld:newLight(light[1], light[2], light[3], light[4], light[5], light[6])
                 self.lights[j].light:setVisible(false)
                 self.lights[j].light.initInfo = light
             end
@@ -79,7 +77,7 @@ function Unit:populate(game)
             for j = 1, #self.lights do
                 local light = self.lights[j].light.initInfo
 
-                self.lights[j].light = game.light:newLight(light[1], light[2], light[3], light[4], light[5], light[6])
+                self.lights[j].light = self.lightWorld:newLight(light[1], light[2], light[3], light[4], light[5], light[6])
                 self.lights[j].light:setVisible(false)
                 self.lights[j].light.initInfo = light
             end
@@ -93,7 +91,7 @@ end
 function Unit:initLight()
     -- if self.castShadow then
     -- TODO: rename to body
-    self.light = self.game.light:newImage(self.animation:frame(), self.x, self.y)
+    self.light = self.lightWorld:newImage(self.animation:frame(), self.x, self.y)
     self.light.name = self.name
     self.light:setShadowType('image')
 
@@ -246,7 +244,6 @@ end
 
 
 function Unit:die()
-    GAME_SIGNAL:emit('removeUnit', self)
 end
 
 function Unit:is(class)

@@ -15,6 +15,7 @@ function love.load()
     require "utils"
     enums = require "enums"
     require "spritesheet"
+    require "animation"
     require "assets"
     require "comm"
     require "client"

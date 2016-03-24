@@ -47,9 +47,6 @@ Game = Class {
         -- Awesome green screen effect
         -- self.light.post_shader:toggleEffect('pip')
 
-        -- Units
-        self.units = {}
-
         -- Map
         self.map = Map({
             light = self.light
@@ -72,7 +69,7 @@ function Game:alpha(alpha)
 end
 
 function Game:clear()
-    self.units = {}
+
 end
 
 function Game:centerViewport(x, y)
@@ -82,9 +79,10 @@ end
 
 function Game:setVisible(x, y, visibility)
     self.map:setVisible(x, y, visibility)
+    local units = self.map:getUnits()
 
-    for i = 1, #self.units do
-        local u = self.units[i]
+    for i = 1, #units do
+        local u = units[i]
 
         local px = math.floor(u.x / 32) + 1
         local py = math.floor(u.y / 32) + 1
@@ -113,11 +111,12 @@ end
 
 function Game:setAllVisible(visibility)
     self.map:setAllVisible(visibility)
+    local units = self.map:getUnits()
 
-    for i = 1, #self.units do
-        local u = self.units[i]
+    for i = 1, #units do
+        local u = units[i]
 
-        self.units[i].outOfSight = not visibility
+        units[i].outOfSight = not visibility
 
         if u ~= self.player then
             for j = 1, #u.lights do
@@ -127,87 +126,19 @@ function Game:setAllVisible(visibility)
     end
 end
 
-
-function Game:addUnit(unit)
-    local already = false
-    for i = 1, #self.units do
-        if self.units[i] == unit then
-            return false
-        end
-    end
-
-    if not already then
-        unit.game = self
-
-        if not unit.populated then
-            unit:populate(self)
-        end
-
-        table.insert(self.units, 1, unit)
-
-        -- unit:initLight()
-
-        self:orderUnits()
-
-        return true
-    end
-
-    return false
-end
-
-function Game:addUnits(units)
-    for i = 1, #units do
-        local unit = units[i]
-
-        local already = false
-        for i = 1, #self.units do
-            if self.units[i] == unit then
-                return false
-            end
-        end
-
-        if not already then
-            unit.game = self
-            table.insert(self.units, 1, unit)
-        end
-    end
-
-    self:orderUnits()
-end
-
 -- Order units by z index (relative to player z which is 0)
-function Game:orderUnits()
-    table.sort(self.units, function (a, b)
-        return a.z < b.z
-    end)
-end
+-- function Game:orderUnits()
+--     table.sort(self.units, function (a, b)
+--         return a.z < b.z
+--     end)
+-- end
 
-function Game:removeUnit(unit)
-    for i = 1, #self.units do
-        if self.units[i] == unit then
-            local u = self.units[i]
-
-            if u.light then
-                self.light:remove(u.light)
-                u.light = nil
-            end
-
-            for j = 1, #u.lights do
-                self.light:remove(u.lights[j].light)
-            end
-
-            self.map:removeUnit(unit)
-
-            table.remove(self.units, i)
-
-            break
-        end
-    end
-end
 
 function Game:drawUnits()
-    for i = 1, #self.units do
-        local u = self.units[i]
+    local units = self.map:getUnits()
+
+    for i = 1, #units do
+        local u = units[i]
 
         u:draw()
     end
@@ -219,8 +150,10 @@ function Game:drawUnitReflections()
     love.graphics.setCanvas(self.reflectionCanvas)
     self.reflectionCanvas:clear()
 
-    for i = 1, #self.units do
-        local u = self.units[i]
+    local units = self.map:getUnits()
+
+    for i = 1, #units do
+        local u = units[i]
         if u.reflective then
             if u.name == 'Reflect' then
                 local img = u.animation:frame()
@@ -244,8 +177,8 @@ function Game:drawUnitReflections()
         love.graphics.setShader()
     end)
 
-    for i = 1, #self.units do
-        local u = self.units[i]
+    for i = 1, #units do
+        local u = units[i]
         if not u.reflective then
             local py = u.y
             local overlayAlpha = u.overlayColor[4]
@@ -267,24 +200,30 @@ function Game:drawUnitReflections()
 end
 
 function Game:drawBackUnits()
-    for i = 1, #self.units do
-        local u = self.units[i]
+	local units = self.map:getUnits()
+
+    for i = 1, #units do
+        local u = units[i]
 
         u:drawBack()
     end
 end
 
 function Game:drawUnitsUi()
-    for i = 1, #self.units do
-        local u = self.units[i]
+	local units = self.map:getUnits()
+
+    for i = 1, #units do
+        local u = units[i]
 
         u:drawUi()
     end
 end
 
-function Game:drawParticles()    
-    for i = 1, #self.units do
-        local u = self.units[i]
+function Game:drawParticles()
+    local units = self.map:getUnits()
+
+    for i = 1, #units do
+        local u = units[i]
         for j = 1, #u.particles do
             local p2 = u.particles[j]
 
@@ -294,7 +233,12 @@ function Game:drawParticles()
 end
 
 function Game:updateLogic(dt)
-    self:centerViewport(self.player.x, self.player.y)
+  local vgrdc = self.map.map_knowledge.vgrdc
+
+  self:centerViewport(
+    vgrdc and self.map.map_knowledge.vgrdc.x * 32 or 0,
+    vgrdc and self.map.map_knowledge.vgrdc.y * 32 or 0
+  )
 end
 
 function Game:drawHUD()
@@ -321,7 +265,7 @@ function Game:drawGame()
 
     -- self:drawMouseHover()
 
-    self:drawUnitReflections()
+    -- self:drawUnitReflections()
 
     self:drawUnits()
 
@@ -388,8 +332,10 @@ function Game:update(dt)
     self.mouseLight:setPosition(love.mouse.getX() - self.viewport.x, love.mouse.getY() - self.viewport.y)
 
     -- Graphic update
-    for i = 1, #self.units do
-        local u = self.units[i]
+    local units = self.map:getUnits()
+
+    for i = 1, #units do
+        local u = units[i]
 
         for j = 1, #u.particles do
             local p = u.particles[j]
@@ -398,8 +344,8 @@ function Game:update(dt)
         end
     end
 
-    for i = 1, #self.units do
-        local u = self.units[i]
+    for i = 1, #units do
+        local u = units[i]
 
         if u then
             u:update(dt)
@@ -432,65 +378,6 @@ end
 function Game:isFree(x, y)
     return self.map:isFree(x, y)
 end
-
-function Game:getUnitAt(x, y)
-    for i = 1, #self.units do
-        local u = self.units[i]
-        local ux = math.floor(u.rx / 32) + 1
-        local uy = math.floor(u.ry / 32) + 1
-
-        if ux == x and uy == y then
-            return u
-        end
-    end
-
-    return nil
-end
-
-function Game:getUnitsAt(x, y)
-    local units = {}
-
-    for i = 1, #self.units do
-        local u = self.units[i]
-        local ux = math.floor(u.rx / 32) + 1
-        local uy = math.floor(u.ry / 32) + 1
-
-        if ux == x and uy == y then
-            table.insert(units, u)
-        end
-    end
-
-    return units
-end
-
-function Game:getHostileUnitsAt(x, y)
-    local units = self:getUnitsAt(x, y)
-    local hostiles = {}
-
-    for i = 1, #units do
-        local u = units[i]
-
-        if u.hostile then
-            table.insert(hostiles, u)
-        end
-    end
-
-    return hostiles
-end
-
-function Game:neighbors(x, y)
-    return {
-        up        = self:getUnitAt(x, y - 1),
-        down      = self:getUnitAt(x, y + 1),
-        left      = self:getUnitAt(x - 1, y),
-        right     = self:getUnitAt(x + 1, y),
-        leftUp    = self:getUnitAt(x - 1, y - 1),
-        rightUp   = self:getUnitAt(x + 1, y - 1),
-        leftDown  = self:getUnitAt(x - 1, y + 1),
-        rightDown = self:getUnitAt(x + 1, y + 1),
-    }
-end
-
 
 function Game:textinput(t)
 

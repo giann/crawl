@@ -402,7 +402,7 @@ function Utils.assign(object, options)
 end
 
 function Utils.mirrorH(image)
-    local data = image:getData()
+    local data = image:getImageData()
     local width = image:getWidth()
     local height = image:getHeight()
     local canvas = love.graphics.newCanvas(width, height)
@@ -492,7 +492,7 @@ function love.graphics.tiltedrectangle(mode, x, y, width, height, tilt, directio
 end
 
 function love.graphics.grayscale(image)
-    local colored = image:getData()
+    local colored = image:getImageData()
     local width = image:getWidth()
     local height = image:getHeight()
     local gray = love.image.newImageData(width, height)

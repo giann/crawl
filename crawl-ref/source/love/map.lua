@@ -32,7 +32,7 @@ Cell = Class {
 }
 
 function Cell:initLight(x, y)
-    if self.code ~= 'empty' then
+    if self.code ~= 'empty' and self.width > 0 then
         self.body = self.lightWorld:newRectangle(x and x + self.width/2 or 0, y and y + self.height/2 or 0, self.width, self.height)
         self.body:setVisible(false)
 
@@ -132,6 +132,7 @@ function Map:handle_map_message(data)
     -- self.map_knowledge:print()
 
     local main   = Assets.tile_info.main.spritesheet
+    local main_normal = Assets.tile_info.main.spritesheet_normal
     local player = Assets.tile_info.player.spritesheet
     local floor  = Assets.tile_info.floor.spritesheet
     local wall   = Assets.tile_info.wall.spritesheet
@@ -170,32 +171,60 @@ function Map:handle_map_message(data)
             map_cell.y = previous.y
         end
 
-        -- TODO find background
+        -- Background
         local bg_idx = self:getBackground(cell)
+        local fg_idx = cell.fg.value
+        local base_idx = cell.base
+
         local isFloor = bg_idx < TILE_FLOOR_MAX - 1
-        -- TODO find a better test
         local isWall = bg_idx >= FLOOR_MAX - 1 and bg_idx < WALL_MAX - 1
+        local floorIdx = bg_idx + 2
+
+        local wallIdx = bg_idx - TILE_FLOOR_MAX + 2
+        local featIdx = bg_idx - TILE_WALL_MAX + 2
 
         if isFloor or isWall then
-            self:setCell(Cell({
-                image      = isFloor and floor.images[bg_idx + 2] or wall.images[bg_idx - TILE_FLOOR_MAX + 2],
-                normal     = isFloor and floor_normal.images[bg_idx + 2] or wall_normal.images[bg_idx - TILE_FLOOR_MAX +  2],
+            local gen_cell = Cell({
+                image      = isFloor and floor.images[floorIdx] or wall.images[wallIdx],
+                normal     = isFloor and floor_normal.images[floorIdx] or wall_normal.images[wallIdx],
                 castShadow = isWall,
                 passable   = isFloor,
                 lightWorld = self.light,
                 spriteCode = bg_idx,
-                code       = isFloor and bg_idx or bg_idx - TILE_FLOOR_MAX + 2,
+                code       = isFloor and floorIdx or wallIdx,
                 visible    = true,
                 explored   = true,
                 knowledge  = map_cell
-            }), map_cell.x, map_cell.y)
+            })
+
+            -- TODO overlays ? blood etc.
+
+            -- TODO construct doll -> unit
+
+            -- TODO find foreground
+            -- if (base_idx) then
+            --     this.draw_main(base_idx, x, y);
+
+            if fg_idx > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
+                gen_cell.unit = Unit({
+                        lightWorld = self.light,
+                        x = map_cell.x * 32 - 32/2,
+                        y = map_cell.y * 32 - 32/2,
+                        outOfSight = false,
+                        castShadow = false,
+                        animation = Animation({
+                                frames = {
+                                    main.images[fg_idx + 1]
+                                },
+                                normal = {
+                                    main_normal.images[fg_idx + 1]
+                                }
+                        })
+                })
+            end
+
+            self:setCell(gen_cell, map_cell.x, map_cell.y)
         end
-
-        -- TODO overlays ? blood etc.
-
-        -- TODO construct doll -> unit
-
-        -- TODO find foreground
 
     end
 end
@@ -249,6 +278,35 @@ function Map:setAllVisible(visible)
         for j = 1, self.height do
             self.map[i][j]:setVisible(visible)
         end
+    end
+end
+
+function Map:getUnits()
+    local units = {}
+
+    
+    for i = self.bounds.left, self.bounds.right do
+        for j = self.bounds.top, self.bounds.bottom do
+            local cell = self.map[i] and self.map[i][j]
+            local unit = cell and cell.unit or nil
+
+            if unit then
+                table.insert(units, unit)
+            end
+        end
+    end
+
+    return units
+end
+
+function Map:removeUnit(u)
+    if u.light then
+        self.lightWorld:remove(u.light)
+        u.light = nil
+    end
+
+    for j = 1, #u.lights do
+        self.lightWorld:remove(u.lights[j].light)
     end
 end
 
