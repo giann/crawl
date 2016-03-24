@@ -32,7 +32,7 @@ Cell = Class {
 }
 
 function Cell:initLight(x, y)
-    if self.code ~= 'empty' and self.width > 0 and self.height > 0 then
+    if self.code ~= 'empty' then
         self.body = self.lightWorld:newRectangle(x and x + self.width/2 or 0, y and y + self.height/2 or 0, self.width, self.height)
         self.body:setVisible(false)
 
@@ -46,11 +46,7 @@ function Cell:initLight(x, y)
             self.body:setColor(self.shadowColor)
         end
 
-        -- if Utils.startsWith(self.code, 'floor') then
-        --     self.body.floor = true
-        -- else
-        --     self.body.floor = false
-        -- end
+        self.body.floor = self.castShadow
     end
 end
 
@@ -252,22 +248,6 @@ function Map:setAllVisible(visible)
     for i = 1, self.width do
         for j = 1, self.height do
             self.map[i][j]:setVisible(visible)
-        end
-    end
-end
-
-function Map:drawTest()
-    if self.bounds.right ~= 0 and self.bounds.bottom ~= 0 then
-        for i = self.bounds.left, self.bounds.right do
-            for j = self.bounds.top, self.bounds.bottom do
-                local cell = self.map[i][j]
-                if cell then
-                    cell:draw(
-                        (i - 1) * cell.width,
-                        (j - 1) * cell.height
-                    )
-                end
-            end
         end
     end
 end

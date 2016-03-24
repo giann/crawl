@@ -2,7 +2,7 @@ Game = Class {
 
     init = function (self, save)
 
-        love.mouse.setVisible(false)
+        love.mouse.setVisible(true)
 
         local w, h = love.graphics.getDimensions()
         local s = 1
@@ -58,7 +58,7 @@ Game = Class {
         -- temp
         self.player = {x = 0, y = 0}
 
-        self.mouseLight = self.light:newLight(100, 100, 255, 255, 255, 100)
+        self.mouseLight = self.light:newLight(100, 100, 255, 255, 255, 300)
         self.mouseLight:setVisible(true)
 
     end
