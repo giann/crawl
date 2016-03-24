@@ -38,6 +38,10 @@ Assets.tile_info = {
         spritesheet = SpriteSheet({
             image = love.graphics.newImage('dat/tiles/player.png'),
             tileinfo = tileinfo_player
+        }),
+        spritesheet_normal = SpriteSheet({
+            image = love.graphics.newImage('dat/tiles/player_NORMALS.png'),
+            tileinfo = tileinfo_player
         })
     },
     floor = {
@@ -73,6 +77,10 @@ Assets.tile_info = {
         tileinfo = tileinfo_feat,
         spritesheet = SpriteSheet({
             image = love.graphics.newImage('dat/tiles/feat.png'),
+            tileinfo = tileinfo_feat
+        }),
+        spritesheet_normal = SpriteSheet({
+            image = love.graphics.newImage('dat/tiles/feat_NORMALS.png'),
             tileinfo = tileinfo_feat
         })
     },

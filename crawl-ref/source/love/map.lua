@@ -15,7 +15,7 @@ Cell = Class {
         self.passable = true
         self.knowledge = nil
 
-        self.unit = nil
+        self.units = {}
 
         Utils.assign(self, options)
 
@@ -139,6 +139,7 @@ function Map:handle_map_message(data)
     local floor_normal  = Assets.tile_info.floor.spritesheet_normal
     local wall_normal   = Assets.tile_info.wall.spritesheet_normal
     local feat   = Assets.tile_info.feat.spritesheet
+    local feat_normal   = Assets.tile_info.feat.spritesheet_normal
     local icons  = Assets.tile_info.icons.spritesheet
     local gui    = Assets.tile_info.gui.spritesheet
 
@@ -172,30 +173,50 @@ function Map:handle_map_message(data)
         end
 
         -- Background
-        local bg_idx = self:getBackground(cell)
+        local bg_idx = cell.bg.value--self:getBackground(cell)
         local fg_idx = cell.fg.value
         local base_idx = cell.base
 
         local isFloor = bg_idx < TILE_FLOOR_MAX - 1
         local isWall = bg_idx >= FLOOR_MAX - 1 and bg_idx < WALL_MAX - 1
+        local isFeat = bg_idx >= WALL_MAX
+
         local floorIdx = bg_idx + 2
-
+        local floorFeatIdx = cell.flv.f + 2
         local wallIdx = bg_idx - TILE_FLOOR_MAX + 2
-        local featIdx = bg_idx - TILE_WALL_MAX + 2
+        local featIdx = bg_idx - TILE_WALL_MAX + 3
 
-        if isFloor or isWall then
+        if isFloor or isWall or isFeat then
             local gen_cell = Cell({
-                image      = isFloor and floor.images[floorIdx] or wall.images[wallIdx],
-                normal     = isFloor and floor_normal.images[floorIdx] or wall_normal.images[wallIdx],
-                castShadow = isWall,
-                passable   = isFloor,
-                lightWorld = self.light,
-                spriteCode = bg_idx,
-                code       = isFloor and floorIdx or wallIdx,
-                visible    = true,
-                explored   = true,
-                knowledge  = map_cell
+                    image      = isFloor and floor.images[floorIdx] or isWall and wall.images[wallIdx] or floor.images[floorFeatIdx],
+                    normal     = isFloor and floor_normal.images[floorIdx] or isWall and wall_normal.images[wallIdx] or floor_normal.images[floorFeatIdx],
+                    castShadow = isWall,
+                    passable   = isFloor,
+                    lightWorld = self.light,
+                    spriteCode = bg_idx,
+                    code       = isFloor and floorIdx or isWall and wallIdx or floorFeatIdx,
+                    visible    = true,
+                    explored   = true,
+                    knowledge  = map_cell
             })
+
+            if isFeat then
+                table.insert(gen_cell.units, Unit({
+                        lightWorld = self.light,
+                        x = map_cell.x * 32 - 32/2,
+                        y = map_cell.y * 32 - 32/2,
+                        outOfSight = false,
+                        castShadow = false,
+                        animation = Animation({
+                                frames = {
+                                    feat.images[featIdx]
+                                },
+                                normal = {
+                                    feat_normal.images[featIdx]
+                                }
+                        })
+                }))
+            end
 
             -- TODO overlays ? blood etc.
 
@@ -206,7 +227,7 @@ function Map:handle_map_message(data)
             --     this.draw_main(base_idx, x, y);
 
             if fg_idx > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
-                gen_cell.unit = Unit({
+                table.insert(gen_cell.units, Unit({
                         lightWorld = self.light,
                         x = map_cell.x * 32 - 32/2,
                         y = map_cell.y * 32 - 32/2,
@@ -220,7 +241,7 @@ function Map:handle_map_message(data)
                                     main_normal.images[fg_idx + 1]
                                 }
                         })
-                })
+                }))
             end
 
             self:setCell(gen_cell, map_cell.x, map_cell.y)
@@ -288,10 +309,10 @@ function Map:getUnits()
     for i = self.bounds.left, self.bounds.right do
         for j = self.bounds.top, self.bounds.bottom do
             local cell = self.map[i] and self.map[i][j]
-            local unit = cell and cell.unit or nil
+            local cell_units = cell and cell.units or nil
 
-            if unit then
-                table.insert(units, unit)
+            if cell_units then
+                units = table.join(units, cell_units)
             end
         end
     end
