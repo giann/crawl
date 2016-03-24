@@ -128,7 +128,7 @@ function light:drawNormalShading(l,t,w,h,s, normalMap, shadowMap, canvas, floorN
   self.shadowShader:send("lightAngle", math.pi - self.angle / 2.0)
   self.shadowShader:send("lightDirection", self.direction)
   self.shadowShader:send("invert_normal", self.normalInvert == true)
-  self.shadowShader:send("debug", DEBUG_LIGHT)
+  self.shadowShader:send("debug", 0)
   util.drawCanvasToCanvas(normalMap, canvas, {
     blendmode = 'additive',
     shader = self.shadowShader

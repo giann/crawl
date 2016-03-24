@@ -63,14 +63,14 @@ function Cell:draw(x, y)
         self.body:setPosition(x + self.width/2, y + self.height/2)
     end
 
-    if self.visible and self.code ~= 'empty' then --or self.explored then
+    if self.image and self.visible and self.code ~= 'empty' then --or self.explored then
         love.graphics.draw(self.image, x, y)
         love.graphics.setColor(255, 255, 255, 255)
     elseif self.code ~= 'empty' and not self.explored then 
         love.graphics.setColor(0, 0, 0, 255)
         love.graphics.rectangle('fill', x, y, self.width, self.height)
         love.graphics.setColor(255, 255, 255, 255)
-    elseif self.code ~= 'empty' then
+    elseif self.image and self.code ~= 'empty' then
         love.graphics.setColor(90, 90, 90, 255)
         -- love.graphics.draw(self.imageBW, x, y)
         love.graphics.draw(self.image, x, y)
@@ -146,7 +146,7 @@ function Map:handle_map_message(data)
         cell.flv.s = cell.flv.s or 0
         map_cell.g = map_cell.g or ' '
 
-        print(json.encode(cell))
+        -- print(json.encode(cell))
 
         if not map_cell.col then
             map_cell.col = 7
@@ -167,6 +167,8 @@ function Map:handle_map_message(data)
         local isWall = bg_idx >= FLOOR_MAX and bg_idx < WALL_MAX
 
         if isFloor or isWall then
+            print(bg_idx, floor.images[bg_idx], wall.images[bg_idx])
+
             self:setCell(Cell({
                 image = isFloor and floor.images[bg_idx] or wall.images[bg_idx],
                 normal = isFloor and floor_normal.images[bg_idx] or wall_normal.images[bg_idx],
@@ -197,6 +199,7 @@ function Map:getBackground(cell)
     if cell.mangrove_water and bg_idx > Assets.tile_info.floor.tileinfo.DNGN_UNSEEN then
         return Assets.tile_info.floor.tileinfo.DNGN_SHALLOW_WATER
     elseif (bg_idx >= Assets.tile_info.wall.tileinfo.DNGN_FIRST_TRANSPARENT) then
+        print('floor')
         return cell.flv.f-- f = floor
     end
 
@@ -237,6 +240,22 @@ function Map:setAllVisible(visible)
     for i = 1, self.width do
         for j = 1, self.height do
             self.map[i][j]:setVisible(visible)
+        end
+    end
+end
+
+function Map:drawTest()
+    if self.bounds.right ~= 0 and self.bounds.bottom ~= 0 then
+        for i = self.bounds.left, self.bounds.right do
+            for j = self.bounds.top, self.bounds.bottom do
+                local cell = self.map[i][j]
+                if cell then
+                    cell:draw(
+                        (i - 1) * cell.width,
+                        (j - 1) * cell.height
+                    )
+                end
+            end
         end
     end
 end

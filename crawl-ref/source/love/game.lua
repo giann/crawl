@@ -58,6 +58,9 @@ Game = Class {
         -- temp
         self.player = {x = 0, y = 0}
 
+        self.mouseLight = self.light:newLight(100, 100, 255, 255, 255, 100)
+        self.mouseLight:setVisible(true)
+
     end
 
 }
@@ -344,8 +347,7 @@ function Game:draw()
     self.light.post_shader:drawWith(self.light.render_buffer, self.viewport.x, self.viewport.y, self.viewport.scale)
 
     love.graphics.push()
-    -- love.graphics.translate(self.viewport.x, self.viewport.y)
-    love.graphics.translate(self.map.bounds.left * 32, self.map.bounds.top * 32)
+    love.graphics.translate(self.viewport.x, self.viewport.y)
     love.graphics.scale(self.viewport.scale)
 
     -- self.map:drawExplored(self.player.x - vp.width/2, self.player.y - vp.height/2, vp.width, vp.height)
@@ -374,10 +376,16 @@ function Game:update(dt)
     -- Game logic update
     self:updateLogic(dt)
 
+    -- temp
+    self.viewport.x = self.map.bounds.left * 32
+    self.viewport.y = self.map.bounds.top * 32
+
     self.viewport.offX = math.random(0, self.viewport.shakeAmplitude)
     self.viewport.offY = math.random(0, self.viewport.shakeAmplitude)
     self.viewport.x = self.viewport.ox + self.viewport.offX
     self.viewport.y = self.viewport.oy + self.viewport.offY
+
+    self.mouseLight:setPosition(love.mouse.getX() - self.viewport.x, love.mouse.getY() - self.viewport.y)
 
     -- Graphic update
     for i = 1, #self.units do

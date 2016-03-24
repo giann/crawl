@@ -88,6 +88,8 @@ end
 function love.draw()
     game:draw()
 
+    -- game.map:drawTest()
+
     -- love.graphics.setCanvas()
     -- love.graphics.setColor(255, 255, 255)
 
