@@ -58,7 +58,7 @@ function Comm:handle_message(msg)
     local handler = self.message_handlers[msg.msg]
 
     if not handler then
-        print('Unknown message type: ' .. msg.msg)--, json.encode(msg))
+        print('Unknown message type: ' .. msg.msg)
         return false
     end
 

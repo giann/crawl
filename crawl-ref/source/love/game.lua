@@ -52,6 +52,9 @@ Game = Class {
             light = self.light
         })
 
+        -- Messages
+        self.messages = Messages()
+
         -- temp
         self.player = {x = 0, y = 0}
 
@@ -242,7 +245,8 @@ function Game:updateLogic(dt)
 end
 
 function Game:drawHUD()
-
+    love.graphics.setColor(255, 255, 255, 255)
+    self.messages.display:draw()
 end
 
 function Game:drawGame()
@@ -366,10 +370,6 @@ function Game:mousereleased(x, y, button)
 end
 
 function Game:keypressed(key, isrepeat)
-    if key == "escape" then
-        love.event.quit()
-    end
-
     if key == 'f6' then
         self.drawLights = not self.drawLights
     end
