@@ -134,9 +134,10 @@ function Map:handle_map_message(data)
     local main          = Assets.tile_info.main.spritesheet
     local main_normal   = Assets.tile_info.main.spritesheet_normal
     local player        = Assets.tile_info.player.spritesheet
+    local player_normal = Assets.tile_info.player.spritesheet_normal
     local floor         = Assets.tile_info.floor.spritesheet
-    local wall          = Assets.tile_info.wall.spritesheet
     local floor_normal  = Assets.tile_info.floor.spritesheet_normal
+    local wall          = Assets.tile_info.wall.spritesheet
     local wall_normal   = Assets.tile_info.wall.spritesheet_normal
     local feat          = Assets.tile_info.feat.spritesheet
     local feat_normal   = Assets.tile_info.feat.spritesheet_normal
@@ -188,33 +189,33 @@ function Map:handle_map_message(data)
 
         if isFloor or isWall or isFeat then
             local gen_cell = Cell({
-                    image      = isFloor and floor.images[floorIdx] or isWall and wall.images[wallIdx] or floor.images[floorFeatIdx],
-                    normal     = isFloor and floor_normal.images[floorIdx] or isWall and wall_normal.images[wallIdx] or floor_normal.images[floorFeatIdx],
-                    castShadow = isWall,
-                    passable   = isFloor,
-                    lightWorld = self.light,
-                    spriteCode = bg_idx,
-                    code       = isFloor and floorIdx or isWall and wallIdx or floorFeatIdx,
-                    visible    = true,
-                    explored   = true,
-                    knowledge  = map_cell
+                image      = isFloor and floor.images[floorIdx] or isWall and wall.images[wallIdx] or floor.images[floorFeatIdx],
+                normal     = isFloor and floor_normal.images[floorIdx] or isWall and wall_normal.images[wallIdx] or floor_normal.images[floorFeatIdx],
+                castShadow = isWall,
+                passable   = isFloor,
+                lightWorld = self.light,
+                spriteCode = bg_idx,
+                code       = isFloor and floorIdx or isWall and wallIdx or floorFeatIdx,
+                visible    = true,
+                explored   = true,
+                knowledge  = map_cell
             })
 
             if isFeat and feat.images[featIdx] then
                 table.insert(gen_cell.units, Unit({
-                        lightWorld = self.light,
-                        x = map_cell.x * 32 - 32/2,
-                        y = map_cell.y * 32 - 32/2,
-                        outOfSight = false,
-                        castShadow = false,
-                        animation = Animation({
-                                frames = {
-                                    feat.images[featIdx]
-                                },
-                                normal = {
-                                    feat_normal.images[featIdx]
-                                }
-                        })
+                    lightWorld = self.light,
+                    x          = map_cell.x * 32 - 32/2,
+                    y          = map_cell.y * 32 - 32/2,
+                    outOfSight = false,
+                    castShadow = false,
+                    animation  = Animation({
+                            frames = {
+                            feat.images[featIdx]
+                        },
+                        normal = {
+                            feat_normal.images[featIdx]
+                        }
+                    })
                 }))
             elseif isFeat then
                 print('Feat not found', featIdx)
@@ -223,6 +224,24 @@ function Map:handle_map_message(data)
             -- TODO overlays ? blood etc.
 
             -- TODO construct doll -> unit
+            if cell.doll then
+                print(json.encode(cell.doll))
+                table.insert(gen_cell.units, Unit({
+                    lightWorld = self.light,
+                    x          = map_cell.x * 32 - 32/2,
+                    y          = map_cell.y * 32 - 32/2,
+                    outOfSight = false,
+                    castShadow = true,
+                    animation  = Animation({
+                        frames = {
+                            player:getDollTile(fg_idx, cell)
+                        },
+                        normal = {
+                            player_normal:getDollTile(fg_idx, cell)
+                        }
+                    })
+                }))
+            end
 
             -- TODO find foreground
             -- if (base_idx) then
@@ -230,19 +249,19 @@ function Map:handle_map_message(data)
 
             if fg_idx > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
                 table.insert(gen_cell.units, Unit({
-                        lightWorld = self.light,
-                        x = map_cell.x * 32 - 32/2,
-                        y = map_cell.y * 32 - 32/2,
-                        outOfSight = false,
-                        castShadow = false,
-                        animation = Animation({
-                                frames = {
-                                    main.images[fg_idx + 1]
-                                },
-                                normal = {
-                                    main_normal.images[fg_idx + 1]
-                                }
-                        })
+                    lightWorld = self.light,
+                    x          = map_cell.x * 32 - 32/2,
+                    y          = map_cell.y * 32 - 32/2,
+                    outOfSight = false,
+                    castShadow = false,
+                    animation  = Animation({
+                        frames = {
+                            main.images[fg_idx + 1]
+                        },
+                        normal = {
+                            main_normal.images[fg_idx + 1]
+                        }
+                    })
                 }))
             elseif fg_idx > 0 and fg_idx + 1 < MAIN_MAX then
                 print('Main not found', fg_idx + 1)

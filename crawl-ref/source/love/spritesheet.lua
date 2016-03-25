@@ -21,14 +21,60 @@ function SpriteSheet:generateImages()
 
     for i = 1, #self.tileinfo.tile_info do
 
-        self.images[i] = self:getTileCanvas(i, false)
+        self.images[i] = self:getTileCanvas(i, false, true)
 
     end
 
 end
 
 
-function SpriteSheet:getTileCanvas(i, adjust, x, y, ofsx, ofsy, y_max)
+function SpriteSheet:getDollTile(fg_idx, cell)
+    local pCanvas = love.graphics.getCanvas()
+    local canvas = love.graphics.newCanvas(32, 32)
+
+    love.graphics.setCanvas(canvas)
+
+    if fg_idx + 1 >= MAIN_MAX and cell.doll then
+        local mcache_map = {}
+
+        if cell.mcache then
+            for i = 1, #cell.mcache do
+                mcache_map[cell.mcache[i][1]] = i
+            end
+        end
+
+        for i = 1, #cell.doll do
+            local doll_part = cell.doll[i]
+            print('doll_part', json.encode(doll_part))
+            local xofs = 0
+            local yofs = 0
+            if mcache_map[doll_part[1]] then
+                local mind = mcache_map[doll_part[1]]
+                xofs = cell.mcache[mind][2]
+                yofs = cell.mcache[mind][3]
+            end
+
+            self:getTileCanvas(doll_part[1] - TILE_MAIN_MAX, true, false, 0, 0, xofs, yofs, doll_part[2])
+        end
+    end
+
+    if (fg_idx + 1 >= Assets.tile_info.player.tileinfo.MCACHE_START) and cell.mcache then
+        for i = 1, #cell.mcache do
+            local mcache_part = cell.mcache[i]
+            print('mcache_part', json.encode(mcache_part))
+            if mcache_part then
+                self:getTileCanvas(mcache_part[1] - TILE_MAIN_MAX, true, false, 0, 0, mcache_part[2], mcache_part[3])
+            end
+        end
+    end
+
+    love.graphics.setCanvas(pCanvas)
+
+    return canvas
+end
+
+
+function SpriteSheet:getTileCanvas(i, adjust, onCanvas, x, y, ofsx, ofsy, y_max)
     local imageWidth = self.image:getWidth()
     local imageHeight = self.image:getHeight()
 
@@ -70,7 +116,9 @@ function SpriteSheet:getTileCanvas(i, adjust, x, y, ofsx, ofsy, y_max)
     )
 
     local pCanvas = love.graphics.getCanvas()
-    love.graphics.setCanvas(canvas)
+    if onCanvas then
+        love.graphics.setCanvas(canvas)
+    end
 
     love.graphics.draw(
         self.image,
@@ -83,7 +131,9 @@ function SpriteSheet:getTileCanvas(i, adjust, x, y, ofsx, ofsy, y_max)
         (y or 0) + (sy * self.y_scale) * adjust
     )
 
-    love.graphics.setCanvas(pCanvas)
+    if onCanvas then
+        love.graphics.setCanvas(pCanvas)
 
-    return canvas
+        return canvas
+    end
 end
