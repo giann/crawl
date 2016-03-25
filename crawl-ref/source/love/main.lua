@@ -30,9 +30,13 @@ function love.load()
     game = Game()
     history = {}
 
-    defaultFont = love.graphics.newImageFont('dat/tiles/fontbz-love.png', "☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ")
+    local defaultFont = love.graphics.newImageFont('dat/tiles/fontbz-love.png', "☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ")
     defaultFont:setLineHeight(1)
-    love.graphics.setFont(defaultFont)
+
+    local defaultTTF = love.graphics.newFont('dat/ProFontWindowsNFMono2.ttf')
+    defaultTTF:setLineHeight(1.5)
+
+    love.graphics.setFont(defaultTTF)
 
     -- TOREMOVE: quick connect and start
     client.comm:send('login', {
@@ -68,10 +72,6 @@ end
 
 -- Key pressed
 function love.keypressed(key)
-
-    if key == "escape" then
-        love.event.quit()
-    end
 
     game:keypressed(key)
 

@@ -245,6 +245,15 @@ function Game:updateLogic(dt)
 end
 
 function Game:drawHUD()
+    love.graphics.setColor(0, 0, 0, 150)
+    love.graphics.rectangle(
+        'fill',
+        self.messages.display.x - 5,
+        self.messages.display.y - 5,
+        self.messages.display.limit - 5,
+        love.window.getHeight() - self.messages.display.y + 5
+    )
+
     love.graphics.setColor(255, 255, 255, 255)
     self.messages.display:draw()
 end
