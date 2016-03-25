@@ -259,6 +259,25 @@ function Map:handle_map_message(data)
                     -- TODO find foreground
                     -- if (base_idx) then
                     --     this.draw_main(base_idx, x, y);
+                    -- if base_idx and main.images[base_idx + 1] then
+                    --     table.insert(gen_cell.units, Unit({
+                    --         lightWorld = self.light,
+                    --         x          = map_cell.x * 32 - 32/2,
+                    --         y          = map_cell.y * 32 - 32/2,
+                    --         outOfSight = false,
+                    --         castShadow = false,
+                    --         animation  = Animation({
+                    --             frames = {
+                    --                 main.images[base_idx + 1]
+                    --             },
+                    --             normal = {
+                    --                 main_normal.images[base_idx + 1]
+                    --             }
+                    --         })
+                    --     }))
+                    -- elseif base_idx then
+                    --     print('Base not found', base_idx + 1)
+                    -- end
 
                     if fg_idx > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
                         table.insert(gen_cell.units, Unit({

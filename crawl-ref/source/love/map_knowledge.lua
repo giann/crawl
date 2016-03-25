@@ -27,6 +27,8 @@ function MapKnowledge:merge(cells)
         elseif previous then
             since_previous = since_previous + 1
 
+            cell.x = previous.x + since_previous
+            cell.y = previous.y
             self:set(previous.x + since_previous, previous.y, cell)
         end
     end
