@@ -24,76 +24,76 @@ local tileinfo_gui = require "tileinfo-gui"
 Assets.tile_info = {
     main = {
         tileinfo = tileinfo_main,
-        spritesheet = SpriteSheet({
+        spritesheet = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/main.png'),
             tileinfo = tileinfo_main
         }),
-        spritesheet_normal = SpriteSheet({
+        spritesheet_normal = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/main_NORMALS.png'),
             tileinfo = tileinfo_main
         })
     },
     player = {
         tileinfo = tileinfo_player,
-        spritesheet = SpriteSheet({
+        spritesheet = SpriteSheet(false, {
             image = love.graphics.newImage('dat/tiles/player.png'),
             tileinfo = tileinfo_player
         }),
-        spritesheet_normal = SpriteSheet({
+        spritesheet_normal = SpriteSheet(false, {
             image = love.graphics.newImage('dat/tiles/player_NORMALS.png'),
             tileinfo = tileinfo_player
         })
     },
     floor = {
         tileinfo = tileinfo_floor,
-        spritesheet = SpriteSheet({
+        spritesheet = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/floor_light.png'),
             tileinfo = tileinfo_floor
         }),
-        spritesheet_normal = SpriteSheet({
+        spritesheet_normal = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/floor_NORMALS.png'),
             tileinfo = tileinfo_floor
         })
     },
     wall = {
         tileinfo = tileinfo_wall,
-        spritesheet = SpriteSheet({
+        spritesheet = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/wall.png'),
             tileinfo = tileinfo_wall
         }),
-        spritesheet_normal = SpriteSheet({
+        spritesheet_normal = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/wall_NORMALS.png'),
             tileinfo = tileinfo_wall
         })
     },
     dngn = {
         tileinfo = tileinfo_dngn,
-        spritesheet = SpriteSheet({
+        spritesheet = SpriteSheet(true, {
             image = nil, -- used only for it's functions
             tileinfo = tileinfo_dngn
         })
     },
     feat = {
         tileinfo = tileinfo_feat,
-        spritesheet = SpriteSheet({
+        spritesheet = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/feat.png'),
             tileinfo = tileinfo_feat
         }),
-        spritesheet_normal = SpriteSheet({
+        spritesheet_normal = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/feat_NORMALS.png'),
             tileinfo = tileinfo_feat
         })
     },
     icons = {
         tileinfo = tileinfo_icons,
-        spritesheet = SpriteSheet({
+        spritesheet = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/icons.png'),
             tileinfo = tileinfo_icons
         })
     },
     gui = {
         tileinfo = tileinfo_gui,
-        spritesheet = SpriteSheet({
+        spritesheet = SpriteSheet(true, {
                 image = love.graphics.newImage('dat/tiles/gui.png'),
                 tileinfo = tileinfo_gui
         })

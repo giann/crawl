@@ -1,6 +1,6 @@
 SpriteSheet = Class {
 
-    init = function (self, options)
+    init = function (self, generate, options)
         self.image = nil
         self.tileinfo = nil
         self.images = {}
@@ -9,7 +9,7 @@ SpriteSheet = Class {
 
         Utils.assign(self, options)
 
-        if self.image and self.tileinfo then
+        if self.image and self.tileinfo and generate then
             self:generateImages()
         end
     end
