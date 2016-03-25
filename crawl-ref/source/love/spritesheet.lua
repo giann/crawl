@@ -33,6 +33,7 @@ function SpriteSheet:getDollTile(fg_idx, cell)
     local canvas = love.graphics.newCanvas(32, 32)
 
     love.graphics.setCanvas(canvas)
+    love.graphics.setColor(255, 255, 255, 255)
 
     if fg_idx + 1 >= MAIN_MAX and cell.doll then
         local mcache_map = {}
@@ -45,7 +46,6 @@ function SpriteSheet:getDollTile(fg_idx, cell)
 
         for i = 1, #cell.doll do
             local doll_part = cell.doll[i]
-            print('doll_part', json.encode(doll_part))
             local xofs = 0
             local yofs = 0
             if mcache_map[doll_part[1]] then
@@ -54,16 +54,15 @@ function SpriteSheet:getDollTile(fg_idx, cell)
                 yofs = cell.mcache[mind][3]
             end
 
-            self:getTileCanvas(doll_part[1] - TILE_MAIN_MAX, true, false, 0, 0, xofs, yofs, doll_part[2])
+            self:getTileCanvas(doll_part[1] - TILE_MAIN_MAX + 2, true, false, 0, 0, xofs, yofs, doll_part[2])
         end
     end
 
     if (fg_idx + 1 >= Assets.tile_info.player.tileinfo.MCACHE_START) and cell.mcache then
         for i = 1, #cell.mcache do
             local mcache_part = cell.mcache[i]
-            print('mcache_part', json.encode(mcache_part))
             if mcache_part then
-                self:getTileCanvas(mcache_part[1] - TILE_MAIN_MAX, true, false, 0, 0, mcache_part[2], mcache_part[3])
+                self:getTileCanvas(mcache_part[1] - TILE_MAIN_MAX + 2, true, false, 0, 0, mcache_part[2], mcache_part[3])
             end
         end
     end

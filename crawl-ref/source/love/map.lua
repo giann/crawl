@@ -182,7 +182,7 @@ function Map:handle_map_message(data)
         local isWall = bg_idx >= FLOOR_MAX - 1 and bg_idx < WALL_MAX - 1
         local isFeat = bg_idx >= WALL_MAX
 
-        local floorIdx = bg_idx + 2
+        local floorIdx = bg_idx + 3
         local floorFeatIdx = cell.flv.f + 2
         local wallIdx = bg_idx - TILE_FLOOR_MAX + 2
         local featIdx = bg_idx - TILE_WALL_MAX + 3
@@ -225,7 +225,6 @@ function Map:handle_map_message(data)
 
             -- TODO construct doll -> unit
             if cell.doll then
-                print(json.encode(cell.doll))
                 table.insert(gen_cell.units, Unit({
                     lightWorld = self.light,
                     x          = map_cell.x * 32 - 32/2,
