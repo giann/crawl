@@ -37,7 +37,7 @@ Game = Class {
         self.drawLights = true
 
         self.light = LightWorld({
-            ambient = {110, 110, 110},
+            ambient = {150, 150, 150},
             refractionStrength = 10.0,
             reflectionVisibility = 0,
         })
