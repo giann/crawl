@@ -55,8 +55,8 @@ Game = Class {
         -- temp
         self.player = {x = 0, y = 0}
 
-        self.mouseLight = self.light:newLight(100, 100, 255, 255, 255, 300)
-        self.mouseLight:setVisible(true)
+        -- self.mouseLight = self.light:newLight(100, 100, 255, 255, 255, 300)
+        -- self.mouseLight:setVisible(true)
 
     end
 
@@ -247,6 +247,9 @@ end
 
 function Game:drawGame()
     local vp = self.viewport
+    local vgrdc = self.map.map_knowledge.vgrdc
+    local map_dx = vgrdc and self.map.map_knowledge.vgrdc.x * 32 or 0
+    local map_dy = vgrdc and self.map.map_knowledge.vgrdc.y * 32 or 0
 
     -- self.stars:draw()
 
@@ -254,9 +257,9 @@ function Game:drawGame()
     love.graphics.translate(vp.x, vp.y)
     love.graphics.scale(vp.scale)
 
-    self.map:drawBack(self.player.x - vp.width/2, self.player.y - vp.height/2, vp.width, vp.height)
+    self.map:drawBack(map_dx - vp.width/2, map_dy - vp.height/2, vp.width, vp.height)
 
-    self.map:drawFront(self.player.x - vp.width/2, self.player.y - vp.height/2, vp.width, vp.height)
+    self.map:drawFront(map_dx - vp.width/2, map_dy - vp.height/2, vp.width, vp.height)
 
 
     self:drawBackUnits()
@@ -329,7 +332,7 @@ function Game:update(dt)
     self.viewport.x = self.viewport.ox + self.viewport.offX
     self.viewport.y = self.viewport.oy + self.viewport.offY
 
-    self.mouseLight:setPosition(love.mouse.getX() - self.viewport.x, love.mouse.getY() - self.viewport.y)
+    -- self.mouseLight:setPosition(love.mouse.getX() - self.viewport.x, love.mouse.getY() - self.viewport.y)
 
     -- Graphic update
     local units = self.map:getUnits()
@@ -370,6 +373,10 @@ function Game:keypressed(key, isrepeat)
     if key == 'f6' then
         self.drawLights = not self.drawLights
     end
+
+    client.comm:send('input', {
+        text = key
+    })
 end
 
 function Game:keyreleased(key)

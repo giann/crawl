@@ -126,6 +126,7 @@ function Map:handle_map_message(data)
     
     -- update map knowledge
     self.map_knowledge:merge(data.cells)
+    self.map_knowledge.vgrdc = data.vgrdc or self.map_knowledge.vgrdc
 
     self.bounds = self.map_knowledge.bounds
     
@@ -150,125 +151,141 @@ function Map:handle_map_message(data)
         local map_cell = data.cells[i]
         local cell = map_cell.t
 
-        cell.fg = enums.prepare_fg_flags(cell.fg or 0)
-        cell.bg = enums.prepare_bg_flags(cell.bg or 0)
-        cell.cloud = enums.prepare_fg_flags(cell.cloud or 0)
-        cell.flv = cell.flv or {}
-        cell.flv.f = cell.flv.f or 0
-        cell.flv.s = cell.flv.s or 0
-        map_cell.g = map_cell.g or ' '
+        if cell then
+            cell.fg = enums.prepare_fg_flags(cell.fg or 0)
+            cell.bg = enums.prepare_bg_flags(cell.bg or 0)
+            cell.cloud = enums.prepare_fg_flags(cell.cloud or 0)
+            cell.flv = cell.flv or {}
+            cell.flv.f = cell.flv.f or 0
+            cell.flv.s = cell.flv.s or 0
+            map_cell.g = map_cell.g or ' '
 
-        -- print(json.encode(cell))
+            -- print(json.encode(cell))
 
-        if not map_cell.col then
-            map_cell.col = 7
-        end
-
-        if map_cell.x and map_cell.y then
-            previous = map_cell
-            since_previous = 0
-        elseif previous then
-            since_previous = since_previous + 1
-            map_cell.x = previous.x + since_previous
-            map_cell.y = previous.y
-        end
-
-        -- Background
-        local bg_idx = cell.bg.value--self:getBackground(cell)
-        local fg_idx = cell.fg.value
-        local base_idx = cell.base
-
-        local isFloor = bg_idx < TILE_FLOOR_MAX - 1
-        local isWall = bg_idx >= FLOOR_MAX - 1 and bg_idx < WALL_MAX - 1
-        local isFeat = bg_idx >= WALL_MAX
-
-        local floorIdx = bg_idx + 3
-        local floorFeatIdx = cell.flv.f + 2
-        local wallIdx = bg_idx - TILE_FLOOR_MAX + 2
-        local featIdx = bg_idx - TILE_WALL_MAX + 3
-
-        if isFloor or isWall or isFeat then
-            local gen_cell = Cell({
-                image      = isFloor and floor.images[floorIdx] or isWall and wall.images[wallIdx] or floor.images[floorFeatIdx],
-                normal     = isFloor and floor_normal.images[floorIdx] or isWall and wall_normal.images[wallIdx] or floor_normal.images[floorFeatIdx],
-                castShadow = isWall,
-                passable   = isFloor,
-                lightWorld = self.light,
-                spriteCode = bg_idx,
-                code       = isFloor and floorIdx or isWall and wallIdx or floorFeatIdx,
-                visible    = true,
-                explored   = true,
-                knowledge  = map_cell
-            })
-
-            if isFeat and feat.images[featIdx] then
-                table.insert(gen_cell.units, Unit({
-                    lightWorld = self.light,
-                    x          = map_cell.x * 32 - 32/2,
-                    y          = map_cell.y * 32 - 32/2,
-                    outOfSight = false,
-                    castShadow = false,
-                    animation  = Animation({
-                            frames = {
-                            feat.images[featIdx]
-                        },
-                        normal = {
-                            feat_normal.images[featIdx]
-                        }
-                    })
-                }))
-            elseif isFeat then
-                print('Feat not found', featIdx)
+            if not map_cell.col then
+                map_cell.col = 7
             end
 
-            -- TODO overlays ? blood etc.
-
-            -- TODO construct doll -> unit
-            if cell.doll then
-                table.insert(gen_cell.units, Unit({
-                    lightWorld = self.light,
-                    x          = map_cell.x * 32 - 32/2,
-                    y          = map_cell.y * 32 - 32/2,
-                    outOfSight = false,
-                    castShadow = true,
-                    animation  = Animation({
-                        frames = {
-                            player:getDollTile(fg_idx, cell)
-                        },
-                        normal = {
-                            player_normal:getDollTile(fg_idx, cell)
-                        }
-                    })
-                }))
+            if map_cell.x and map_cell.y then
+                previous = map_cell
+                since_previous = 0
+            elseif previous then
+                since_previous = since_previous + 1
+                map_cell.x = previous.x + since_previous
+                map_cell.y = previous.y
             end
 
-            -- TODO find foreground
-            -- if (base_idx) then
-            --     this.draw_main(base_idx, x, y);
+            -- Background
+            local bg_idx = cell.bg.value--self:getBackground(cell)
+            local fg_idx = cell.fg.value
+            local base_idx = cell.base
 
-            if fg_idx > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
-                table.insert(gen_cell.units, Unit({
+            -- TODO find out why i have to correct with -1/+3/+2
+            local isFloor = bg_idx < TILE_FLOOR_MAX - 1
+            local isWall = bg_idx >= FLOOR_MAX - 1 and bg_idx < WALL_MAX - 1
+            local isFeat = bg_idx >= WALL_MAX
+
+            local floorIdx = bg_idx + 3
+            local floorFeatIdx = cell.flv.f + 2
+            local wallIdx = bg_idx - TILE_FLOOR_MAX + 2
+            local featIdx = bg_idx - TILE_WALL_MAX + 3
+
+            if isFloor or isWall or isFeat then
+                local gen_cell = Cell({
+                    image      = isFloor and floor.images[floorIdx] or isWall and wall.images[wallIdx] or floor.images[floorFeatIdx],
+                    normal     = isFloor and floor_normal.images[floorIdx] or isWall and wall_normal.images[wallIdx] or floor_normal.images[floorFeatIdx],
+                    castShadow = isWall,
+                    passable   = isFloor,
                     lightWorld = self.light,
-                    x          = map_cell.x * 32 - 32/2,
-                    y          = map_cell.y * 32 - 32/2,
-                    outOfSight = false,
-                    castShadow = false,
-                    animation  = Animation({
-                        frames = {
-                            main.images[fg_idx + 1]
-                        },
-                        normal = {
-                            main_normal.images[fg_idx + 1]
-                        }
-                    })
-                }))
-            elseif fg_idx > 0 and fg_idx + 1 < MAIN_MAX then
-                print('Main not found', fg_idx + 1)
-            end
+                    spriteCode = bg_idx,
+                    code       = isFloor and floorIdx or isWall and wallIdx or floorFeatIdx,
+                    visible    = true,
+                    explored   = true,
+                    knowledge  = map_cell
+                })
 
-            self:setCell(gen_cell, map_cell.x, map_cell.y)
+                if isFeat and feat.images[featIdx] then
+                    table.insert(gen_cell.units, Unit({
+                        lightWorld = self.light,
+                        x          = map_cell.x * 32 - 32/2,
+                        y          = map_cell.y * 32 - 32/2,
+                        outOfSight = false,
+                        castShadow = false,
+                        animation  = Animation({
+                                frames = {
+                                feat.images[featIdx]
+                            },
+                            normal = {
+                                feat_normal.images[featIdx]
+                            }
+                        })
+                    }))
+                elseif isFeat then
+                    print('Feat not found', featIdx)
+                end
+
+                -- TODO overlays ? blood etc.
+
+                if fg_idx then
+                    -- TODO construct doll -> unit
+                    if cell.doll then
+                        local doll = Unit({
+                            lightWorld = self.light,
+                            x          = map_cell.x * 32 - 32/2,
+                            y          = map_cell.y * 32 - 32/2,
+                            outOfSight = false,
+                            castShadow = true,
+                            animation  = Animation({
+                                frames = {
+                                    player:getDollTile(fg_idx, cell)
+                                },
+                                normal = {
+                                    player_normal:getDollTile(fg_idx, cell)
+                                }
+                            })
+                        })
+
+                        if map_cell.g == '@' then
+                            table.insert(doll.lights, {
+                                light = self.light:newLight(100, 100, 255, 255, 255, 300),
+                                x = 0,
+                                y = 0 
+                            })
+                        end
+
+                        table.insert(gen_cell.units, doll)
+                    end
+
+                    -- TODO find foreground
+                    -- if (base_idx) then
+                    --     this.draw_main(base_idx, x, y);
+
+                    if fg_idx > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
+                        table.insert(gen_cell.units, Unit({
+                            lightWorld = self.light,
+                            x          = map_cell.x * 32 - 32/2,
+                            y          = map_cell.y * 32 - 32/2,
+                            outOfSight = false,
+                            castShadow = false,
+                            animation  = Animation({
+                                frames = {
+                                    main.images[fg_idx + 1]
+                                },
+                                normal = {
+                                    main_normal.images[fg_idx + 1]
+                                }
+                            })
+                        }))
+                    elseif fg_idx > 0 and fg_idx + 1 < MAIN_MAX then
+                        print('Main not found', fg_idx + 1)
+                    end
+                else
+                    print('Something wrong here', cell.fg)
+                end
+
+                self:setCell(gen_cell, map_cell.x, map_cell.y)
+            end
         end
-
     end
 end
 
@@ -344,12 +361,12 @@ end
 
 function Map:removeUnit(u)
     if u.light then
-        self.lightWorld:remove(u.light)
+        self.light:remove(u.light)
         u.light = nil
     end
 
     for j = 1, #u.lights do
-        self.lightWorld:remove(u.lights[j].light)
+        self.light:remove(u.lights[j].light)
     end
 end
 
@@ -444,9 +461,28 @@ end
 function Map:setCell(cell, x, y)
     if not self.map[x] then
         self.map[x] = {}
+    else
+        self:resetCell(x, y)
     end
 
     self.map[x][y] = cell
+end
+
+
+function Map:resetCell(x, y)
+    -- TODO put some stuff in the cache here
+    if self.map[x] and self.map[x][y] then
+        local cell = self.map[x][y]
+
+        if cell.body then
+            self.light:remove(cell.body)
+        end
+
+        for i = 1, #cell.units do
+            cell.units[1]:stopParticles()
+            self:removeUnit(cell.units[1])
+        end
+    end
 end
 
 
