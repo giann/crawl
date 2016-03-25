@@ -5,7 +5,7 @@ Messages = Class {
 
         self.display = TextDisplay({
             x = 20,
-            y = love.window.getHeight() - 90,
+            y = love.window.getHeight() - 155,
             limit = love.window.getWidth() * 0.5
         })
 

@@ -1,5 +1,14 @@
 function love.load()
 
+    love.window.setMode(35 * 36, 17 * 36, {
+        resizable = false,
+        centered = true,
+        -- fullscreen = true,
+        -- fullscreentype = 'desktop',
+        -- display = 2,
+        -- fsaa = 8
+    })
+
     websocket  = require "websocket"
     json       = require "lib/json"
     deflatelua = require "lib/deflatelua"
