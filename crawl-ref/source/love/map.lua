@@ -131,17 +131,17 @@ function Map:handle_map_message(data)
     
     -- self.map_knowledge:print()
 
-    local main   = Assets.tile_info.main.spritesheet
-    local main_normal = Assets.tile_info.main.spritesheet_normal
-    local player = Assets.tile_info.player.spritesheet
-    local floor  = Assets.tile_info.floor.spritesheet
-    local wall   = Assets.tile_info.wall.spritesheet
+    local main          = Assets.tile_info.main.spritesheet
+    local main_normal   = Assets.tile_info.main.spritesheet_normal
+    local player        = Assets.tile_info.player.spritesheet
+    local floor         = Assets.tile_info.floor.spritesheet
+    local wall          = Assets.tile_info.wall.spritesheet
     local floor_normal  = Assets.tile_info.floor.spritesheet_normal
     local wall_normal   = Assets.tile_info.wall.spritesheet_normal
-    local feat   = Assets.tile_info.feat.spritesheet
+    local feat          = Assets.tile_info.feat.spritesheet
     local feat_normal   = Assets.tile_info.feat.spritesheet_normal
-    local icons  = Assets.tile_info.icons.spritesheet
-    local gui    = Assets.tile_info.gui.spritesheet
+    local icons         = Assets.tile_info.icons.spritesheet
+    local gui           = Assets.tile_info.gui.spritesheet
 
     local previous = nil
     local since_previous = 0
@@ -200,7 +200,7 @@ function Map:handle_map_message(data)
                     knowledge  = map_cell
             })
 
-            if isFeat then
+            if isFeat and feat.images[featIdx] then
                 table.insert(gen_cell.units, Unit({
                         lightWorld = self.light,
                         x = map_cell.x * 32 - 32/2,
@@ -216,6 +216,8 @@ function Map:handle_map_message(data)
                                 }
                         })
                 }))
+            elseif isFeat then
+                print('Feat not found', featIdx)
             end
 
             -- TODO overlays ? blood etc.
@@ -242,6 +244,8 @@ function Map:handle_map_message(data)
                                 }
                         })
                 }))
+            elseif fg_idx > 0 and fg_idx + 1 < MAIN_MAX then
+                print('Main not found', fg_idx + 1)
             end
 
             self:setCell(gen_cell, map_cell.x, map_cell.y)
