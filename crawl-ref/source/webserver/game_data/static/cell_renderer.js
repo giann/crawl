@@ -639,6 +639,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                                    (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
                                     overlay > dngn.FLOOR_MAX))
                                {
+                                    console.log('overlay there',x,y)
                                    renderer.draw_dngn(overlay, x, y);
                                }
                            });

@@ -13,6 +13,7 @@ Cell = Class {
         self.code = 'empty'
         self.target = nil
         self.passable = true
+        self.reflective = false
         self.knowledge = nil
 
         self.units = {}
@@ -201,8 +202,59 @@ function Map:handle_map_message(data)
                     code       = isFloor and floorIdx or isWall and wallIdx or floorFeatIdx,
                     visible    = true,
                     explored   = true,
-                    knowledge  = map_cell
+                    knowledge  = map_cell,
+                    reflective = true
                 })
+
+                -- TODO overlays ? blood etc.
+                if bg_idx > DNGN_UNSEEN then
+                    
+                    if bg_idx <= WALL_MAX then
+                        -- blood
+                    end
+
+                    if cell.ov then
+                        for i = 1, #cell.ov do
+                            local overlay = cell.ov[i]
+
+                            if overlay and (bg_idx < DNGN_FIRST_TRANSPARENT or overlay > FLOOR_MAX) then
+                                local image, normal = nil, nil
+                                if overlay < FLOOR_MAX then
+                                    image = floor.images[overlay + 3]
+                                    normal = floor_normal.images[overlay + 3]
+                                elseif overlay < WALL_MAX then
+                                    image = wall.images[overlay - TILE_FLOOR_MAX + 2]
+                                    normal = wall_normal.images[overlay - TILE_FLOOR_MAX + 2]
+                                else
+                                    image = wall.images[overlay - TILE_WALL_MAX + 3]
+                                    normal = wall_normal.images[overlay - TILE_WALL_MAX + 3]
+                                end
+
+                                if image then
+                                    table.insert(gen_cell.units, Unit({
+                                        lightWorld = self.light,
+                                        x          = map_cell.x * 32 - 32/2,
+                                        y          = map_cell.y * 32 - 32/2,
+                                        outOfSight = false,
+                                        castShadow = false,
+                                        animation  = Animation({
+                                            frames = {
+                                                image
+                                            },
+                                            normal = {
+                                                normal
+                                            }
+                                        })
+                                    }))
+                                else
+                                    print('not ok', overlay, WALL_MAX, FLOOR_MAX)
+                                end
+
+                            end
+                        end
+                    end
+
+                end
 
                 if isFeat and feat.images[featIdx] then
                     table.insert(gen_cell.units, Unit({
@@ -223,8 +275,6 @@ function Map:handle_map_message(data)
                 elseif isFeat then
                     print('Feat not found', featIdx)
                 end
-
-                -- TODO overlays ? blood etc.
 
                 if fg_idx then
                     -- TODO construct doll -> unit
@@ -310,13 +360,24 @@ end
 
 
 function Map:getBackground(cell)
+    local backgrounds = {}
     local bg = cell.bg;
     local bg_idx = cell.bg.value
 
-    if cell.mangrove_water and bg_idx > Assets.tile_info.floor.tileinfo.DNGN_UNSEEN then
-        return Assets.tile_info.floor.tileinfo.DNGN_SHALLOW_WATER
-    elseif (bg_idx >= Assets.tile_info.wall.tileinfo.DNGN_FIRST_TRANSPARENT) then
-        return cell.flv.f-- f = floor
+    if cell.mangrove_water and bg_idx > DNGN_UNSEEN then
+        table.insert(backgrounds, DNGN_SHALLOW_WATER)
+    elseif (bg_idx >= DNGN_FIRST_TRANSPARENT) then
+        table.insert(backgrounds, cell.flv.f)
+
+        if cell.ov then
+            for i = 1, #cell.ov do
+                local overlay = cell.ov[i]
+
+                if overlay and overlay <= FLOOR_MAX - 1 then
+                    table.insert(backgrounds, overlay)
+                end
+            end
+        end
     end
 
     return bg_idx
@@ -407,7 +468,7 @@ function Map:drawBack(x, y, w, h)
 
         for i = x, math.min(x + w, self.bounds.right) do
             for j = y, math.min(y + h, self.bounds.bottom) do
-                local cell = self.map[i][j]
+                local cell = self.map[i] and self.map[i][j]
                 if cell and not cell.castShadow then
                     cell:draw(
                         (i - 1) * cell.width,
@@ -436,7 +497,7 @@ function Map:drawExplored(x, y, w, h)
 
         for i = x, math.min(x + w, self.bounds.right) do
             for j = y, math.min(y + h, self.bounds.bottom) do
-                local cell = self.map[i][j]
+                local cell = self.map[i] and self.map[i][j]
                 if cell and not cell.visible and cell.explored then
                     cell:draw(
                         (i - 1) * cell.width,
@@ -465,7 +526,7 @@ function Map:drawFront(x, y, w, h)
 
         for i = x, math.min(x + w, self.bounds.right) do
             for j = y, math.min(y + h, self.bounds.bottom) do
-                local cell = self.map[i][j]
+                local cell = self.map[i] and self.map[i][j]
                 if cell and cell.castShadow then
                     cell:draw(
                         (i - 1) * cell.width,

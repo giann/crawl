@@ -171,6 +171,20 @@ function Game:drawUnitReflections()
         end
     end
 
+    for x = self.map.bounds.left, self.map.bounds.right do
+        for y = self.map.bounds.top, self.map.bounds.bottom do
+            local cell = self.map.map[x] and self.map.map[x][y]
+            if cell and cell.reflective then
+                local img = cell.image
+                local w = img:getWidth()
+                local h = img:getHeight()
+                love.graphics.setColor(0, 0, 0, 255)
+                love.graphics.rectangle('fill', x - w/2, y - h/2, w, h)
+                love.graphics.setColor(255, 255, 255, 255)
+            end
+        end
+    end
+
     love.graphics.setCanvas(previous)
 
     love.graphics.setColor(255, 255, 255, 255)

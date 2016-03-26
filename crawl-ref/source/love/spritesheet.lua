@@ -58,7 +58,7 @@ function SpriteSheet:getDollTile(fg_idx, cell)
         end
     end
 
-    if (fg_idx + 1 >= Assets.tile_info.player.tileinfo.MCACHE_START) and cell.mcache then
+    if (fg_idx + 1 >= MCACHE_START) and cell.mcache then
         for i = 1, #cell.mcache do
             local mcache_part = cell.mcache[i]
             if mcache_part then
