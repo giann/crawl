@@ -161,8 +161,6 @@ function Map:handle_map_message(data)
             cell.flv.s = cell.flv.s or 0
             map_cell.g = map_cell.g or ' '
 
-            -- print(json.encode(cell))
-
             if not map_cell.col then
                 map_cell.col = 7
             end
@@ -544,6 +542,8 @@ end
 
 
 function Map:resetCell(x, y)
+    -- TODO compare knowledge: if no .g maybe keep units ?
+
     -- TODO put some stuff in the cache here
     if self.map[x] and self.map[x][y] then
         local cell = self.map[x][y]

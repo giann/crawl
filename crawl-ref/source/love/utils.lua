@@ -35,7 +35,7 @@ function Utils.translatePolygon(dx, dy, polygon)
             translated[i] = dy + polygon[i]
         end
     end
-    
+
     return translated
 end
 
@@ -133,11 +133,15 @@ function table.merge(t1, t2)
   local t = {}
 
   for k,v in pairs(t1) do
-    t[k] = v
+      t[k] = v
   end
 
   for k,v in pairs(t2) do
-    t[k] = v
+      if type(v) == 'table' and t[k] and type(t[k]) == 'table' then
+          t[k] = table.merge(t[k], v)
+      else
+          t[k] = v
+      end
   end
 
   return t
@@ -178,7 +182,7 @@ function Utils.randomFlashing(light, rate)
 end
 
 function Utils.stringToSeed(str)
-    
+
     local seed = 0
 
     for i = 1, #str do
@@ -191,7 +195,7 @@ end
 function Utils.startsWith(self, piece)
   return string.sub(self, 1, string.len(piece)) == piece
 end
- 
+
 rawset(_G.string, "startsWith", startsWith)
 
 function Utils.getPS(conf, image)
@@ -215,7 +219,7 @@ function Utils.getPS(conf, image)
     ps:setAreaSpread(string.lower(particle_settings["area_spread_distribution"]), particle_settings["area_spread_dx"] or 0 , particle_settings["area_spread_dy"] or 0)
     ps:setBufferSize(particle_settings["buffer_size"] or 1)
     local colors = {}
-    for i = 1, 8 do 
+    for i = 1, 8 do
         if particle_settings["colors"][i][1] ~= 0 or particle_settings["colors"][i][2] ~= 0 or particle_settings["colors"][i][3] ~= 0 or particle_settings["colors"][i][4] ~= 0 then
             table.insert(colors, particle_settings["colors"][i][1] or 0)
             table.insert(colors, particle_settings["colors"][i][2] or 0)
@@ -229,7 +233,7 @@ function Utils.getPS(conf, image)
     ps:setEmissionRate(particle_settings["emission_rate"] or 0)
     ps:setEmitterLifetime(particle_settings["emitter_lifetime"] or 0)
     ps:setInsertMode(string.lower(particle_settings["insert_mode"]))
-    ps:setLinearAcceleration(particle_settings["linear_acceleration_xmin"] or 0, particle_settings["linear_acceleration_ymin"] or 0, 
+    ps:setLinearAcceleration(particle_settings["linear_acceleration_xmin"] or 0, particle_settings["linear_acceleration_ymin"] or 0,
                              particle_settings["linear_acceleration_xmax"] or 0, particle_settings["linear_acceleration_ymax"] or 0)
     if particle_settings["offsetx"] ~= 0 or particle_settings["offsety"] ~= 0 then
         ps:setOffset(particle_settings["offsetx"], particle_settings["offsety"])
@@ -239,8 +243,8 @@ function Utils.getPS(conf, image)
     ps:setRotation(math.rad(particle_settings["rotation_min"] or 0), math.rad(particle_settings["rotation_max"] or 0))
     ps:setSizeVariation(particle_settings["size_variation"] or 0)
     local sizes = {}
-    local sizes_i = 1 
-    for i = 1, 8 do 
+    local sizes_i = 1
+    for i = 1, 8 do
         if particle_settings["sizes"][i] == 0 then
             if i < 8 and particle_settings["sizes"][i+1] == 0 then
                 sizes_i = i
@@ -271,7 +275,7 @@ function love.graphics.roundrectangle(x, y, width, height, radius)
         love.graphics.rectangle('fill', x + radius, y + height - radius, width - (radius * 2), radius)
         love.graphics.rectangle('fill', x, y + radius, radius, height - (radius * 2))
         love.graphics.rectangle('fill', x + (width - radius), y + radius, radius, height - (radius * 2))
-        
+
         --ARCS
         love.graphics.arc('fill', x + radius, y + radius, radius, math.rad(-180), math.rad(-90))
         love.graphics.arc('fill', x + width - radius , y + radius, radius, math.rad(-90), math.rad(0))
@@ -344,7 +348,7 @@ function love.graphics.gradientrect(x, y, x2, y2, c1, c2, peak, height)
     for i = 1, d1 do
         local pX, pY = Path.pointAlong(nil, x, y, x2, y2, i)
         local color = Colors.colorBetween(c1, c2, i/d1)
-        
+
         love.graphics.setColor(unpack(color))
         love.graphics.rectangle('fill', pX, pY, 1, pY + height)
     end
@@ -352,7 +356,7 @@ function love.graphics.gradientrect(x, y, x2, y2, c1, c2, peak, height)
     for i = d1, d2 do
         local pX, pY = Path.pointAlong(nil, x, y, x2, y2, i)
         local color = Colors.colorBetween(c2, c1, i/d2)
-        
+
         love.graphics.setColor(unpack(color))
         love.graphics.rectangle('fill', pX, pY, 1, pY + height)
     end
@@ -442,7 +446,7 @@ function Utils.fadeOutSource(source, time)
     local volume = source:getVolume()
     local oVolume = volume
     local handle = nil
-    
+
     handle = Timer.do_for(time, function (dt)
         volume = volume - oVolume * (dt/time)
         source:setVolume(volume)
@@ -516,7 +520,7 @@ function Utils.tlength(table)
     for _ in pairs(table) do
         count = count + 1
     end
-    
+
     return count
 end
 
