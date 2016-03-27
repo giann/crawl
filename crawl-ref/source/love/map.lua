@@ -1,5 +1,5 @@
 Cell = Class {
-    
+
     init = function (self, options)
         self.image = nil
         self.castShadow = true
@@ -64,7 +64,7 @@ function Cell:draw(x, y)
     if self.image and self.visible and self.code ~= 'empty' then --or self.explored then
         love.graphics.draw(self.image, x, y)
         love.graphics.setColor(255, 255, 255, 255)
-    elseif self.code ~= 'empty' and not self.explored then 
+    elseif self.code ~= 'empty' and not self.explored then
         love.graphics.setColor(0, 0, 0, 255)
         love.graphics.rectangle('fill', x, y, self.width, self.height)
         love.graphics.setColor(255, 255, 255, 255)
@@ -81,7 +81,7 @@ function Cell:draw(x, y)
     --     if (self.knowledge.g == '#' and not self.castShadow) or (self.knowledge.g == '.' and self.castShadow) then
     --         love.graphics.setColor(255, 0, 0, 255)
     --     end
-       
+
     --     love.graphics.print(self.knowledge.g .. self.code, x + self.width/2, y + self.height/2)
 
     --     love.graphics.setColor(255, 255, 255, 255)
@@ -94,7 +94,7 @@ end
 
 
 Map = Class {
-    
+
     init = function (self, options)
 
         self.name = nil
@@ -124,13 +124,13 @@ function Map:handle_map_message(data)
     if data.clear then
         self:clear()
     end
-    
+
     -- update map knowledge
     self.map_knowledge:merge(data.cells)
     self.map_knowledge.vgrdc = data.vgrdc or self.map_knowledge.vgrdc
 
     self.bounds = self.map_knowledge.bounds
-    
+
     -- self.map_knowledge:print()
 
     local main          = Assets.tile_info.main.spritesheet
@@ -208,12 +208,12 @@ function Map:handle_map_message(data)
 
                 -- TODO overlays ? blood etc.
                 if bg_idx > DNGN_UNSEEN then
-                    
+
                     if bg_idx <= WALL_MAX then
                         -- blood
                     end
 
-                    if cell.ov then
+                    if cell.ov and false then
                         for i = 1, #cell.ov do
                             local overlay = cell.ov[i]
 
@@ -231,21 +231,7 @@ function Map:handle_map_message(data)
                                 end
 
                                 if image then
-                                    table.insert(gen_cell.units, Unit({
-                                        lightWorld = self.light,
-                                        x          = map_cell.x * 32 - 32/2,
-                                        y          = map_cell.y * 32 - 32/2,
-                                        outOfSight = false,
-                                        castShadow = false,
-                                        animation  = Animation({
-                                            frames = {
-                                                image
-                                            },
-                                            normal = {
-                                                normal
-                                            }
-                                        })
-                                    }))
+                                    -- TODO draw it instead of adding units
                                 else
                                     print('not ok', overlay, WALL_MAX, FLOOR_MAX)
                                 end
@@ -299,7 +285,15 @@ function Map:handle_map_message(data)
                             table.insert(doll.lights, {
                                 light = self.light:newLight(100, 100, 255, 255, 255, 300),
                                 x = 0,
-                                y = 0 
+                                y = 0
+                            })
+                        end
+
+                        if cell.halo and map_cell.g ~= '@' then
+                            table.insert(doll.lights, {
+                                light = self.light:newLight(100, 100, 217, 85, 86, 40),
+                                x = 0,
+                                y = 0
                             })
                         end
 
@@ -424,7 +418,7 @@ end
 function Map:getUnits()
     local units = {}
 
-    
+
     for i = self.bounds.left, self.bounds.right do
         for j = self.bounds.top, self.bounds.bottom do
             local cell = self.map[i] and self.map[i][j]
@@ -559,9 +553,11 @@ function Map:resetCell(x, y)
         end
 
         for i = 1, #cell.units do
-            cell.units[1]:stopParticles()
-            self:removeUnit(cell.units[1])
+            cell.units[i]:stopParticles()
+            self:removeUnit(cell.units[i])
         end
+
+        cell.units = {}
     end
 end
 

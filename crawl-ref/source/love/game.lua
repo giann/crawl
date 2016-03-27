@@ -332,6 +332,13 @@ function Game:draw()
 
     self:drawHUD()
 
+    love.graphics.setColor(255, 255, 255, 255)
+    local str = '(' .. math.floor(fps) .. '  FPS)  (' .. #self.light.body .. '  Bodies '  .. #self.light.lights .. '  Lights)'
+    love.graphics.print(str, 5, love.graphics.getHeight() - love.graphics.getFont():getHeight() - 5)
+    love.graphics.print('DCSS trunk',
+    love.graphics.getWidth() - love.graphics.getFont():getWidth('DCSS trunk') - 5,
+    love.graphics.getHeight() - love.graphics.getFont():getHeight() - 5)
+
     Utils.drawScanlines(love.graphics.getDimensions())
 end
 

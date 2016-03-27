@@ -60,11 +60,24 @@ function love.load()
     client.comm.socket.timeout = 0
     client.comm.socket.sock:settimeout(0)
 
+    fps = 0
+    frames = 0
+    lastFPS = 0
+
 end
 
 
 -- Called continuously
 function love.update(dt)
+    lastFPS = lastFPS + dt
+
+    frames = frames + 1
+    if lastFPS > 1 then
+        lastFPS = 0
+        fps = frames
+        frames = 0
+    end
+
     client:receive()
     game:update(dt)
 end
