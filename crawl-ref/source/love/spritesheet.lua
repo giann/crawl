@@ -35,8 +35,7 @@ function SpriteSheet:getDollTile(fg_idx, cell)
     love.graphics.setCanvas(canvas)
     love.graphics.setColor(255, 255, 255, 255)
 
-    --if fg_idx + 1 >= MAIN_MAX and cell.doll then
-    if cell.doll then
+    if fg_idx + 1 >= MAIN_MAX and cell.doll then
         local mcache_map = {}
 
         if cell.mcache then
@@ -59,8 +58,7 @@ function SpriteSheet:getDollTile(fg_idx, cell)
         end
     end
 
-    -- if (fg_idx + 1 >= MCACHE_START) and cell.mcache then
-    if cell.mcache then
+    if (fg_idx + 1 >= MCACHE_START) and cell.mcache then
         for i = 1, #cell.mcache do
             local mcache_part = cell.mcache[i]
             if mcache_part then
