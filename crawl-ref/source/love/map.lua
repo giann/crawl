@@ -273,7 +273,7 @@ function Map:handle_map_message(data)
                     --     print('Base not found', base_idx + 1)
                     -- end
 
-                    if fg_idx > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
+                    if fg_idx > 0 and fg_idx < MAIN_MAX and main.images[fg_idx] then
                         table.insert(gen_cell.units, Unit({
                             lightWorld = self.light,
                             x          = map_cell.x * 32 - 32/2,
@@ -282,15 +282,15 @@ function Map:handle_map_message(data)
                             castShadow = false,
                             animation  = Animation({
                                 frames = {
-                                    main.images[fg_idx + 1]
+                                    main.images[fg_idx]
                                 },
                                 normal = {
-                                    main_normal.images[fg_idx + 1]
+                                    main_normal.images[fg_idx]
                                 }
                             })
                         }))
-                    elseif fg_idx > 0 and fg_idx + 1 < MAIN_MAX then
-                        print('Main not found', fg_idx + 1)
+                    elseif fg_idx > 0 and fg_idx < MAIN_MAX then
+                        print('Main not found', fg_idx)
                     end
 
                     if cell.doll then
