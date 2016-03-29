@@ -75,25 +75,6 @@ function Cell:draw(x, y)
         love.graphics.setColor(255, 255, 255, 255)
     end
 
-    if self.knowledge and self.knowledge.t.doll then
-        local dollUnit = false
-        for i = 1, #self.units do
-            if self.units[i].doll then
-                dollUnit = self.units[i]
-                break
-            end
-        end
-
-        if not dollUnit then
-            love.graphics.setColor(255, 0, 0, 255)
-            love.graphics.rectangle('fill', x, y, self.width, self.height)
-        else
-            love.graphics.setColor(0, 255, 0, 255)
-            love.graphics.rectangle('fill', dollUnit.x, dollUnit.y, self.width, self.height)
-        end
-    end
-
-    love.graphics.setColor(255, 255, 255, 255)
 end
 
 function Cell:setVisible(visible)
@@ -269,44 +250,6 @@ function Map:handle_map_message(data)
                 end
 
                 if fg_idx then
-                    -- TODO construct doll -> unit
-                    if cell.doll then
-                        local doll = Unit({
-                            lightWorld = self.light,
-                            x          = map_cell.x * 32 - 32/2,
-                            y          = map_cell.y * 32 - 32/2,
-                            outOfSight = false,
-                            castShadow = true,
-                            animation  = Animation({
-                                frames = {
-                                    player:getDollTile(fg_idx, cell)
-                                },
-                                normal = {
-                                    player_normal:getDollTile(fg_idx, cell)
-                                }
-                            }),
-                            doll = cell.doll
-                        })
-
-                        if map_cell.g == '@' then
-                            table.insert(doll.lights, {
-                                light = self.light:newLight(100, 100, 255, 255, 255, 300),
-                                x = 0,
-                                y = 0
-                            })
-                        end
-
-                        if cell.halo and map_cell.g ~= '@' then
-                            table.insert(doll.lights, {
-                                light = self.light:newLight(100, 100, 217, 85, 86, 40),
-                                x = 0,
-                                y = 0
-                            })
-                        end
-
-                        table.insert(gen_cell.units, doll)
-                    end
-
                     -- TODO find foreground
                     -- if (base_idx) then
                     --     this.draw_main(base_idx, x, y);
@@ -348,6 +291,43 @@ function Map:handle_map_message(data)
                         }))
                     elseif fg_idx > 0 and fg_idx + 1 < MAIN_MAX then
                         print('Main not found', fg_idx + 1)
+                    end
+
+                    if cell.doll then
+                        local doll = Unit({
+                            lightWorld = self.light,
+                            x          = map_cell.x * 32 - 32/2,
+                            y          = map_cell.y * 32 - 32/2,
+                            outOfSight = false,
+                            castShadow = true,
+                            animation  = Animation({
+                                frames = {
+                                    player:getDollTile(fg_idx, cell)
+                                },
+                                normal = {
+                                    player_normal:getDollTile(fg_idx, cell)
+                                }
+                            }),
+                            doll = fg_idx
+                        })
+
+                        if map_cell.g == '@' then
+                            table.insert(doll.lights, {
+                                light = self.light:newLight(100, 100, 255, 255, 255, 300),
+                                x = 0,
+                                y = 0
+                            })
+                        end
+
+                        if cell.halo and map_cell.g ~= '@' then
+                            table.insert(doll.lights, {
+                                light = self.light:newLight(100, 100, 217, 85, 86, 40),
+                                x = 0,
+                                y = 0
+                            })
+                        end
+
+                        table.insert(gen_cell.units, doll)
                     end
                 else
                     print('Something wrong here', json.encode(cell.fg))
