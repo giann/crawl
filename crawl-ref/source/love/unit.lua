@@ -230,6 +230,8 @@ function Unit:draw(angle)
             imageWidth/2,
             imageHeight/2
         )
+
+        love.graphics.setColor(255,255,255,255)
     end
 
 end

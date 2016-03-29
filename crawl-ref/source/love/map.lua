@@ -280,7 +280,7 @@ function Map:handle_map_message(data)
                     --     print('Base not found', base_idx + 1)
                     -- end
 
-                    if fg_idx + 1 > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
+                    if fg_idx > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
                         table.insert(gen_cell.units, Unit({
                             lightWorld = self.light,
                             x          = map_cell.x * 32 - 32/2,
