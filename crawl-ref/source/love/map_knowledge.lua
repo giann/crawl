@@ -86,3 +86,13 @@ function MapKnowledge:print()
 
     return line
 end
+
+
+function MapKnowledge:visible(cell)
+    if (cell.t) then
+        cell.t.bg = enums.prepare_bg_flags(cell.t.bg or 0)
+        return not cell.t.bg.UNSEEN and not cell.t.bg.MM_UNSEEN
+    end
+
+    return false;
+end

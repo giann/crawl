@@ -187,7 +187,7 @@ function Map:handle_map_message(data)
                     lightWorld = self.light,
                     spriteCode = bg_idx,
                     code       = isFloor and floorIdx or isWall and wallIdx or floorFeatIdx,
-                    visible    = true,
+                    visible    = self.map_knowledge:visible(map_cell),
                     explored   = true,
                     knowledge  = map_cell,
                     reflective = true
