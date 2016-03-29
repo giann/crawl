@@ -31,6 +31,8 @@ function MapKnowledge:merge(cells)
             cell.y = previous.y
             self:set(previous.x + since_previous, previous.y, cell)
         end
+
+        cells[i] = self.cells[cell.x][cell.y]
     end
 end
 
@@ -42,15 +44,6 @@ function MapKnowledge:set(x, y, cell)
 
     if self.cells[x][y] then
         cell = table.merge(self.cells[x][y], cell)
-    end
-
-    -- Reset fg/bg
-    if cell.t.fg and type(cell.t.fg) == 'table' then
-        cell.t.fg.value = nil
-    end
-
-    if cell.t.bg and type(cell.t.bg) == 'table' then
-        cell.t.bg.value = nil
     end
 
     self.cells[x][y] = cell

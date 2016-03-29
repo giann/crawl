@@ -122,7 +122,9 @@ function prepare_flags(tileidx, flagdata, cache)
     if not isNaN(tileidx) then
         tileidx = {tileidx}
     elseif tileidx.value then
-        return tileidx
+        -- return tileidx
+        -- Always regenerate
+        tileidx.value = nil
     end
 
     while true do
