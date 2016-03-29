@@ -75,17 +75,25 @@ function Cell:draw(x, y)
         love.graphics.setColor(255, 255, 255, 255)
     end
 
-    -- if self.knowledge and self.knowledge.g then
-    --     love.graphics.setColor(255, 255, 255, 255)
+    if self.knowledge and self.knowledge.t.doll then
+        local dollUnit = false
+        for i = 1, #self.units do
+            if self.units[i].doll then
+                dollUnit = self.units[i]
+                break
+            end
+        end
 
-    --     if (self.knowledge.g == '#' and not self.castShadow) or (self.knowledge.g == '.' and self.castShadow) then
-    --         love.graphics.setColor(255, 0, 0, 255)
-    --     end
+        if not dollUnit then
+            love.graphics.setColor(255, 0, 0, 255)
+            love.graphics.rectangle('fill', x, y, self.width, self.height)
+        else
+            love.graphics.setColor(0, 255, 0, 255)
+            love.graphics.rectangle('fill', dollUnit.x, dollUnit.y, self.width, self.height)
+        end
+    end
 
-    --     love.graphics.print(self.knowledge.g .. self.code, x + self.width/2, y + self.height/2)
-
-    --     love.graphics.setColor(255, 255, 255, 255)
-    -- end
+    love.graphics.setColor(255, 255, 255, 255)
 end
 
 function Cell:setVisible(visible)
@@ -276,7 +284,8 @@ function Map:handle_map_message(data)
                                 normal = {
                                     player_normal:getDollTile(fg_idx, cell)
                                 }
-                            })
+                            }),
+                            doll = cell.doll
                         })
 
                         if map_cell.g == '@' then
@@ -341,7 +350,7 @@ function Map:handle_map_message(data)
                         print('Main not found', fg_idx + 1)
                     end
                 else
-                    print('Something wrong here', cell.fg)
+                    print('Something wrong here', json.encode(cell.fg))
                 end
 
                 self:setCell(gen_cell, map_cell.x, map_cell.y)

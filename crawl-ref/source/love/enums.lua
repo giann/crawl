@@ -121,7 +121,7 @@ end
 function prepare_flags(tileidx, flagdata, cache)
     if not isNaN(tileidx) then
         tileidx = {tileidx}
-    elseif not tileidx.value then
+    elseif tileidx.value then
         return tileidx
     end
 

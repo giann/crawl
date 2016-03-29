@@ -404,6 +404,10 @@ function Game:keypressed(key, isrepeat)
         self.drawLights = not self.drawLights
     end
 
+    if key == 'f7' then
+        self.map.map_knowledge:print()
+    end
+
     client.comm:send('input', {
         text = key
     })

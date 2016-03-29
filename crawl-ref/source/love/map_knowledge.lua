@@ -41,9 +41,7 @@ function MapKnowledge:set(x, y, cell)
     end
 
     if self.cells[x][y] then
-        print('merging', json.encode(self.cells[x][y]), json.encode(cell))
         cell = table.merge(self.cells[x][y], cell)
-        print('->', json.encode(cell), '\n\n')
     end
 
     self.cells[x][y] = cell
@@ -73,8 +71,6 @@ function MapKnowledge:print()
         for x = self.bounds.left, self.bounds.right do
 
             if self.cells[x] and self.cells[x][y] and self.cells[x][y].g then
-                print(json.encode(self.cells[x][y]))
-
                 line = line .. self.cells[x][y].g
             else
                 line = line .. '-'
