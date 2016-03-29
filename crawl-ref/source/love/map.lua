@@ -69,7 +69,8 @@ function Cell:draw(x, y)
         love.graphics.rectangle('fill', x, y, self.width, self.height)
         love.graphics.setColor(255, 255, 255, 255)
     elseif self.image and self.code ~= 'empty' then
-        love.graphics.setColor(90, 90, 90, 255)
+        love.graphics.setColor(150, 150, 150, 255)
+        -- TODO generate B&W tiles
         -- love.graphics.draw(self.imageBW, x, y)
         love.graphics.draw(self.image, x, y)
         love.graphics.setColor(255, 255, 255, 255)
@@ -168,10 +169,10 @@ function Map:handle_map_message(data)
             local fg_idx = cell.fg.value
             local base_idx = cell.base
 
-            -- TODO find out why i have to correct with -1/+3/+2
-            local isFloor = bg_idx < TILE_FLOOR_MAX - 1
-            local isWall = bg_idx >= FLOOR_MAX - 1 and bg_idx < WALL_MAX - 1
-            local isFeat = bg_idx >= WALL_MAX
+            -- TODO find out why i have to correct with -1/+3/+2, also is the test right ?
+            local isFloor = bg_idx + 3 < TILE_FLOOR_MAX
+            local isWall = bg_idx + 2 >= FLOOR_MAX and bg_idx + 2 < WALL_MAX
+            local isFeat = bg_idx + 3 >= WALL_MAX
 
             local floorIdx = bg_idx + 3
             local floorFeatIdx = cell.flv.f + 2
@@ -252,7 +253,7 @@ function Map:handle_map_message(data)
                             }
                         })
                     }))
-                elseif isFeat then
+                elseif isFeat or map_cell.g == '>' then
                     print('Feat not found', featIdx)
                 end
 
