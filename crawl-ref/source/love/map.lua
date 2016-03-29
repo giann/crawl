@@ -219,6 +219,13 @@ function Map:handle_map_message(data)
 
                                 if image then
                                     -- TODO draw it instead of adding units
+                                    local pCanvas = love.graphics.getCanvas()
+                                    love.graphics.setCanvas(gen_cell.image)
+
+                                    love.graphics.setColor(255, 0, 0, 255)
+                                    love.graphics.draw(image, 0, 0)
+
+                                    love.graphics.setCanvas(pCanvas)
                                 else
                                     print('not ok', overlay, WALL_MAX, FLOOR_MAX)
                                 end
@@ -273,7 +280,7 @@ function Map:handle_map_message(data)
                     --     print('Base not found', base_idx + 1)
                     -- end
 
-                    if fg_idx > 0 and fg_idx < MAIN_MAX and main.images[fg_idx] then
+                    if fg_idx + 1 > 0 and fg_idx + 1 < MAIN_MAX and main.images[fg_idx + 1] then
                         table.insert(gen_cell.units, Unit({
                             lightWorld = self.light,
                             x          = map_cell.x * 32 - 32/2,
@@ -282,10 +289,10 @@ function Map:handle_map_message(data)
                             castShadow = false,
                             animation  = Animation({
                                 frames = {
-                                    main.images[fg_idx]
+                                    main.images[fg_idx + 1]
                                 },
                                 normal = {
-                                    main_normal.images[fg_idx]
+                                    main_normal.images[fg_idx + 1]
                                 }
                             })
                         }))
