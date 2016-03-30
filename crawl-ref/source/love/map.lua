@@ -80,10 +80,9 @@ end
 
 function Cell:drawUI(x, y)
 
-    if self.imageUI and self.visible then
+    if self.imageUI then
         love.graphics.setColor(255, 255, 255, 255)
         love.graphics.draw(self.imageUI, x, y)
-        love.graphics.rectangle('fill', x, y, 32, 32)
     end
 
 end
@@ -561,7 +560,7 @@ function Map:handle_map_message(data)
                     print('Something wrong here', json.encode(cell.fg))
                 end
 
-                gen_cell.imageUI = gen_cell:generateUI()
+                gen_cell:generateUI()
 
                 self:setCell(gen_cell, map_cell.x, map_cell.y)
             end
