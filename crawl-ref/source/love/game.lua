@@ -341,7 +341,7 @@ function Game:draw()
         love.graphics.setColor(255, 127, 0, 255)
     end
 
-    local str = '(' .. math.floor(fps) .. '  FPS)  (' .. #self.light.body .. '  Bodies '  .. #self.light.lights .. '  Lights)'
+    local str = '(' .. math.floor(fps) .. '  FPS)  (' .. (self.light.in_range or 0) .. '/' .. (self.light.total_range or 0) .. ' Bodies  '  .. #self.light.lights .. ' Lights)'
 
     love.graphics.print(
         str,

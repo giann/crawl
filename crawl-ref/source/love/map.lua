@@ -109,6 +109,7 @@ Map = Class {
 
 }
 
+-- TODO clean that up !
 function Map:handle_map_message(data)
     if data.clear then
         self:clear()

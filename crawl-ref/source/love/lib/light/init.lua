@@ -128,13 +128,16 @@ end
 
 -- draw normal shading
 function light_world:drawNormalShading(l,t,w,h,s)
+  self.in_range, self.total_range = 0, 0
   -- create normal map
   self.normalMap:clear()
   util.drawto(self.normalMap, l, t, s, function()
     for i = 1, #self.body do
       if self.body[i]:isInRange(l,t,w,h,s) then
+        self.in_range = self.in_range + 1
         self.body[i]:drawNormal()
       end
+      self.total_range = self.total_range + 1
     end
   end)
 
