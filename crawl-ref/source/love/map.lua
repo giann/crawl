@@ -100,7 +100,7 @@ function Cell:generateUI()
     local icons   = Assets.tile_info.icons.spritesheet
     local pCanvas = love.graphics.getCanvas()
 
-    love.graphics.setCanvas(canvas)
+    love.graphics.setCanvas(self.imageUI)
     love.graphics.setColor(255, 255, 255, 255)
 
     if (fg.NET) then
