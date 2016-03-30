@@ -103,11 +103,11 @@ val = val + 1
 
 local key_conversion = {}
 -- Escape
-key_conversion['escape'] = 27,
+key_conversion['escape'] = 27
 -- Backspace
-key_conversion['backspace'] = 8,
+key_conversion['backspace'] = 8
 -- Tab
-key_conversion['tab'] = 9,
+key_conversion['tab'] = 9
 
 -- Numpad / Arrow keys
 key_conversion['insert']   = -250

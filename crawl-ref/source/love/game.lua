@@ -427,9 +427,46 @@ function Game:keypressed(key, isrepeat)
         self.map.map_knowledge:print()
     end
 
-    client.comm:send('input', {
-        text = key
-    })
+    -- TODO out of game interactions
+    local ctrlKey = love.keyboard.isDown('rctrl') or love.keyboard.isDown('lctrl')
+    local shiftKey = love.keyboard.isDown('rshift') or love.keyboard.isDown('lshift')
+    local altKey = love.keyboard.isDown('ralt') or love.keyboard.isDown('lalt')
+
+    if (ctrlKey and not shiftKey and not altKey) then
+        if (key_conversion.ctrl[key]) then
+            client.comm:send('key', {
+                keycode = key_conversion.ctrl[key]
+            })
+        elseif (key_conversion.captured_control_keys[string.upper(key)]) then
+            local code = key - 65 + 1 -- Compare the CONTROL macro in defines.h, 65 = "A".charCodeAt(0)
+            client.comm:send('key', {
+                keycode = code
+            })
+        end
+    elseif (not ctrlKey and shiftKey and not altKey) then
+        if (key_conversion.shift[key]) then
+            client.comm:send('key', {
+                keycode = key_conversion.shift[key]
+            })
+        end
+    elseif (not ctrlKey and not shiftKey and altKey) then
+        -- if (key < 32) then
+        --     return
+        -- end
+
+        -- send_bytes([27, key])
+    elseif (not ctrlKey and not shiftKey and not altKey) then
+        if (key_conversion.simple[key]) then
+            client.comm:send('key', {
+                keycode = key_conversion.simple[key]
+            })
+        else
+            client.comm:send('input', {
+                text = key
+            })
+        end
+    end
+    
 end
 
 function Game:keyreleased(key)

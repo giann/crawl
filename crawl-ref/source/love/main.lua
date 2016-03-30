@@ -23,6 +23,7 @@ function love.load()
 
     require "utils"
     enums = require "enums"
+    key_conversion = require "key_conversion"
     require "spritesheet"
     require "animation"
     require "textdisplay"
