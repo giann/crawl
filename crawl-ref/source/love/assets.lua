@@ -53,6 +53,10 @@ Assets.tile_info = {
         spritesheet_normal = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/floor_NORMALS.png'),
             tileinfo = tileinfo_floor
+        }),
+        spritesheet_bw = SpriteSheet(true, {
+            image = love.graphics.newImage('dat/tiles/floor_BW.png'),
+            tileinfo = tileinfo_floor
         })
     },
     wall = {
@@ -63,6 +67,10 @@ Assets.tile_info = {
         }),
         spritesheet_normal = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/wall_NORMALS.png'),
+            tileinfo = tileinfo_wall
+        }),
+        spritesheet_bw = SpriteSheet(true, {
+            image = love.graphics.newImage('dat/tiles/wall_BW.png'),
             tileinfo = tileinfo_wall
         })
     },
@@ -81,6 +89,10 @@ Assets.tile_info = {
         }),
         spritesheet_normal = SpriteSheet(true, {
             image = love.graphics.newImage('dat/tiles/feat_NORMALS.png'),
+            tileinfo = tileinfo_feat
+        }),
+        spritesheet_bw = SpriteSheet(true, {
+            image = love.graphics.newImage('dat/tiles/feat_BW.png'),
             tileinfo = tileinfo_feat
         })
     },

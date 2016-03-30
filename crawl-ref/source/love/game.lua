@@ -309,6 +309,9 @@ end
 
 function Game:draw()
     local vp = self.viewport
+    local vgrdc = self.map.map_knowledge.vgrdc
+    local map_dx = vgrdc and self.map.map_knowledge.vgrdc.x * 32 or 0
+    local map_dy = vgrdc and self.map.map_knowledge.vgrdc.y * 32 or 0
 
     love.graphics.setCanvas(self.light.render_buffer)
     self.light.render_buffer:clear()
@@ -324,7 +327,7 @@ function Game:draw()
     love.graphics.translate(self.viewport.x, self.viewport.y)
     love.graphics.scale(self.viewport.scale)
 
-    -- self.map:drawExplored(self.player.x - vp.width/2, self.player.y - vp.height/2, vp.width, vp.height)
+    self.map:drawExplored(map_dx - vp.width/2, map_dy - vp.height/2, vp.width, vp.height)
 
     self:drawUnitsUi()
 

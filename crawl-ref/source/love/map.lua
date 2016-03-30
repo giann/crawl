@@ -2,6 +2,7 @@ Cell = Class {
 
     init = function (self, options)
         self.image = nil
+        self.imageBW = nil
         self.castShadow = true
         self.width = 0
         self.height = 0
@@ -23,17 +24,13 @@ Cell = Class {
         if self.image then
             self.width = self.image:getWidth()
             self.height = self.image:getHeight()
-
-            if self.spriteCode then
-                -- self.imageBW = Assets.decorBW:getNamedSprite(self.spriteCode)
-            end
         end
     end
 
 }
 
 function Cell:initLight(x, y)
-    if self.code ~= 'empty' and self.width > 0 then
+    if self.width > 0 then
         self.body = self.lightWorld:newRectangle(x and x + self.width/2 or 0, y and y + self.height/2 or 0, self.width, self.height)
         self.body:setVisible(false)
 
@@ -57,22 +54,24 @@ function Cell:draw(x, y)
     end
 
     if self.body then
-        self.body.visible = self.visible and self.code ~= 'empty'
+        self.body.visible = self.visible
         self.body:setPosition(x + self.width/2, y + self.height/2)
     end
 
-    if self.image and self.visible and self.code ~= 'empty' then --or self.explored then
+    if self.image and self.visible then --or self.explored then
         love.graphics.draw(self.image, x, y)
         love.graphics.setColor(255, 255, 255, 255)
-    elseif self.code ~= 'empty' and not self.explored then
+    elseif not self.explored then
         love.graphics.setColor(0, 0, 0, 255)
         love.graphics.rectangle('fill', x, y, self.width, self.height)
         love.graphics.setColor(255, 255, 255, 255)
-    elseif self.image and self.code ~= 'empty' then
-        love.graphics.setColor(150, 150, 150, 255)
-        -- TODO generate B&W tiles
-        -- love.graphics.draw(self.imageBW, x, y)
-        love.graphics.draw(self.image, x, y)
+    elseif self.image then
+        love.graphics.setColor(90, 90, 90, 255)
+        if self.imageBW then
+            love.graphics.draw(self.imageBW, x, y)
+        else
+            love.graphics.draw(self.image, x, y)
+        end
         love.graphics.setColor(255, 255, 255, 255)
     end
 
@@ -128,10 +127,13 @@ function Map:handle_map_message(data)
     local player        = Assets.tile_info.player.spritesheet
     local player_normal = Assets.tile_info.player.spritesheet_normal
     local floor         = Assets.tile_info.floor.spritesheet
+    local floor_bw      = Assets.tile_info.floor.spritesheet_bw
     local floor_normal  = Assets.tile_info.floor.spritesheet_normal
     local wall          = Assets.tile_info.wall.spritesheet
+    local wall_bw       = Assets.tile_info.wall.spritesheet_bw
     local wall_normal   = Assets.tile_info.wall.spritesheet_normal
     local feat          = Assets.tile_info.feat.spritesheet
+    local feat_bw       = Assets.tile_info.feat.spritesheet_bw
     local feat_normal   = Assets.tile_info.feat.spritesheet_normal
     local icons         = Assets.tile_info.icons.spritesheet
     local gui           = Assets.tile_info.gui.spritesheet
@@ -183,6 +185,7 @@ function Map:handle_map_message(data)
                 local gen_cell = Cell({
                     image      = isFloor and floor.images[floorIdx] or isWall and wall.images[wallIdx] or floor.images[floorFeatIdx],
                     normal     = isFloor and floor_normal.images[floorIdx] or isWall and wall_normal.images[wallIdx] or floor_normal.images[floorFeatIdx],
+                    imageBW    = isFloor and floor_bw.images[floorIdx] or isWall and wall_bw.images[wallIdx] or floor_bw.images[floorFeatIdx],
                     castShadow = isWall,
                     passable   = isFloor,
                     lightWorld = self.light,
