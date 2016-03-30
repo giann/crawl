@@ -2,6 +2,33 @@ Assets = {
     loading = love.timer.getTime()
 }
 
+-- local fontImg = love.graphics.newImage('dat/tiles/wanderlust.png')
+-- local imageWidth, imageHeight = fontImg:getWidth(), fontImg:getHeight()
+-- local canvas = love.graphics.newCanvas(1536+1, 8)
+-- love.graphics.setCanvas(canvas)
+-- love.graphics.setLineStyle('rough')
+-- love.graphics.setLineWidth(1)
+-- for x = 0, 15 do
+--     for y = 0, 15 do
+--         local idx = (y * 16 + x) * 6
+
+--         love.graphics.setColor(255, 0, 255, 255)
+--         love.graphics.line(idx, 0, idx, 8)
+
+--         love.graphics.setColor(255, 255, 255, 255)
+--         love.graphics.draw(
+--             fontImg,
+--             love.graphics.newQuad(x * 8 + 2, y * 8, 5, 8, imageWidth, imageHeight),
+--             idx, 0
+--         )
+--     end
+-- end
+-- love.graphics.setColor(255, 0, 255, 255)
+-- love.graphics.line(1537, 0, 1537, 8)
+-- love.graphics.setColor(255, 255, 255, 255)
+
+-- canvas:getImageData():encode("wanderlust-font.png")
+
 Assets.shaders = {
     alphaDiscard = love.graphics.newShader [[
        vec4 effect ( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ) {
@@ -77,7 +104,7 @@ Assets.tile_info = {
     dngn = {
         tileinfo = tileinfo_dngn,
         spritesheet = SpriteSheet(true, {
-            image = nil, -- used only for it's functions
+            image = nil, -- used only for its functions
             tileinfo = tileinfo_dngn
         })
     },
