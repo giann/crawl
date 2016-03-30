@@ -3,6 +3,7 @@ Cell = Class {
     init = function (self, options)
         self.image = nil
         self.imageBW = nil
+        self.imageUI = nil
         self.castShadow = true
         self.width = 0
         self.height = 0
@@ -77,8 +78,223 @@ function Cell:draw(x, y)
 
 end
 
+function Cell:drawUI(x, y)
+
+    if self.imageUI and self.visible then
+        love.graphics.setColor(255, 255, 255, 255)
+        love.graphics.draw(self.imageUI, x, y)
+        love.graphics.rectangle('fill', x, y, 32, 32)
+    end
+
+end
+
 function Cell:setVisible(visible)
     self.visible = visible
+end
+
+function Cell:generateUI()
+    self.imageUI  = love.graphics.newCanvas(32, 32)
+
+    local fg      = self.knowledge.t.fg
+    local bg      = self.knowledge.t.bg
+    local icons   = Assets.tile_info.icons.spritesheet
+    local pCanvas = love.graphics.getCanvas()
+
+    love.graphics.setCanvas(canvas)
+    love.graphics.setColor(255, 255, 255, 255)
+
+    if (fg.NET) then
+        icons:getTileCanvas(TRAP_NET, true, false, 0, 0)
+    end
+
+    if (fg.WEB) then
+        icons:getTileCanvas(TRAP_WEB, true, false, 0, 0)
+    end
+
+    if (fg.S_UNDER) then
+        icons:getTileCanvas(SOMETHING_UNDER, true, false, 0, 0)
+    end
+
+    local status_shift = 0
+    if (fg.MIMIC_INEPT) then
+        icons:getTileCanvas(INEPT_MIMIC, true, false, 0, 0)
+    elseif (fg.MIMIC) then
+        icons:getTileCanvas(MIMIC, true, false, 0, 0)
+    elseif (fg.MIMIC_RAVEN) then
+        icons:getTileCanvas(RAVENOUS_MIMIC, true, false, 0, 0)
+    end
+
+    --The berserk icon is in the lower right, so status_shift doesn't need changing.
+    if (fg.BERSERK) then
+        icons:getTileCanvas(BERSERK, true, false, 0, 0)
+    end
+
+    -- Pet mark
+    if (fg.PET) then
+        icons:getTileCanvas(HEART, true, false, 0, 0)
+        status_shift = status_shift + 10
+    elseif (fg.GD_NEUTRAL) then
+        icons:getTileCanvas(GOOD_NEUTRAL, true, false, 0, 0)
+        status_shift = status_shift + 7
+    elseif (fg.NEUTRAL) then
+        icons:getTileCanvas(NEUTRAL, true, false, 0, 0)
+        status_shift = status_shift + 7
+    end
+
+    if (fg.STAB) then
+        icons:getTileCanvas(STAB_BRAND, true, false, 0, 0)
+        status_shift = status_shift + 12
+    elseif (fg.MAY_STAB) then
+        icons:getTileCanvas(MAY_STAB_BRAND, true, false, 0, 0)
+        status_shift = status_shift + 7
+    elseif (fg.FLEEING) then
+        icons:getTileCanvas(FLEEING, true, false, 0, 0)
+        status_shift = status_shift + 3
+    end
+
+    if (fg.POISON) then
+        icons:getTileCanvas(POISON, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 5
+    end
+    if (fg.STICKY_FLAME) then
+        icons:getTileCanvas(STICKY_FLAME, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 7
+    end
+    if (fg.INNER_FLAME) then
+        icons:getTileCanvas(INNER_FLAME, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 7
+    end
+    if (fg.CONSTRICTED) then
+        icons:getTileCanvas(CONSTRICTED, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 11
+    end
+    if (fg.GLOWING) then
+        icons:getTileCanvas(GLOWING, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 8
+    end
+    if (fg.HASTED) then
+        icons:getTileCanvas(HASTED, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 6
+    end
+    if (fg.SLOWED) then
+        icons:getTileCanvas(SLOWED, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 6
+    end
+    if (fg.MIGHT) then
+        icons:getTileCanvas(MIGHT, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 6
+    end
+    if (fg.DRAIN) then
+        icons:getTileCanvas(DRAIN, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 6
+    end
+    if (fg.PAIN_MIRROR) then
+        icons:getTileCanvas(PAIN_MIRROR, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 7
+    end
+    if (fg.PETRIFYING) then
+        icons:getTileCanvas(PETRIFYING, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 6
+    end
+    if (fg.PETRIFIED) then
+        icons:getTileCanvas(PETRIFIED, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 6
+    end
+    if (fg.BLIND) then
+        icons:getTileCanvas(BLIND, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 10
+    end
+    if (fg.DEATHS_DOOR) then
+        icons:getTileCanvas(DEATHS_DOOR, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 10
+    end
+    if (fg.RECALL) then
+        icons:getTileCanvas(RECALL, true, false, 0, 0, -status_shift, 0)
+        status_shift = status_shift + 9
+    end
+
+    -- Anim. weap. and summoned might overlap, but that's okay
+    if (fg.ANIM_WEP) then
+        icons:getTileCanvas(ANIMATED_WEAPON, true, false, 0, 0)
+    end
+    if (fg.SUMMONED) then
+        icons:getTileCanvas(SUMMONED, true, false, 0, 0)
+    end
+    if (fg.PERM_SUMMON) then
+        icons:getTileCanvas(PERM_SUMMON, true, false, 0, 0)
+    end
+
+    if (bg.UNSEEN and (bg.value or fg.value)) then
+        icons:getTileCanvas(MESH, true, false, 0, 0)
+    end
+
+    if (bg.OOR and (bg.value or fg.value)) then
+        icons:getTileCanvas(OOR_MESH, true, false, 0, 0)
+    end
+
+    if (bg.MM_UNSEEN and (bg.value or fg.value)) then
+        icons:getTileCanvas(MAGIC_MAP_MESH, true, false, 0, 0)
+    end
+
+    -- Don't let the "new stair" icon cover up any existing icons, but
+    -- draw it otherwise.
+    if (bg.NEW_STAIR and status_shift == 0) then
+        icons:getTileCanvas(NEW_STAIR, true, false, 0, 0)
+    end
+
+    if (bg.EXCL_CTR and bg.UNSEEN) then
+        icons:getTileCanvas(TRAVEL_EXCLUSION_CENTRE_FG, true, false, 0, 0)
+    elseif (bg.TRAV_EXCL and bg.UNSEEN) then
+        icons:getTileCanvas(TRAVEL_EXCLUSION_FG, true, false, 0, 0)
+    end
+
+    -- Tutorial cursor takes precedence over other cursors.
+    if (bg.TUT_CURSOR) then
+        icons:getTileCanvas(TUTORIAL_CURSOR, true, false, 0, 0)
+    elseif (bg.CURSOR1) then
+        icons:getTileCanvas(CURSOR, true, false, 0, 0)
+    elseif (bg.CURSOR2) then
+        icons:getTileCanvas(CURSOR2, true, false, 0, 0)
+    elseif (bg.CURSOR3) then
+        icons:getTileCanvas(CURSOR3, true, false, 0, 0)
+    end
+
+    -- if (cell.travel_trail & 0xF) then
+    --     icons:getTileCanvas(TRAVEL_PATH_FROM  true, false,+
+    --                    (cell.travel_trail & 0xF) - 1, 0, 0)
+    -- end
+    -- if (cell.travel_trail & 0xF0) then
+    --     icons:getTileCanvas(TRAVEL_PATH_TO  true, false,+
+    --                    ((cell.travel_trail & 0xF0) >> 4) - 1, 0, 0)
+    -- end
+
+    if (fg.MDAM_LIGHT) then
+        icons:getTileCanvas(MDAM_LIGHTLY_DAMAGED, true, false, 0, 0)
+    elseif (fg.MDAM_MOD) then
+        icons:getTileCanvas(MDAM_MODERATELY_DAMAGED, true, false, 0, 0)
+    elseif (fg.MDAM_HEAVY) then
+        icons:getTileCanvas(MDAM_HEAVILY_DAMAGED, true, false, 0, 0)
+    elseif (fg.MDAM_SEV) then
+        icons:getTileCanvas(MDAM_SEVERELY_DAMAGED, true, false, 0, 0)
+    elseif (fg.MDAM_ADEAD) then
+        icons:getTileCanvas(MDAM_ALMOST_DEAD, true, false, 0, 0)
+    end
+
+    -- if (options.get("tile_show_demon_tier") === true) then
+        if (fg.DEMON_1) then
+            icons:getTileCanvas(DEMON_NUM1, true, false, 0, 0)
+        elseif (fg.DEMON_2) then
+            icons:getTileCanvas(DEMON_NUM2, true, false, 0, 0)
+        elseif (fg.DEMON_3) then
+            icons:getTileCanvas(DEMON_NUM3, true, false, 0, 0)
+        elseif (fg.DEMON_4) then
+            icons:getTileCanvas(DEMON_NUM4, true, false, 0, 0)
+        elseif (fg.DEMON_5) then
+            icons:getTileCanvas(DEMON_NUM5, true, false, 0, 0)
+        end
+    -- end
+
+    love.graphics.setCanvas(pCanvas)
 end
 
 
@@ -264,7 +480,7 @@ function Map:handle_map_message(data)
                 if fg_idx then
                     -- TODO find foreground
                     -- if (base_idx) then
-                    --     this.draw_main(base_idx, x, y);
+                    --     this.draw_main(base_idx, x, y)
                     -- if base_idx and main.images[base_idx + 1] then
                     --     table.insert(gen_cell.units, Unit({
                     --         lightWorld = self.light,
@@ -345,6 +561,8 @@ function Map:handle_map_message(data)
                     print('Something wrong here', json.encode(cell.fg))
                 end
 
+                gen_cell.imageUI = gen_cell:generateUI()
+
                 self:setCell(gen_cell, map_cell.x, map_cell.y)
             end
         end
@@ -354,7 +572,7 @@ end
 
 function Map:getBackground(cell)
     local backgrounds = {}
-    local bg = cell.bg;
+    local bg = cell.bg
     local bg_idx = cell.bg.value
 
     if cell.mangrove_water and bg_idx > DNGN_UNSEEN then
@@ -522,6 +740,35 @@ function Map:drawFront(x, y, w, h)
                 local cell = self.map[i] and self.map[i][j]
                 if cell and cell.castShadow then
                     cell:draw(
+                        (i - 1) * cell.width,
+                        (j - 1) * cell.height
+                    )
+                end
+            end
+        end
+    end
+end
+
+function Map:drawUI(x, y, w, h)
+    if self.bounds.right ~= 0 and self.bounds.bottom ~= 0 then
+        local x = math.floor(x / 32) + 1
+        local y = math.floor(y / 32) + 1
+
+        if x < self.bounds.left then
+            x = self.bounds.left
+        end
+        if y < self.bounds.top then
+            y = self.bounds.top
+        end
+
+        local w = math.floor(w / 32) + 1
+        local h = math.floor(h / 32) + 1
+
+        for i = x, math.min(x + w, self.bounds.right) do
+            for j = y, math.min(y + h, self.bounds.bottom) do
+                local cell = self.map[i] and self.map[i][j]
+                if cell then
+                    cell:drawUI(
                         (i - 1) * cell.width,
                         (j - 1) * cell.height
                     )
