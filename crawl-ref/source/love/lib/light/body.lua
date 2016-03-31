@@ -38,7 +38,7 @@ function body:init(id, type, ...)
     util.drawto(circle_canvas, 0, 0, 1, function()
       love.graphics.circle('fill', args[3], args[3], args[3]) 
     end)
-    self.img = love.graphics.newImage(circle_canvas:getImageData()) 
+    self.img = love.graphics.newImage(circle_canvas:newImageData()) 
     self.imgWidth = self.img:getWidth()
     self.imgHeight = self.img:getHeight()
     self.ix = self.imgWidth * 0.5
@@ -54,7 +54,7 @@ function body:init(id, type, ...)
     util.drawto(rectangle_canvas, 0, 0, 1, function()
       love.graphics.rectangle('fill', 0, 0, args[3], args[4]) 
     end)
-    self.img = love.graphics.newImage(rectangle_canvas:getImageData()) 
+    self.img = love.graphics.newImage(rectangle_canvas:newImageData()) 
     self.imgWidth = self.img:getWidth()
     self.imgHeight = self.img:getHeight()
     self.ix = self.imgWidth * 0.5
@@ -118,7 +118,8 @@ function body:initNormal(...)
       {self.width, self.height, 1.0, 1.0},
       {0.0, self.height, 0.0, 1.0}
     }
-    self.normalMesh = love.graphics.newMesh(self.normalVert, self.normal, "fan")
+    self.normalMesh = love.graphics.newMesh(self.normalVert, "fan")
+    self.normalMesh:setTexture(self.normal)
   else
     self.width = args[4] or 64
     self.height = args[5] or 64
@@ -308,7 +309,7 @@ function body:setPoints(...)
   util.drawto(poly_canvas, 0, 0, 1, function()
     love.graphics.polygon('fill', points) 
   end)
-  self.img = love.graphics.newImage(poly_canvas:getImageData()) 
+  self.img = love.graphics.newImage(poly_canvas:newImageData()) 
   self.imgWidth = self.img:getWidth()
   self.imgHeight = self.img:getHeight()
   self.ix = self.imgWidth * 0.5
@@ -395,7 +396,8 @@ function body:setNormalMap(normal, width, height, nx, ny)
       {self.normalWidth, self.normalHeight, self.normalWidth / self.normal:getWidth(), self.normalHeight / self.normal:getHeight()},
       {0.0, self.normalHeight, 0.0, self.normalHeight / self.normal:getHeight()}
     }
-    self.normalMesh = love.graphics.newMesh(self.normalVert, self.normal, "fan")
+    self.normalMesh = love.graphics.newMesh(self.normalVert, "fan")
+    self.normalMesh:setTexture(self.normal)
   else
     self.normalMesh = nil
   end
@@ -478,8 +480,9 @@ function body:setShadowType(type, ...)
         {0.0, self.height, 0.0, 1.0}
       }
       if not self.shadowMesh then
-        self.shadowMesh = love.graphics.newMesh(self.shadowVert, self.img, "fan")
-        self.shadowMesh:setVertexColors(true)
+        self.shadowMesh = love.graphics.newMesh(self.shadowVert, "fan")
+        self.shadowMesh:setTexture(self.img)
+        self.shadowMesh:setAttributeEnabled("VertexColor", trrue)
       end
     else
       self.width = 64

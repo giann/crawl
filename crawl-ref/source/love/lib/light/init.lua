@@ -58,7 +58,7 @@ function light_world:init(options)
 end
 
 function light_world:refreshScreenSize(w, h)
-  w, h = w or love.window.getWidth(), h or love.window.getHeight()
+  w, h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
 
   self.w, self.h        = w, h
   self.render_buffer    = love.graphics.newCanvas(w, h)
@@ -119,7 +119,12 @@ function light_world:drawBlur(blendmode, blur, canvas, canvas2, l, t, w, h, s)
   if blur <= 0 then
     return
   end
-  canvas2:clear()
+
+  local pCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(canvas2)
+  love.graphics.clear()
+  love.graphics.setCanvas(pCanvas)
+
   self.blurv:send("steps", blur)
   self.blurh:send("steps", blur)
   util.drawCanvasToCanvas(canvas, canvas2, {shader = self.blurv, blendmode = blendmode})
@@ -130,7 +135,12 @@ end
 function light_world:drawNormalShading(l,t,w,h,s)
   self.in_range, self.total_range = 0, 0
   -- create normal map
-  self.normalMap:clear()
+
+  local pCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.normalMap)
+  love.graphics.clear()
+  love.graphics.setCanvas(pCanvas)
+
   util.drawto(self.normalMap, l, t, s, function()
     for i = 1, #self.body do
       if self.body[i]:isInRange(l,t,w,h,s) then
@@ -141,7 +151,11 @@ function light_world:drawNormalShading(l,t,w,h,s)
     end
   end)
 
-  self.floorNormalMap:clear()
+  local pCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.floorNormalMap)
+  love.graphics.clear()
+  love.graphics.setCanvas(pCanvas)
+
   util.drawto(self.floorNormalMap, l, t, s, function()
     for i = 1, #self.body do
       if not self.body[i].castsNoShadow and self.body[i]:isInRange(l,t,w,h,s) then
@@ -150,11 +164,20 @@ function light_world:drawNormalShading(l,t,w,h,s)
     end
   end)
 
-  self.normal2:clear()
+  local pCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.normal2)
+  love.graphics.clear()
+  love.graphics.setCanvas(pCanvas)
+
   for i = 1, #self.lights do
     if self.lights[i]:inRange(l,t,w,h,s) then
       -- create shadow map for this light
-      self.shadowMap:clear()
+
+      local pCanvas = love.graphics.getCanvas()
+      love.graphics.setCanvas(self.shadowMap)
+      love.graphics.clear()
+      love.graphics.setCanvas(pCanvas)
+
       util.drawto(self.shadowMap, l, t, s, function()
         for k = 1, #self.body do
           if self.body[k]:isInLightRange(self.lights[i]) and self.body[k]:isInRange(l,t,w,h,s) then
@@ -168,16 +191,20 @@ function light_world:drawNormalShading(l,t,w,h,s)
   end
 
   -- add in ambient color
-  self.normal:clear(255, 255, 255)
+  local pCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.normal)
+  love.graphics.clear(255,255,255,255)
+  love.graphics.setCanvas(pCanvas)
+
   util.drawCanvasToCanvas(self.normal2, self.normal, {blendmode = "alpha"})
   util.drawto(self.normal, l, t, s, function()
-    love.graphics.setBlendMode("additive")
+    love.graphics.setBlendMode("add")
     love.graphics.setColor({self.ambient[1], self.ambient[2], self.ambient[3]})
     love.graphics.rectangle("fill", -l/s, -t/s, w/s,h/s)
   end)
 
   light_world:drawBlur("alpha", self.blur, self.normal, self.normal2, l, t, w, h, s)
-  util.drawCanvasToCanvas(self.normal, self.render_buffer, {blendmode = "multiplicative"})
+  util.drawCanvasToCanvas(self.normal, self.render_buffer, {blendmode = "multiply"})
 end
 
 -- draw material
@@ -202,7 +229,11 @@ function light_world:drawGlow(l,t,w,h,s)
   end
 
   -- create glow map
-  self.glowMap:clear(0, 0, 0)
+  local pCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.glowMap)
+  love.graphics.clear(0, 0, 0, 255)
+  love.graphics.setCanvas(pCanvas)
+
   util.drawto(self.glowMap, l, t, s, function()
     for i = 1, #self.body do
       if self.body[i]:isInRange(l,t,w,h,s) then
@@ -212,12 +243,16 @@ function light_world:drawGlow(l,t,w,h,s)
   end)
 
   light_world:drawBlur("alpha", self.glowBlur, self.glowMap, self.glowMap2, l, t, w, h, s)
-  util.drawCanvasToCanvas(self.glowMap, self.render_buffer, {blendmode = "additive"})
+  util.drawCanvasToCanvas(self.glowMap, self.render_buffer, {blendmode = "add"})
 end
 -- draw refraction
 function light_world:drawRefraction(l,t,w,h,s)
   -- create refraction map
-  self.refractionMap:clear()
+  local pCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.refractionMap)
+  love.graphics.clear()
+  love.graphics.setCanvas(pCanvas)
+
   util.drawto(self.refractionMap, l, t, s, function()
     for i = 1, #self.body do
       if self.body[i]:isInRange(l,t,w,h,s) then
@@ -235,7 +270,11 @@ end
 -- draw reflection
 function light_world:drawReflection(l,t,w,h,s)
   -- create reflection map
-  self.reflectionMap:clear(0, 0, 0)
+  local pCanvas = love.graphics.getCanvas()
+  love.graphics.setCanvas(self.refractionMap)
+  love.graphics.clear(0, 0, 0, 255)
+  love.graphics.setCanvas(pCanvas)
+
   util.drawto(self.reflectionMap, l, t, s, function()
     for i = 1, #self.body do
       if self.body[i]:isInRange(l,t,w,h,s) then

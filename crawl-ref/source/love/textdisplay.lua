@@ -4,8 +4,8 @@ TextDisplay = Class {
 
         self.text = ""
         self.x = 0
-        self.y = love.window.getHeight() * 0.4
-        self.limit = love.window.getWidth()
+        self.y = love.graphics.getHeight() * 0.4
+        self.limit = love.graphics.getWidth()
         self.align = 'left'
         -- self.font = defaultFont
         self.r = 0

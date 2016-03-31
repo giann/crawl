@@ -5,8 +5,8 @@ Messages = Class {
 
         self.display = TextDisplay({
             x = 20,
-            y = love.window.getHeight() - 155,
-            limit = love.window.getWidth() * 0.5
+            y = love.graphics.getHeight() - 155,
+            limit = love.graphics.getWidth() * 0.5
         })
 
         Utils.assign(self, options)

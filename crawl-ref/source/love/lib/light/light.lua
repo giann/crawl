@@ -25,7 +25,7 @@ function light:init(x, y, r, g, b, range)
 end
 
 function light:refresh(w, h)
-  self.shadowShader:send('screenResolution', {w or love.window.getWidth(), h or love.window.getHeight()})
+  self.shadowShader:send('screenResolution', {w or love.graphics.getWidth(), h or love.graphics.getHeight()})
 end
 
 -- set position
@@ -130,7 +130,7 @@ function light:drawNormalShading(l,t,w,h,s, normalMap, shadowMap, canvas, floorN
   self.shadowShader:send("invert_normal", self.normalInvert == true)
   self.shadowShader:send("debug", 0)
   util.drawCanvasToCanvas(normalMap, canvas, {
-    blendmode = 'additive',
+    blendmode = 'add',
     shader = self.shadowShader
   })
 end

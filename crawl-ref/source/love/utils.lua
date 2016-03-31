@@ -326,7 +326,7 @@ function love.graphics.gradientline(x, y, x2, y2, c1, c2, peak)
 
         love.graphics.setPointSize(pWidth)
         love.graphics.setColor(unpack(color))
-        love.graphics.point(pX, pY)
+        love.graphics.points(pX, pY)
     end
 
     for i = d1, d2 do
@@ -336,7 +336,7 @@ function love.graphics.gradientline(x, y, x2, y2, c1, c2, peak)
 
         love.graphics.setPointSize(pWidth)
         love.graphics.setColor(unpack(color))
-        love.graphics.point(pX, pY)
+        love.graphics.points(pX, pY)
     end
 end
 
@@ -374,7 +374,7 @@ function love.graphics.gradientcircleline(centerX, centerY, radius, c1, c2, peak
 
         love.graphics.setPointSize(pWidth)
         love.graphics.setColor(unpack(color))
-        love.graphics.point(pX, pY)
+        love.graphics.points(pX, pY)
     end
 
     for i = d1, d2 do
@@ -384,7 +384,7 @@ function love.graphics.gradientcircleline(centerX, centerY, radius, c1, c2, peak
 
         love.graphics.setPointSize(pWidth)
         love.graphics.setColor(unpack(color))
-        love.graphics.point(pX, pY)
+        love.graphics.points(pX, pY)
     end
 end
 
@@ -406,7 +406,7 @@ function Utils.assign(object, options)
 end
 
 function Utils.mirrorH(image)
-    local data = image:getImageData()
+    local data = image:newImageData()
     local width = image:getWidth()
     local height = image:getHeight()
     local canvas = love.graphics.newCanvas(width, height)
@@ -419,13 +419,13 @@ function Utils.mirrorH(image)
     for i = width - 1, 0, -1 do
         for j = 0, height - 1 do
             love.graphics.setColor(data:getPixel(i, j))
-            love.graphics.point(width - i, j)
+            love.graphics.points(width - i, j)
         end
     end
 
     love.graphics.setCanvas()
 
-    return canvas--love.graphics.newImage(canvas:getImageData())
+    return canvas--love.graphics.newImage(canvas:newImageData())
 end
 
 function Utils.mirrorCoordinatesH(coordinates, totalWidth)
@@ -496,7 +496,7 @@ function love.graphics.tiltedrectangle(mode, x, y, width, height, tilt, directio
 end
 
 function love.graphics.grayscale(image)
-    local colored = image:getImageData()
+    local colored = image:newImageData()
     local width = image:getWidth()
     local height = image:getHeight()
     local gray = love.image.newImageData(width, height)

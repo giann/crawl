@@ -55,7 +55,7 @@ function post_shader:init()
 end
 
 function post_shader:refreshScreenSize(w, h)
-  w, h = w or love.window.getWidth(), h or love.window.getHeight()
+  w, h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
 
   self.render_buffer = love.graphics.newCanvas(w, h)
   self.back_buffer   = love.graphics.newCanvas(w, h)
@@ -114,7 +114,7 @@ function post_shader:drawBloom(canvas, args)
   util.drawCanvasToCanvas(self.back_buffer, self.back_buffer, {shader = post_shader.film_grain})
   util.drawCanvasToCanvas(self.back_buffer, self.back_buffer, {shader = post_shader.contrast})
   util.drawCanvasToCanvas(canvas, canvas, {shader = post_shader.contrast})
-  util.drawCanvasToCanvas(self.back_buffer, canvas, {blendmode = "additive", color = {255, 255, 255, (args[2] or 0.25) * 255}})
+  util.drawCanvasToCanvas(self.back_buffer, canvas, {blendmode = "add", color = {255, 255, 255, (args[2] or 0.25) * 255}})
 end
 
 function post_shader:drawBlur(canvas, args)

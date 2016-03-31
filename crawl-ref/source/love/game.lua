@@ -43,7 +43,7 @@ Game = Class {
         })
 
         -- self.light.post_shader:addEffect('hdr_tv')
-        self.light.post_shader:addEffect('bloom', {2.0})
+        -- self.light.post_shader:addEffect('bloom', {2.0})
         -- Awesome green screen effect
         -- self.light.post_shader:toggleEffect('pip')
 
@@ -151,7 +151,7 @@ function Game:drawUnitReflections()
     local previous = love.graphics.getCanvas()
 
     love.graphics.setCanvas(self.reflectionCanvas)
-    self.reflectionCanvas:clear()
+    love.graphics.clear()
 
     local units = self.map:getUnits()
 
@@ -188,11 +188,12 @@ function Game:drawUnitReflections()
     love.graphics.setCanvas(previous)
 
     love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.setStencil(function ()
+    love.graphics.stencil(function ()
         love.graphics.setShader(Assets.shaders.alphaDiscard)
         love.graphics.draw(self.reflectionCanvas, -self.viewport.x, -self.viewport.y)
         love.graphics.setShader()
     end)
+    love.graphics.setStencilTest("greater", 0)
 
     for i = 1, #units do
         local u = units[i]
@@ -213,7 +214,7 @@ function Game:drawUnitReflections()
 
     love.graphics.setColor(255, 255, 255, 255)
 
-    love.graphics.setStencil()
+    love.graphics.setStencilTest()
 end
 
 function Game:drawBackUnits()
@@ -265,7 +266,7 @@ function Game:drawHUD()
         self.messages.display.x - 5,
         self.messages.display.y - 5,
         self.messages.display.limit - 5,
-        love.window.getHeight() - self.messages.display.y + 5
+        love.graphics.getHeight() - self.messages.display.y + 5
     )
 
     love.graphics.setColor(255, 255, 255, 255)
@@ -315,15 +316,15 @@ function Game:draw()
     local map_dx = vgrdc and self.map.map_knowledge.vgrdc.x * 32 or 0
     local map_dy = vgrdc and self.map.map_knowledge.vgrdc.y * 32 or 0
 
-    love.graphics.setCanvas(self.light.render_buffer)
-    self.light.render_buffer:clear()
+    -- love.graphics.setCanvas(self.light.render_buffer)
+    -- love.graphics.clear()
 
     self:drawGame()
 
-    love.graphics.setCanvas()
+    -- love.graphics.setCanvas()
 
-    love.graphics.setColor(255, 255, 255, 255)
-    self.light.post_shader:drawWith(self.light.render_buffer, self.viewport.x, self.viewport.y, self.viewport.scale)
+    -- love.graphics.setColor(255, 255, 255, 255)
+    -- self.light.post_shader:drawWith(self.light.render_buffer, self.viewport.x, self.viewport.y, self.viewport.scale)
 
     love.graphics.push()
     love.graphics.translate(self.viewport.x, self.viewport.y)
