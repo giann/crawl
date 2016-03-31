@@ -109,13 +109,13 @@ function SpriteSheet:getTileCanvas(i, adjust, onCanvas, x, y, ofsx, ofsy, y_max)
     local w = info.ex - info.sx
     local h = info.ey - info.sy
 
-    local canvas = love.graphics.newCanvas(
-        w * self.x_scale,
-        (h + ey - pos_ey_adjust) * self.y_scale
-    )
-
+    local canvas = nil
     local pCanvas = love.graphics.getCanvas()
     if onCanvas then
+        canvas = love.graphics.newCanvas(
+            w * self.x_scale,
+            (h + ey - pos_ey_adjust) * self.y_scale
+        )
         love.graphics.setCanvas(canvas)
     end
 

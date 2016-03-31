@@ -21,21 +21,21 @@ Animation = Class {
 
         Utils.assign(self, options)
 
-        if not self.mirrored or #self.mirrored <= 0 then
-            for i = 1, #self.frames do
-                self.mirrored[i] = Utils.mirrorH(self.frames[i])
-            end
-        end
+        -- if not self.mirrored or #self.mirrored <= 0 then
+        --     for i = 1, #self.frames do
+        --         self.mirrored[i] = Utils.mirrorH(self.frames[i])
+        --     end
+        -- end
 
-        for i = 1, #self.glow do
-            self.glowMirrored[i] = Utils.mirrorH(self.glow[i])
-        end
+        -- for i = 1, #self.glow do
+        --     self.glowMirrored[i] = Utils.mirrorH(self.glow[i])
+        -- end
 
-        if not self.normalMirrored or #self.normalMirrored <= 0 then
-            for i = 1, #self.normal do
-                self.normalMirrored[i] = Utils.mirrorH(self.normal[i])
-            end
-        end
+        -- if not self.normalMirrored or #self.normalMirrored <= 0 then
+        --     for i = 1, #self.normal do
+        --         self.normalMirrored[i] = Utils.mirrorH(self.normal[i])
+        --     end
+        -- end
 
         -- for i = 1, #self.frames do
         --     self.gray[i] = love.graphics.grayscale(self.frames[i])
@@ -136,21 +136,21 @@ function Animation:normalFrame()
     end
 end
 
-function Animation:setDirection(direction)
-    if self.direction ~= direction then
-        self.direction = direction
+-- function Animation:setDirection(direction)
+--     if self.direction ~= direction then
+--         self.direction = direction
 
-        local temp = self.frames
-        self.frames = self.mirrored
-        self.mirrored = temp
+--         local temp = self.frames
+--         self.frames = self.mirrored
+--         self.mirrored = temp
 
-        -- TODO: works on pc not on mac ?
-        temp = self.normal
-        self.normal = self.normalMirrored
-        self.normalMirrored = temp
+--         -- TODO: works on pc not on mac ?
+--         temp = self.normal
+--         self.normal = self.normalMirrored
+--         self.normalMirrored = temp
 
-        temp = self.gray
-        self.gray = self.grayMirrored
-        self.grayMirrored = temp
-    end
-end
+--         temp = self.gray
+--         self.gray = self.grayMirrored
+--         self.grayMirrored = temp
+--     end
+-- end

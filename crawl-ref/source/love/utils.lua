@@ -527,13 +527,8 @@ function love.graphics.newCanvas(width, height)
     if canvasCache[width .. 'x' .. height] and #canvasCache[width .. 'x' .. height] > 0 then
         local canvas = table.remove(canvasCache[width .. 'x' .. height])
 
-        if canvas.clear then
-            print('Got one from cache')
-            canvas:clear()
-            return canvas
-        end
-
-        print('Why not clear ?', canvas)
+        print('Got one from cache')
+        return canvas
     end
 
     return newCanvas(width, height)
@@ -545,6 +540,7 @@ function love.graphics.cacheCanvas(canvas)
     end
 
     print('Put one to cache')
+    canvas:clear()
     table.insert(canvasCache[canvas:getWidth() .. 'x' .. canvas:getHeight()], canvas)
 end
 

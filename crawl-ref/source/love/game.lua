@@ -339,7 +339,7 @@ function Game:draw()
 
     love.graphics.setColor(255, 255, 255, 255)
 
-    if fps < 35 then
+    if fps < 30 then
         love.graphics.setColor(255, 127, 0, 255)
     end
 
