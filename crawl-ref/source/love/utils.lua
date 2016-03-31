@@ -425,7 +425,7 @@ function Utils.mirrorH(image)
 
     love.graphics.setCanvas()
 
-    return love.graphics.newImage(canvas:getImageData())
+    return canvas--love.graphics.newImage(canvas:getImageData())
 end
 
 function Utils.mirrorCoordinatesH(coordinates, totalWidth)
@@ -525,10 +525,10 @@ end
 local newCanvas = love.graphics.newCanvas
 function love.graphics.newCanvas(width, height)
     if canvasCache[width .. 'x' .. height] and #canvasCache[width .. 'x' .. height] > 0 then
-        print('Got one from cache')
         local canvas = table.remove(canvasCache[width .. 'x' .. height])
 
         if canvas.clear then
+            print('Got one from cache')
             canvas:clear()
             return canvas
         end
