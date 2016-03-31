@@ -52,31 +52,31 @@ Animation = Class {
 
 }
 
-function Animation:destroy()
-    for i = 1, #self.frames do
-        love.graphics.cacheCanvas(self.frames[i])
-    end
+-- function Animation:destroy()
+--     for i = 1, #self.frames do
+--         love.graphics.cacheCanvas(self.frames[i])
+--     end
 
-    for i = 1, #self.mirrored do
-        love.graphics.cacheCanvas(self.mirrored[i])
-    end
+--     for i = 1, #self.mirrored do
+--         love.graphics.cacheCanvas(self.mirrored[i])
+--     end
 
-    for i = 1, #self.glow do
-        love.graphics.cacheCanvas(self.glow[i])
-    end
+--     for i = 1, #self.glow do
+--         love.graphics.cacheCanvas(self.glow[i])
+--     end
 
-    for i = 1, #self.normal do
-        love.graphics.cacheCanvas(self.normal[i])
-    end
+--     for i = 1, #self.normal do
+--         love.graphics.cacheCanvas(self.normal[i])
+--     end
 
-    for i = 1, #self.glowMirrored do
-        love.graphics.cacheCanvas(self.glowMirrored[i])
-    end
+--     for i = 1, #self.glowMirrored do
+--         love.graphics.cacheCanvas(self.glowMirrored[i])
+--     end
 
-    for i = 1, #self.normalMirrored do
-        love.graphics.cacheCanvas(self.normalMirrored[i])
-    end
-end
+--     for i = 1, #self.normalMirrored do
+--         love.graphics.cacheCanvas(self.normalMirrored[i])
+--     end
+-- end
 
 function Animation:start()
     self.timer = Timer.addPeriodic(self.speed, function ()

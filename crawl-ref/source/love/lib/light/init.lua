@@ -111,8 +111,8 @@ function light_world:drawLights(l, t, w, h, s)
   -- self:drawMaterial(      l,t,w,h,s)
   self:drawNormalShading( l,t,w,h,s)
   -- self:drawGlow(          l,t,w,h,s)
-  self:drawRefraction(    l,t,w,h,s)
-  self:drawReflection(    l,t,w,h,s)
+  -- self:drawRefraction(    l,t,w,h,s)
+  -- self:drawReflection(    l,t,w,h,s)
 end
 
 function light_world:drawBlur(blendmode, blur, canvas, canvas2, l, t, w, h, s)

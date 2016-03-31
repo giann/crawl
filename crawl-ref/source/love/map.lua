@@ -661,7 +661,7 @@ function Map:removeUnit(u)
         self.light:remove(u.lights[j].light)
     end
 
-    u.animation:destroy()
+    -- u.animation:destroy()
 end
 
 -- TODO: Draw only within viewport
