@@ -2,7 +2,7 @@ Unit = Class {
 
     init = function (self, options)
         self.name = name or nil
-        
+
         self.lightWorld = nil
         self.light = nil
         self.ox = nil
@@ -193,7 +193,7 @@ function Unit:update(dt)
         self.particles[i]:setPosition(self.x, self.y)
     end
 
-    if self.light and self.light.visible then        
+    if self.light and self.light.visible then
         self:startParticles()
     elseif self.light and not self.light.visible then
         self:stopParticles()

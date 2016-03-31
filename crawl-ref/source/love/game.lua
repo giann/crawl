@@ -37,7 +37,7 @@ Game = Class {
         self.drawLights = true
 
         self.light = LightWorld({
-            ambient = {150, 150, 150},
+            ambient = {90, 90, 90},
             refractionStrength = 10.0,
             reflectionVisibility = 0,
         })
@@ -343,7 +343,7 @@ function Game:draw()
         love.graphics.setColor(255, 127, 0, 255)
     end
 
-    local str = 
+    local str =
         '(' .. math.floor(fps) .. '  FPS)  ('
             .. (self.light.in_range or 0) .. '/' .. (self.light.total_range or 0)
             .. ' Bodies  '  .. #self.light.lights .. ' Lights)'
@@ -471,7 +471,7 @@ function Game:keypressed(key, isrepeat)
             })
         end
     end
-    
+
 end
 
 function Game:keyreleased(key)

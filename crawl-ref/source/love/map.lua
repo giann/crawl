@@ -420,6 +420,7 @@ function Map:handle_map_message(data)
                         -- blood
                     end
 
+                    -- TODO must not be drawn on originals images
                     if cell.ov and false then
                         for i = 1, #cell.ov do
                             local overlay = cell.ov[i]
@@ -522,6 +523,7 @@ function Map:handle_map_message(data)
 
                     if cell.doll then
                         local doll = Unit({
+                            name = map_cell.g or '.',
                             lightWorld = self.light,
                             x          = map_cell.x * 32 - 32/2,
                             y          = map_cell.y * 32 - 32/2,
@@ -658,6 +660,8 @@ function Map:removeUnit(u)
     for j = 1, #u.lights do
         self.light:remove(u.lights[j].light)
     end
+
+    u.animation:destroy()
 end
 
 -- TODO: Draw only within viewport

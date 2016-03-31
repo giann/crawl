@@ -514,6 +514,40 @@ function love.graphics.grayscale(image)
     return love.graphics.newImage(gray)
 end
 
+canvasCache = {}
+canvasCache['32x32'] = {}
+
+-- Put some canvases in the cache
+for i = 1, 200 do
+    table.insert(canvasCache['32x32'], love.graphics.newCanvas(32, 32))
+end
+
+local newCanvas = love.graphics.newCanvas
+function love.graphics.newCanvas(width, height)
+    if canvasCache[width .. 'x' .. height] and #canvasCache[width .. 'x' .. height] > 0 then
+        print('Got one from cache')
+        local canvas = table.remove(canvasCache[width .. 'x' .. height])
+
+        if canvas.clear then
+            canvas:clear()
+            return canvas
+        end
+
+        print('Why not clear ?', canvas)
+    end
+
+    return newCanvas(width, height)
+end
+
+function love.graphics.cacheCanvas(canvas)
+    if not canvasCache[canvas:getWidth() .. 'x' .. canvas:getHeight()] then
+        canvasCache[canvas:getWidth() .. 'x' .. canvas:getHeight()] = {}
+    end
+
+    print('Put one to cache')
+    table.insert(canvasCache[canvas:getWidth() .. 'x' .. canvas:getHeight()], canvas)
+end
+
 function Utils.tlength(table)
     local count = 0
 
