@@ -316,15 +316,15 @@ function Game:draw()
     local map_dx = vgrdc and self.map.map_knowledge.vgrdc.x * 32 or 0
     local map_dy = vgrdc and self.map.map_knowledge.vgrdc.y * 32 or 0
 
-    -- love.graphics.setCanvas(self.light.render_buffer)
-    -- love.graphics.clear()
+    love.graphics.setCanvas(self.light.render_buffer)
+    love.graphics.clear()
 
     self:drawGame()
 
-    -- love.graphics.setCanvas()
+    love.graphics.setCanvas()
 
-    -- love.graphics.setColor(255, 255, 255, 255)
-    -- self.light.post_shader:drawWith(self.light.render_buffer, self.viewport.x, self.viewport.y, self.viewport.scale)
+    love.graphics.setColor(255, 255, 255, 255)
+    self.light.post_shader:drawWith(self.light.render_buffer, self.viewport.x, self.viewport.y, self.viewport.scale)
 
     love.graphics.push()
     love.graphics.translate(self.viewport.x, self.viewport.y)
