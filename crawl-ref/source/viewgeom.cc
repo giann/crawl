@@ -121,7 +121,7 @@ public:
 
         if (mlistsz.y < MLIST_MIN_HEIGHT)
             _increment(mlistsz.y, leftover_rightcol_y(), MLIST_MIN_HEIGHT);
-        _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
+        _increment(msgsz.y,  leftover_y() - 1, MSG_MAX_HEIGHT);
         _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
 
         // Finish off by doing the positions.

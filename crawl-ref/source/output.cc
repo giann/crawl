@@ -1525,6 +1525,8 @@ void redraw_screen()
         display_message_window();
     }
 
+    display_powerline();
+
     update_screen();
 }
 

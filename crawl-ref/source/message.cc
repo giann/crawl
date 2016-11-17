@@ -354,12 +354,31 @@ static bool _pre_more();
 
 static bool _temporary = false;
 
+class powerline
+{
+    formatted_string line;
+
+public:
+    powerline()
+    {
+        line = formatted_string::parse_string("<blue>powerline </blue><w>                                                                                             </w><green> 19:00</green>");
+    }
+
+    void show()
+    {
+        cgotoxy(1, crawl_view.termsz.y, GOTO_CRT);
+        line.display();
+        cprintf("%*s", crawl_view.termsz.x - line.width(), "");
+    }
+};
+
 class message_window
 {
     int next_line;
     int temp_line;     // starting point of temporary messages
     int input_line;    // last line-after-input
     vector<formatted_string> lines;
+    formatted_string pwline;
     prefix_type prompt; // current prefix prompt
 
     int height() const
@@ -575,6 +594,7 @@ public:
 
         for (size_t i = diff; i < lines.size(); ++i)
             out_line(lines[i], i - diff);
+
         place_cursor();
 #ifdef USE_TILE
         tiles.set_need_redraw();
@@ -705,6 +725,13 @@ void scroll_message_window(int n)
 bool any_messages()
 {
     return msgwin.any_messages();
+}
+
+powerline pwline;
+
+void display_powerline()
+{
+    pwline.show();
 }
 
 typedef circ_vec<message_line, NUM_STORED_MESSAGES> store_t;

@@ -13,6 +13,9 @@
 #include "enum.h"
 #include "player.h"
 
+// Write the powerline contents out
+void display_powerline();
+
 // Write the message window contents out.
 void display_message_window();
 void clear_message_window();
