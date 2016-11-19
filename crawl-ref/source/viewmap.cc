@@ -862,6 +862,9 @@ bool show_map(level_pos &lpos,
                     viewwindow();
                     display_message_window();
                 }
+
+                display_powerline();
+
                 continue;
             }
 

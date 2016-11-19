@@ -2347,6 +2347,7 @@ static void _prep_input()
 
     you.redraw_status_lights = true;
     print_stats();
+    display_powerline();
 
     viewwindow();
     maybe_update_stashes();
