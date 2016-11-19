@@ -361,14 +361,14 @@ class powerline
 public:
     powerline()
     {
-        line = formatted_string::parse_string("<blue>powerline </blue><w>                                                                                             </w><green> 19:00</green>");
+        line = formatted_string::parse_string("<blue>powerline </blue><w>                                                                 </w><green> 19:00</green>");
     }
 
     void show()
     {
-        cgotoxy(1, crawl_view.termsz.y, GOTO_CRT);
+        cgotoxy(1, 1, GOTO_PWL);
         line.display();
-        cprintf("%*s", crawl_view.termsz.x - line.width(), "");
+        cprintf("%*s", crawl_view.pwlsz.x - line.width(), "");
     }
 };
 

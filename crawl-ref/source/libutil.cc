@@ -372,6 +372,8 @@ static coord_def _cgettopleft(GotoRegion region)
         return crawl_view.hudp;
     case GOTO_MSG:
         return crawl_view.msgp;
+    case GOTO_PWL:
+        return crawl_view.pwlp;
     case GOTO_DNGN:
         return crawl_view.viewp;
     case GOTO_CRT:
@@ -426,6 +428,8 @@ coord_def cgetsize(GotoRegion region)
         return crawl_view.hudsz;
     case GOTO_MSG:
         return crawl_view.msgsz;
+    case GOTO_PWL:
+        return crawl_view.pwlsz;
     case GOTO_DNGN:
         return crawl_view.viewsz;
     case GOTO_CRT:

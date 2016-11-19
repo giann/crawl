@@ -41,6 +41,7 @@ public:
         hudp(-1,-1),   hudsz(hudsz_),
         msgp(-1,-1),   msgsz(0, Options.msg_min_height),
         mlistp(-1,-1), mlistsz(MLIST_MIN_WIDTH, 0),
+        pwlp(-1,-1),   pwlsz(VIEW_MIN_WIDTH, 1),
         hud_gutter(HUD_MIN_GUTTER),
         valid(false) {}
 
@@ -73,15 +74,17 @@ public:
     const coord_def hudsz;
     coord_def msgp, msgsz;
     coord_def mlistp, mlistsz;
+    coord_def pwlp, pwlsz;
     int hud_gutter;
     bool valid;
 };
 
-// vvvvvvghhh  v=view, g=hud gutter, h=hud, l=list, m=msg
+// vvvvvvghhh  v=view, g=hud gutter, h=hud, l=list, m=msg, p=powerline
 // vvvvvvghhh
 // vvvvvv lll
 //        lll
 // mmmmmmmmmm
+// pppppppppp
 class _inline_layout : public _layout
 {
 public:
@@ -123,6 +126,7 @@ public:
             _increment(mlistsz.y, leftover_rightcol_y(), MLIST_MIN_HEIGHT);
         _increment(msgsz.y,  leftover_y() - 1, MSG_MAX_HEIGHT);
         _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
+        _increment(pwlsz.y, leftover_y(), 1);
 
         // Finish off by doing the positions.
         if (Options.messages_at_top)
@@ -137,6 +141,7 @@ public:
         }
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
         mlistp = hudp  + coord_def(0, hudsz.y);
+        pwlp   = msgp  + coord_def(0, msgsz.y);
 
         _assert_validity();
         return true;
@@ -147,18 +152,19 @@ public:
         int width = (viewsz.x + hud_gutter + max(hudsz.x, mlistsz.x));
         return termsz.x - width;
     }
-    int leftover_rightcol_y() const { return termsz.y-hudsz.y-mlistsz.y-msgsz.y; }
-    int leftover_leftcol_y() const  { return termsz.y-viewsz.y-msgsz.y; }
+    int leftover_rightcol_y() const { return termsz.y-hudsz.y-mlistsz.y-msgsz.y-pwlsz.y; }
+    int leftover_leftcol_y() const  { return termsz.y-viewsz.y-msgsz.y-pwlsz.y; }
     int leftover_y() const
     {
         return min(leftover_rightcol_y(), leftover_leftcol_y());
     }
 };
 
-// ll vvvvvvghhh  v=view, g=hud gutter, h=hud, l=list, m=msg
+// ll vvvvvvghhh  v=view, g=hud gutter, h=hud, l=list, m=msg, p=powerline
 // ll vvvvvvghhh
 // ll vvvvvv
 // mmmmmmmmmmmmm
+// ppppppppppppp
 class _mlist_col_layout : public _layout
 {
 public:
@@ -194,14 +200,17 @@ public:
         if ((viewsz.y % 2) != 1)
             --viewsz.y;
 
-        _increment(msgsz.y,  leftover_y(), INT_MAX);
+        _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
         mlistsz.y = viewsz.y;
+
+        _increment(pwlsz.y, leftover_y(), 1);
 
         // Finish off by doing the positions.
         mlistp = termp;
-        viewp  = mlistp+ coord_def(mlistsz.x+MLIST_GUTTER, 0);
-        msgp   = termp + coord_def(0, viewsz.y);
-        hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
+        viewp  = mlistp + coord_def(mlistsz.x+MLIST_GUTTER, 0);
+        msgp   = termp  + coord_def(0, viewsz.y);
+        hudp   = viewp  + coord_def(viewsz.x+hud_gutter, 0);
+        pwlp   = msgp   + coord_def(0, msgsz.y);
 
         _assert_validity();
         return true;
@@ -215,7 +224,7 @@ public:
     int leftover_y() const
     {
         const int top_y = max(max(viewsz.y, hudsz.y), mlistsz.y);
-        const int height = top_y + msgsz.y;
+        const int height = top_y + msgsz.y + pwlsz.y;
         return termsz.y - height;
     }
 };
@@ -281,6 +290,7 @@ crawl_view_geometry::crawl_view_geometry()
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       mlistp(hudp.x, hudp.y + hudsz.y),
       mlistsz(hudsz.x, msgp.y - mlistp.y),
+      pwlp(1, msgp.y + msgsz.y), pwlsz(80, 1),
       vbuf(), vgrdc(), viewhalfsz(), glos1(), glos2(),
       vlos1(), vlos2(), mousep(), last_player_pos()
 {
@@ -407,6 +417,8 @@ void crawl_view_geometry::init_geometry()
     hudsz   = winner->hudsz;
     mlistp  = winner->mlistp;
     mlistsz = winner->mlistsz;
+    pwlp    = winner->pwlp;
+    pwlsz   = winner->pwlsz;
 
 #ifdef USE_TILE_LOCAL
     // libgui may redefine these based on its own settings.

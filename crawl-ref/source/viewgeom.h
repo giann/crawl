@@ -48,6 +48,8 @@ public:
     coord_def msgsz;               // Size of the message pane.
     coord_def mlistp;              // Left-top pos of the monster list.
     coord_def mlistsz;             // Size of the monster list.
+    coord_def pwlp;                // Left-top pos of the powerline.
+    coord_def pwlsz;               // Size of the powerline.
 
     crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
 
