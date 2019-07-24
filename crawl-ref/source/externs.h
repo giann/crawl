@@ -602,6 +602,11 @@ public:
                 bool ident = false, bool with_inscription = true,
                 bool quantity_in_words = false,
                 iflags_t ignore_flags = 0x0) const;
+
+    string unqualified_name(description_level_type desc, bool terse = false,
+                            bool ident = false, bool with_inscription = false,
+                            iflags_t ignore_flags = 0x0) const;
+
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;
@@ -658,9 +663,6 @@ public:
     bool is_mundane() const;
 
 private:
-    string name_aux(description_level_type desc, bool terse, bool ident,
-                    bool with_inscription, iflags_t ignore_flags) const;
-
     colour_t randart_colour() const;
 
     colour_t ring_colour() const;
