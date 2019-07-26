@@ -321,7 +321,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         else
             buff << quantity << " ";
     }
-    
+
 
     buff << auxname;
 
