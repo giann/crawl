@@ -105,16 +105,16 @@ private:
 class InvEntry : public MenuEntry
 {
 private:
-    static bool show_glyph;
-
     mutable string basename;
     mutable string qualname;
     mutable string dbname;
 
 protected:
+    static bool show_glyph;
     static bool show_cursor;
     // Should we show the floor tile, etc?
     bool show_background = true;
+    void add_class_hotkeys(const item_def &i);
 
 public:
     const item_def *item;
@@ -149,7 +149,6 @@ public:
     virtual bool get_tiles(vector<tile_def>& tiles) const override;
 
 private:
-    void add_class_hotkeys(const item_def &i);
     bool _has_star;
 };
 
@@ -178,12 +177,14 @@ public:
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
                            function<MenuEntry* (MenuEntry*)> procfn = nullptr,
-                           menu_letter ckey = 'a', bool sort = true);
+                           menu_letter ckey = 'a', bool sort = true,
+                           int item_selector = OSEL_ANY);
 
     // Make sure this menu does not outlive items, or mayhem will ensue!
     menu_letter load_items(const vector<item_def>& items,
                            function<MenuEntry* (MenuEntry*)> procfn = nullptr,
-                           menu_letter ckey = 'a', bool sort = true);
+                           menu_letter ckey = 'a', bool sort = true,
+                           int item_selector = OSEL_ANY);
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
@@ -216,6 +217,16 @@ protected:
 private:
     bool _mode_special_drop;
 };
+
+class WieldEntry : public InvEntry
+{
+public:
+    WieldEntry(const item_def &i);
+
+public:
+    string get_text(const bool need_cursor = false) const override;
+};
+
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 

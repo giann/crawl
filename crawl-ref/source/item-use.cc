@@ -460,8 +460,14 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     {
         if (!auto_wield)
         {
+            string title;
+            title += "Wield which item (- for none, * to show all)?\n";
+            // TODO: subtitle on full screen menu only
+            title.append(37, ' ');
+            title += "Accuracy    Damage   Speed   Brand               Other";
+
             item_slot = prompt_invent_item(
-                            "Wield which item (- for none, * to show all)?",
+                            title.c_str(),
                             menu_type::invlist, OSEL_WIELD,
                             OPER_WIELD, invprompt_flag::no_warning, '-');
         }

@@ -24,6 +24,7 @@
 #include "god-item.h"
 #include "god-passive.h"
 #include "initfile.h"
+#include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
@@ -536,7 +537,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
     vector<const item_def *> tobeshown;
     _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
 
-    load_items(tobeshown, procfn);
+    load_items(tobeshown, procfn, 'a', true, item_selector);
 
     if (!item_count())
         set_title(no_selectables_message(item_selector));
@@ -832,7 +833,8 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
 
 menu_letter InvMenu::load_items(const vector<item_def>& mitems,
                                 function<MenuEntry* (MenuEntry*)> procfn,
-                                menu_letter ckey, bool sort)
+                                menu_letter ckey, bool sort,
+                                int item_selector)
 {
     vector<const item_def*> xlatitems;
     for (const item_def &item : mitems)
@@ -842,7 +844,8 @@ menu_letter InvMenu::load_items(const vector<item_def>& mitems,
 
 menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                                 function<MenuEntry* (MenuEntry*)> procfn,
-                                menu_letter ckey, bool sort)
+                                menu_letter ckey, bool sort,
+                                int item_selector)
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (const item_def * const mitem : mitems)
@@ -888,7 +891,9 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             if (mitem->base_type != i)
                 continue;
 
-            InvEntry * const ie = new InvEntry(*mitem);
+            InvEntry * const ie = item_selector == OSEL_WIELD ? new WieldEntry(*mitem) 
+                                                              : new InvEntry(*mitem);
+
             if (mitem->sub_type == get_max_subtype(mitem->base_type))
                 forced_first = ie;
             else
@@ -971,6 +976,102 @@ int InvMenu::getkey() const
         mkey = ' ';
     }
     return mkey;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// Wield Menu
+
+// Wield which weapon?
+
+// Weapon                 Accuracy     Damage     Speed         Brand          Other
+// -) Unarmed             Good         ##..       ########      Confuse    
+// a) +0,+4 dagger        Excellent    ###..      ######..      N/A
+// b) -1,-2 dagger "Gyu"  Excellent    ##...      ######..      Protection     Blink, SInv, rElec
+// c) +8,+8 scimitar      Fair         ######...  ###...        Flame
+WieldEntry::WieldEntry(const item_def &i)
+    : InvEntry(i)
+{
+    data = const_cast<item_def *>(item);
+
+    if (item_is_wieldable(i))
+    {
+        // TODO: Skill & stat & plus adjust these values
+        const int base_dam = property(*item, PWPN_DAMAGE);
+        const int ammo_type = fires_ammo_type(*item);
+        const int ammo_dam = ammo_type == MI_NONE ? 0 :
+                                                    ammo_type_damage(ammo_type);
+
+        string name;
+        name += i.name(DESC_INVENTORY_WIELD, false, false, false);
+        if (name.length() <= 34)
+            name.append(34 - name.length(), ' ');
+        else
+            name = name.substr(0, 32) + "..";
+
+        // TODO: longest is `poison resistance`, find a dynamic way of finding that out?
+        string ego;
+        ego += uppercase_first(weapon_brand_name(*item, false));
+        if (ego.length() <= 17)
+            ego.append(17 - ego.length(), ' ');
+        else
+            ego = ego.substr(0, 15) + "..";
+
+        // TODO: bars or numbers or something else?
+        text = make_stringf(
+            "%34s   %+7d   %7d   %5.1f   %17s   %s",
+            name.c_str(),
+            property(*item, PWPN_HIT),
+            base_dam + ammo_dam,
+            (float) property(*item, PWPN_SPEED) / 10,
+            ego.c_str(),
+            is_unrandom_artefact(*item) ? artefact_inscription(*item).c_str()
+                                        : ""
+        );
+    }
+    else if (in_inventory(i) && i.base_type != OBJ_GOLD)
+    {
+        // We need to do this in order to get the 'wielded' annotation.
+        // We then toss out the first four characters, which look
+        // like this: "a - ". Ow. FIXME.
+        text = i.name(DESC_INVENTORY_EQUIP, false).substr(4);
+    }
+    else
+        text = i.name(DESC_A, false);
+
+
+    if (item_is_stationary_net(i))
+    {
+        actor *trapped = actor_at(i.pos);
+        text += make_stringf(" (holding %s)",
+                            trapped ? trapped->name(DESC_A).c_str()
+                                    : "nobody"); // buggy net, but don't crash
+    }
+
+    if (i.base_type != OBJ_GOLD && in_inventory(i))
+        add_hotkey(index_to_letter(i.link));
+    else
+        add_hotkey(' ');        // dummy hotkey
+
+    add_class_hotkeys(i);
+
+    quantity = i.quantity;
+}
+
+string WieldEntry::get_text(bool need_cursor) const
+{
+    ostringstream tstr;
+
+    tstr << ' ';
+    if (InvEntry::show_glyph)
+        tstr << "(" << glyph_to_tagstr(get_item_glyph(*item)) << ")" << " ";
+
+    tstr << text;
+    const string str = tstr.str();
+
+    if (printed_width(str) > get_number_of_cols())
+        return chop_tagged_string(str, get_number_of_cols() - 2) + "..";
+    else
+        return str;
 }
 
 //////////////////////////////////////////////////////////////////////////////

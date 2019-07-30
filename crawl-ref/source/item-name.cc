@@ -153,7 +153,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     const bool startvowel     = is_vowel(auxname[0]);
 
-    if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY)
+    if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY
+        || DESC_INVENTORY_WIELD)
     {
         if (in_inventory(*this)) // actually in inventory
         {
@@ -215,6 +216,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         case DESC_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
+        case DESC_INVENTORY_WIELD:
         case DESC_PLAIN:
         default:
             break;
@@ -239,6 +241,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         case DESC_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
+        case DESC_INVENTORY_WIELD:
                               buff << (startvowel ? "an " : "a "); break;
         case DESC_PLAIN:
         default:
@@ -1571,9 +1574,15 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const string ego_suffix = know_ego ? _ego_suffix(weap, terse) : "";
     const string curse_suffix
         = know_curse && weap.cursed() && terse ? " (curse)" :  "";
-    return curse_prefix + plus_text + cosmetic_text + ego_prefix
-           + item_base_name(weap)
-           + ego_suffix + curse_suffix;
+
+    if (desc == DESC_INVENTORY_WIELD)
+        return curse_prefix + plus_text + cosmetic_text
+               + item_base_name(weap)
+               + curse_suffix;
+    else
+        return curse_prefix + plus_text + cosmetic_text + ego_prefix
+               + item_base_name(weap)
+               + ego_suffix + curse_suffix;
 }
 
 // Note that "terse" is only currently used for the "in hand" listing on

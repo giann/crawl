@@ -9,6 +9,7 @@ enum description_level_type
     DESC_ITS,
     DESC_INVENTORY_EQUIP,
     DESC_INVENTORY,
+    DESC_INVENTORY_WIELD,
 
     // Partial item names.
     DESC_BASENAME,                     // Base name of item subtype
