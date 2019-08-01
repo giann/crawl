@@ -161,6 +161,8 @@ public:
     typedef pair<string, cglyph_t> item_glyph_override_type;
     vector<item_glyph_override_type > item_glyph_overrides;
     map<string, cglyph_t> item_glyph_cache;
+    // "=-+.x∞#."
+    u32string bar_glyphs;
 
     string      save_dir;       // Directory where saves and bones go.
     string      macro_dir;      // Directory containing macro.txt

@@ -36,6 +36,7 @@
 #include "misc.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -367,27 +368,27 @@ public:
             if (cx < disp && cx < old_disp)
             {
                 textcolour(m_default);
-                putwch('=');
+                putwch(Options.bar_glyphs[0]);
             }
             else if (cx < disp)
             {
                 textcolour(m_change_pos);
-                putwch('=');
+                putwch(Options.bar_glyphs[0]);
             }
             else if (cx < sub_disp)
             {
                 textcolour(YELLOW);
-                putwch('=');
+                putwch(Options.bar_glyphs[0]);
             }
             else if (cx < old_disp)
             {
                 textcolour(m_change_neg);
-                putwch('-');
+                putwch(Options.bar_glyphs[1]);
             }
             else
             {
                 textcolour(m_empty);
-                putwch('-');
+                putwch(Options.bar_glyphs[1]);
             }
 #endif
 
@@ -1826,15 +1827,15 @@ static string _itosym(int level, int max = 1)
     while (max > 0)
     {
         if (level == 0)
-            sym += ".";
+            sym += Options.bar_glyphs[3];
         else if (level > 0)
         {
-            sym += "+";
+            sym += Options.bar_glyphs[2];
             --level;
         }
         else // negative resistance
         {
-            sym += "x";
+            sym += Options.bar_glyphs[4];
             ++level;
         }
         sym += (spacing) ? " " : "";

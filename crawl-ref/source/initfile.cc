@@ -18,6 +18,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <codecvt>
 #include <iomanip>
 #include <set>
 #include <string>
@@ -1196,6 +1197,9 @@ void game_options::reset_options()
     mon_glyph_overrides.clear();
     item_glyph_overrides.clear();
     item_glyph_cache.clear();
+
+    wstring_convert<codecvt_utf8<char32_t>, char32_t> conv;
+    bar_glyphs = conv.from_bytes(string("=-+.x∞#."));
 
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
@@ -2799,6 +2803,13 @@ void game_options::read_option_line(const string &str, bool runscript)
             split_parse(field, ",", &game_options::remove_item_glyph_override);
         else
             split_parse(field, ",", &game_options::add_item_glyph_override, caret_equal);
+    }
+    else if (key == "bar_glyphs")
+    {
+        if (plain) { // TODO: trim
+            wstring_convert<codecvt_utf8<char32_t>, char32_t> conv;
+            bar_glyphs = conv.from_bytes(field);
+        }
     }
     else if (key == "arena_teams")
         game.arena_teams = field;
