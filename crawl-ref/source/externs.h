@@ -23,6 +23,7 @@
 #include "description-level-type.h"
 #include "dungeon-feature-type.h"
 #include "enum.h"
+#include "json.h"
 #include "spell-type.h"
 #include "monster-type.h"
 #include "branch-type.h"
@@ -423,6 +424,7 @@ public:
 #endif
 
     string describe(bool long_name = false, bool with_number = true) const;
+    JsonNode *to_json() const;
 
     void clear()
     {

@@ -7024,7 +7024,7 @@ JsonNode *json_dump_vault_maps()
 
         JsonNode *json_level(json_mkobject());
 
-        json_append_member(json_level, "level", json_mkstring(lid.describe().c_str()));
+        json_append_member(json_level, "location", lid.to_json());
 
         if (you.wizard)
         {
