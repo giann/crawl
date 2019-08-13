@@ -34,6 +34,8 @@
 #include "stringutil.h"
 #include "syscalls.h"
 #include "artefact.h"
+#include "json.h"
+#include "json-wrapper.h"
 #include <sstream>
 #include <set>
 #include <unistd.h>
@@ -93,9 +95,16 @@ static string colour(int colour, string text, bool bg = false)
            + CONTROL('O');
 }
 
-static void record_resvul(int color, const char* name, const char* caption,
-                          string& str, int rval)
+static void record_resvul(unsigned color, const char* name, const char* caption,
+                          string& str, JsonNode *node, int rval)
 {
+    JsonNode *resvul(json_mkobject());
+    json_append_member(resvul, "name", json_mkstring(name));
+    if (rval > 1 && rval <= 3)
+        json_append_member(resvul, "value", json_mknumber(rval));
+    json_append_member(resvul, "color", json_mknumber(color));
+    json_append_element(node, resvul);
+
     if (str.empty())
         str = " | " + string(caption) + ": ";
     else
@@ -118,13 +127,13 @@ static void record_resvul(int color, const char* name, const char* caption,
     str += colour(color, token);
 }
 
-static void record_resist(int colour, string name, string& res,
-                          string& vul, int rval)
+static void record_resist(unsigned colour, string name, string& res, JsonNode *jres,
+                          string& vul, JsonNode *jvul, int rval)
 {
     if (rval > 0)
-        record_resvul(colour, name.c_str(), "Res", res, rval);
+        record_resvul(colour, name.c_str(), "Res", res, jres, rval);
     else if (rval < 0)
-        record_resvul(colour, name.c_str(), "Vul", vul, -rval);
+        record_resvul(colour, name.c_str(), "Vul", vul, jvul, -rval);
 }
 
 static void monster_action_cost(string& qual, int cost, const char* desc)
@@ -135,6 +144,19 @@ static void monster_action_cost(string& qual, int cost, const char* desc)
             qual += "; ";
         qual += desc;
         qual += ": " + to_string(cost * 10) + "%";
+    }
+}
+
+static void json_monster_action_cost(JsonNode *qualifiers, int cost, const char* desc)
+{
+    if (cost != 10)
+    {
+        JsonNode *action_cost(json_mkobject());
+
+        json_append_member(action_cost, "name", json_mkstring(desc));
+        json_append_member(action_cost, "cost", json_mknumber(cost * 10));
+
+        json_append_element(qualifiers, action_cost);
     }
 }
 
@@ -229,20 +251,64 @@ static string monster_speed(const monster& mon, const monsterentry* me,
     return speed;
 }
 
-static void mons_flag(string& flag, const string& newflag)
+static JsonNode *json_monster_speed(const monster& mon, const monsterentry* me,
+                                    int speed_min, int speed_max)
+{
+    JsonNode *speed(json_mkobject());
+    json_append_member(speed, "min", json_mknumber(speed_min));
+    json_append_member(speed, "max", json_mknumber(speed_max));
+
+    const mon_energy_usage& cost = mons_energy(mon);
+    JsonNode *qualifiers(json_mkarray());
+
+    bool skip_action = false;
+    if (cost.attack != 10 && cost.attack == cost.missile
+        && cost.attack == cost.spell && cost.attack == cost.special
+        && cost.attack == cost.item)
+    {
+        json_monster_action_cost(qualifiers, cost.attack, "act");
+        skip_action = true;
+    }
+
+    json_monster_action_cost(qualifiers, cost.move, "move");
+
+    if (cost.swim != cost.move)
+        json_monster_action_cost(qualifiers, cost.swim, "swim");
+
+    if (!skip_action)
+    {
+        json_monster_action_cost(qualifiers, cost.attack, "atk");
+        json_monster_action_cost(qualifiers, cost.missile, "msl");
+        json_monster_action_cost(qualifiers, cost.spell, "spell");
+        json_monster_action_cost(qualifiers, cost.special, "special");
+        json_monster_action_cost(qualifiers, cost.item, "item");
+    }
+
+    if (speed_max > 0 && mons_class_flag(mon.type, M_STATIONARY))
+        json_monster_action_cost(qualifiers, -1, "stationary");
+
+    return speed;
+}
+
+static void mons_flag(string& flag, JsonNode *jflag, const string& newflag, const unsigned color = BLACK)
 {
     if (flag.empty())
         flag = " | ";
     else
         flag += ", ";
-    flag += newflag;
+    flag += colour(color, newflag);
+
+    JsonNode *json_flag(json_mkobject());
+    json_append_member(json_flag, "name", json_mkstring(newflag.c_str()));
+    json_append_member(json_flag, "color", json_mknumber(color));
+    json_append_element(jflag, json_flag);
 }
 
-static void mons_check_flag(bool set, string& flag,
-                            const string& newflag)
+static void mons_check_flag(bool set, string& flag, JsonNode *jflag,
+                            const string& newflag, const unsigned color = BLACK)
 {
     if (set)
-        mons_flag(flag, newflag);
+        mons_flag(flag, jflag, newflag, color);
 }
 
 static void initialize_crawl()
@@ -458,10 +524,48 @@ static string _spell_flag_string(const mon_spell_slot& slot)
     return flags;
 }
 
+static JsonNode *_spell_flag_json(const mon_spell_slot& slot)
+{
+    JsonNode *json_spell_flags(json_mkarray());
+
+    if (!(slot.flags & MON_SPELL_ANTIMAGIC_MASK))
+    {
+        JsonNode *json_flag(json_mkobject());
+        json_append_member(json_flag, "name", json_mkstring("!AM"));
+        json_append_member(json_flag, "color", json_mknumber(LIGHTCYAN));
+        json_append_element(json_spell_flags, json_flag);
+    }
+    if (!(slot.flags & MON_SPELL_SILENCE_MASK))
+    {
+        JsonNode *json_flag(json_mkobject());
+        json_append_member(json_flag, "name", json_mkstring("!sil"));
+        json_append_member(json_flag, "color", json_mknumber(MAGENTA));
+        json_append_element(json_spell_flags, json_flag);
+    }
+    if (slot.flags & MON_SPELL_BREATH)
+    {
+        JsonNode *json_flag(json_mkobject());
+        json_append_member(json_flag, "name", json_mkstring("breath"));
+        json_append_member(json_flag, "color", json_mknumber(YELLOW));
+        json_append_element(json_spell_flags, json_flag);
+    }
+    if (slot.flags & MON_SPELL_EMERGENCY)
+    {
+        JsonNode *json_flag(json_mkobject());
+        json_append_member(json_flag, "name", json_mkstring("emergency"));
+        json_append_member(json_flag, "color", json_mknumber(LIGHTRED));
+        json_append_element(json_spell_flags, json_flag);
+    }
+
+    return json_spell_flags;
+}
+
 // ::first is spell name, ::second is possible damages
 typedef multimap<string, string> spell_damage_map;
 static void record_spell_set(monster* mp, set<string>& spell_lists,
-                             spell_damage_map& damages)
+                             JsonNode *json_spell_lists,
+                             spell_damage_map& damages,
+                             bool record_json)
 {
     string ret;
     for (const auto& slot : mp->spells)
@@ -484,6 +588,20 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
                        + shorten_spell_name(rawname) + " (";
                 ret +=
                     mons_human_readable_spell_damage_string(mp, breath) + ")";
+
+                if (record_json)
+                {
+                    JsonNode *json_spell(json_mkobject());
+                    json_append_member(json_spell, "head", json_mknumber(k + 1));
+                    json_append_member(json_spell, "name",
+                                       json_mkstring(shorten_spell_name(rawname).c_str()));
+                    JsonNode *json_damages(json_mkarray());
+                    json_append_element(json_damages,
+                                        json_mkstring(mons_human_readable_spell_damage_string(mp, breath).c_str()));
+                    json_append_member(json_spell, "damage", json_damages);
+                    json_append_member(json_spell, "flags", _spell_flag_json(slot));
+                    json_append_element(json_spell_lists, json_spell);
+                }
             }
             ret += "}";
 
@@ -493,6 +611,15 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
 
         string spell_name = spell_title(sp);
         spell_name = shorten_spell_name(spell_name);
+
+        JsonNode *json_spell;
+        if (record_json)
+        {
+            json_spell = json_mkobject();
+            json_append_member(json_spell, "name", json_mkstring(spell_name.c_str()));
+            json_append_member(json_spell, "flags", _spell_flag_json(slot));
+        }
+
         ret += spell_name;
         ret += _spell_flag_string(slot);
 
@@ -508,7 +635,11 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
                 damages.insert(make_pair(spell_name, damage));
             }
         }
+
+        if (record_json)
+            json_append_element(json_spell_lists, json_spell);
     }
+
     spell_lists.insert(ret);
 }
 
@@ -541,6 +672,31 @@ static string construct_spells(const set<string>& spell_lists,
     return ret;
 }
 
+static JsonNode *construct_json_spell_damages(const spell_damage_map& damages)
+{
+    JsonNode *json_spell_damages(json_mkarray());
+
+    map<string, set<string>> merged_damages;
+    for (const auto& entry : damages)
+        merged_damages[entry.first].insert(entry.second);
+
+    for (const auto& entry : merged_damages)
+    {
+        JsonNode *json_spell_damage(json_mkobject());
+        json_append_member(json_spell_damage, "spell", json_mkstring(entry.first.c_str()));
+
+        JsonNode *json_damages(json_mkarray());
+        for (const auto& dam : entry.second)
+            json_append_element(json_damages, json_mkstring(dam.c_str()));
+
+        json_append_member(json_spell_damage, "damage", json_damages);
+
+        json_append_element(json_spell_damages, json_spell_damage);
+    }
+
+    return json_spell_damages;
+}
+
 static inline void set_min_max(int num, int& min, int& max)
 {
     if (!min || num < min)
@@ -560,6 +716,30 @@ static string monster_symbol(const monster& mon)
         symbol = colour(mi.colour(), symbol);
     }
     return symbol;
+}
+
+static string monster_raw_symbol(const monster& mon)
+{
+    string symbol;
+    const monsterentry* me = mon.find_monsterentry();
+    if (me)
+    {
+        monster_info mi(&mon, MILEV_NAME);
+        symbol += me->basechar;
+    }
+    return symbol;
+}
+
+static unsigned monster_color(const monster& mon)
+{
+    unsigned color = 0;
+    const monsterentry* me = mon.find_monsterentry();
+    if (me)
+    {
+        monster_info mi(&mon, MILEV_NAME);
+        color = mi.colour();
+    }
+    return color;
 }
 
 static int _mi_create_monster(mons_spec spec)
@@ -583,9 +763,29 @@ static string damage_flavour(const string& name,
     return "(" + name + ":" + damage + ")";
 }
 
+static JsonNode *json_damage_flavour(const string& name, const unsigned color = BLACK, const string& damage = "")
+{
+    JsonNode *json_damage(json_mkobject());
+    json_append_member(json_damage, "name", json_mkstring(name.c_str()));
+    if (!damage.empty())
+        json_append_member(json_damage, "value", json_mkstring(damage.c_str()));
+    json_append_member(json_damage, "color", json_mknumber(color));
+    return json_damage;
+}
+
 static string damage_flavour(const string& name, int low, int high)
 {
     return make_stringf("(%s:%d-%d)", name.c_str(), low, high);
+}
+
+static JsonNode *json_damage_flavour(const string& name, const int low, const int high, const unsigned color = BLACK)
+{
+    JsonNode *json_damage(json_mkobject());
+    json_append_member(json_damage, "name", json_mkstring(name.c_str()));
+    json_append_member(json_damage, "min", json_mknumber(low));
+    json_append_member(json_damage, "max", json_mknumber(high));
+    json_append_member(json_damage, "color", json_mknumber(color));
+    return json_damage;
 }
 
 static void rebind_mspec(string* requested_name,
@@ -690,6 +890,8 @@ int main(int argc, char* argv[])
 {
     alarm(5);
     crawl_state.test = true;
+    JsonNode *json_mons = NULL;
+    int argi = 0;
     if (argc < 2)
     {
         printf("Usage: @? <monster name>\n");
@@ -707,14 +909,19 @@ int main(int argc, char* argv[])
         printf("%s\n", make_name().c_str());
         return 0;
     }
+    else if (!strcmp(argv[1], "-json") || !strcmp(argv[1], "--json"))
+    {
+        json_mons = json_mkobject();
+        argi++;
+    }
 
     initialize_crawl();
 
     mons_list mons;
-    string target = argv[1];
+    string target = argv[1 + argi];
 
-    if (argc > 2)
-        for (int x = 2; x < argc; x++)
+    if (argc > (2 + argi))
+        for (int x = (2 + argi); x < argc; x++)
         {
             target.append(" ");
             target.append(argv[x]);
@@ -734,7 +941,30 @@ int main(int argc, char* argv[])
     {
         if (row[0] == target)
         {
-            printf("%s\n", row[1].c_str());
+            if (json_mons == NULL)
+                printf("%s\n", row[1].c_str());
+            else
+            {
+                json_append_member(json_mons, "name", json_mkstring("cang"));
+                json_append_member(json_mons, "symbol", json_mkstring("Ω"));
+                json_append_member(json_mons, "color", json_mknumber(LIGHTRED));
+                json_append_member(json_mons, "speed", json_mknumber(999));
+                json_append_member(json_mons, "hitDice", json_mknumber(666));
+                json_append_member(json_mons, "healthPoints", json_mknumber(666));
+                json_append_member(json_mons, "armourClass", json_mknumber(3.14));
+                json_append_member(json_mons, "evasion", json_mknumber(2.71));
+                json_append_member(json_mons, "damage", json_mknumber(999));
+
+                JsonNode *resistances(json_mkarray());
+                json_append_element(resistances, json_mkstring("sanity"));
+                json_append_member(json_mons, "resistances", resistances);
+                json_append_member(json_mons, "experience", json_mknumber(999));
+                json_append_member(json_mons, "intelligence", json_mknumber(999));
+                json_append_member(json_mons, "size", json_mkstring("!!!"));
+
+                JsonWrapper json(json_mons);
+                printf("%s\n", json.to_string().c_str());
+            }
             return 0;
         }
     }
@@ -809,6 +1039,7 @@ int main(int argc, char* argv[])
     int speed_min = 0, speed_max = 0;
     // Calculate averages.
     set<string> spell_lists;
+    JsonNode *json_spell_lists(json_mkarray());
     spell_damage_map damages;
     for (int i = 0; i < ntrials; ++i)
     {
@@ -820,7 +1051,7 @@ int main(int argc, char* argv[])
         set_min_max(mp->speed, speed_min, speed_max);
         set_min_max(mp->hit_points, hp_min, hp_max);
 
-        record_spell_set(mp, spell_lists, damages);
+        record_spell_set(mp, spell_lists, json_spell_lists, damages, i == ntrials - 1);
 
         // If it was a unique or had unrands, let it/them generate in future
         // iterations as well.
@@ -848,6 +1079,8 @@ int main(int argc, char* argv[])
     monster& mon(menv[index]);
 
     const string symbol(monster_symbol(mon));
+    const string raw_symbol(monster_raw_symbol(mon));
+    const unsigned color = monster_color(mon);
 
     const bool shapeshifter = mon.is_shapeshifter()
                               || spec_type == MONS_SHAPESHIFTER
@@ -872,42 +1105,100 @@ int main(int argc, char* argv[])
         string monstervulnerabilities;
         string monsterattacks;
 
+        JsonNode *json_monsterflags(json_mkarray());
+        JsonNode *json_monsterresistances(json_mkarray());
+        JsonNode *json_monstervulnerabilities(json_mkarray());
+        JsonNode *json_monsterattacks(json_mkarray());
+
         lowercase(target);
 
         const bool changing_name =
             mon.has_hydra_multi_attack() || mon.type == MONS_PANDEMONIUM_LORD
             || shapeshifter || mon.type == MONS_DANCING_WEAPON;
 
-        printf("%s (%s)",
-               changing_name ? me->name : mon.name(DESC_PLAIN, true).c_str(),
-               symbol.c_str());
+        if (json_mons == NULL)
+        {
+            printf("%s (%s)",
+                   changing_name ? me->name : mon.name(DESC_PLAIN, true).c_str(),
+                   symbol.c_str());
+        }
+        else
+        {
+            json_append_member(json_mons, "name",
+                               json_mkstring(changing_name ? me->name : mon.name(DESC_PLAIN, true).c_str()));
+            json_append_member(json_mons, "symbol", json_mkstring(raw_symbol.c_str()));
+            json_append_member(json_mons, "color", json_mknumber(color));
+        }
 
         if (mons_class_flag(mon.type, M_UNFINISHED))
-            printf(" | %s", colour(LIGHTRED, "UNFINISHED").c_str());
+        {
+            if (json_mons == NULL)
+                printf(" | %s", colour(LIGHTRED, "UNFINISHED").c_str());
+            else
+                json_append_member(json_mons, "unfinished", json_mkbool(true));
+        }
 
-        printf(" | Spd: %s",
-               monster_speed(mon, me, speed_min, speed_max).c_str());
+        if (json_mons == NULL)
+        {
+            printf(" | Spd: %s",
+                   monster_speed(mon, me, speed_min, speed_max).c_str());
+        }
+        else
+            json_append_member(json_mons, "speed", json_monster_speed(mon, me, speed_min, speed_max));
 
         const int hd = mon.get_experience_level();
-        printf(" | HD: %d", hd);
-
-        printf(" | HP: ");
-        const int hplow = hp_min;
-        const int hphigh = hp_max;
-        if (hplow < hphigh)
-            printf("%i-%i", hplow, hphigh);
+        if (json_mons == NULL)
+            printf(" | HD: %d", hd);
         else
-            printf("%i", hplow);
+            json_append_member(json_mons, "hitDice", json_mknumber(hd));
 
-        printf(" | AC/EV: %i/%i", mac, mev);
+        if (json_mons == NULL)
+        {
+            printf(" | HP: ");
+            const int hplow = hp_min;
+            const int hphigh = hp_max;
+            if (hplow < hphigh)
+                printf("%i-%i", hplow, hphigh);
+            else
+                printf("%i", hplow);
+        }
+        else
+        {
+            JsonNode *hp(json_mkobject());
+            json_append_member(hp, "min", json_mknumber(hp_min));
+            json_append_member(hp, "max", json_mknumber(hp_max));
 
-        string defenses;
-        if (mon.is_spiny() > 0)
-            defenses += colour(YELLOW, "(spiny 5d4)");
-        if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
-            defenses += colour(LIGHTRED, "(headbutt: d20-1)");
-        if (!defenses.empty())
-            printf(" %s", defenses.c_str());
+            json_append_member(json_mons, "healthPoints", hp);
+        }
+
+        if (json_mons == NULL)
+            printf(" | AC/EV: %i/%i", mac, mev);
+        else
+        {
+            json_append_member(json_mons, "armourClass", json_mknumber(mac));
+            json_append_member(json_mons, "evasion", json_mknumber(mev));
+        }
+
+        if (json_mons == NULL)
+        {
+            string defenses;
+            if (mon.is_spiny() > 0)
+                defenses += colour(YELLOW, "(spiny 5d4)");
+            if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
+                defenses += colour(LIGHTRED, "(headbutt: d20-1)");
+            if (!defenses.empty())
+                printf(" %s", defenses.c_str());
+        }
+        else
+        {
+            JsonNode *defenses(json_mkarray());
+            if (mon.is_spiny() > 0)
+                json_append_element(defenses, json_mkstring("spiny 5d4"));
+            if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
+                json_append_element(defenses, json_mkstring("headbutt: d20-1"));
+
+            json_append_member(json_mons, "defenses", defenses);
+        }
 
         mon.wield_melee_weapon();
         for (int x = 0; x < 4; x++)
@@ -924,6 +1215,8 @@ int main(int argc, char* argv[])
                 else
                     monsterattacks += ", ";
 
+                JsonNode *json_attack(json_mkobject());
+
                 short int dam = attk.damage;
                 if (mon.has_ench(ENCH_BERSERK) || mon.has_ench(ENCH_MIGHT))
                     dam = dam * 3 / 2;
@@ -932,12 +1225,19 @@ int main(int argc, char* argv[])
                     dam = dam * 2 / 3;
 
                 monsterattacks += to_string(dam);
+                json_append_member(json_attack, "damage", json_mknumber(dam));
 
-                if (attk.type == AT_CONSTRICT)
+                if (attk.type == AT_CONSTRICT){
                     monsterattacks += colour(GREEN, "(constrict)");
+                    json_append_member(json_attack, "type", json_mkstring("constrict"));
+                }
 
-                if (attk.type == AT_CLAW && mon.has_claws() >= 3)
+                if (attk.type == AT_CLAW && mon.has_claws() >= 3){
                     monsterattacks += colour(LIGHTGREEN, "(claw)");
+                    json_append_member(json_attack, "type", json_mkstring("claw"));
+                }
+
+                JsonNode *json_flavours(json_mkarray());
 
                 const attack_flavour flavour(orig_attk.flavour == AF_KLOWN
                                                      || orig_attk.flavour
@@ -950,137 +1250,185 @@ int main(int argc, char* argv[])
                 case AF_REACH:
                 case AF_REACH_STING:
                     monsterattacks += "(reach)";
+                    json_append_element(json_flavours, json_damage_flavour("reach"));
                     break;
                 case AF_KITE:
                     monsterattacks += "(kite)";
+                    json_append_element(json_flavours, json_damage_flavour("kite"));
                     break;
                 case AF_SWOOP:
                     monsterattacks += "(swoop)";
+                    json_append_element(json_flavours, json_damage_flavour("swoop"));
                     break;
                 case AF_ACID:
                     monsterattacks +=
                         colour(YELLOW, damage_flavour("acid", "7d3"));
+                    json_append_element(json_flavours, json_damage_flavour("acid", YELLOW, "7d3"));
                     break;
                 case AF_BLINK:
                     monsterattacks += colour(MAGENTA, "(blink self)");
+                    json_append_element(json_flavours, json_damage_flavour("blink self", MAGENTA));
                     break;
                 case AF_COLD:
                     monsterattacks += colour(
                         LIGHTBLUE, damage_flavour("cold", hd, 3 * hd - 1));
+                    json_append_element(json_flavours, json_damage_flavour("acid", hd, 3 * hd - 1, LIGHTBLUE));
                     break;
                 case AF_CONFUSE:
                     monsterattacks += colour(LIGHTMAGENTA, "(confuse)");
+                    json_append_element(json_flavours, json_damage_flavour("confuse", LIGHTMAGENTA));
                     break;
                 case AF_DRAIN_DEX:
                     monsterattacks += colour(RED, "(drain dexterity)");
+                    json_append_element(json_flavours, json_damage_flavour("drain dexterity", RED));
                     break;
                 case AF_DRAIN_STR:
                     monsterattacks += colour(RED, "(drain strength)");
+                    json_append_element(json_flavours, json_damage_flavour("drain strength", RED));
                     break;
                 case AF_DRAIN_XP:
                     monsterattacks += colour(LIGHTMAGENTA, "(drain)");
+                    json_append_element(json_flavours, json_damage_flavour("drain", LIGHTMAGENTA));
                     break;
                 case AF_CHAOTIC:
                     monsterattacks += colour(LIGHTGREEN, "(chaos)");
+                    json_append_element(json_flavours, json_damage_flavour("chaos", LIGHTGREEN));
                     break;
                 case AF_ELEC:
                     monsterattacks +=
                         colour(LIGHTCYAN,
                                damage_flavour("elec", hd,
                                               hd + max(hd / 2 - 1, 0)));
+                        json_append_element(json_flavours, json_damage_flavour("elec", hd,
+                                                                               hd + max(hd / 2 - 1, 0),
+                                                                               LIGHTCYAN));
                     break;
                 case AF_FIRE:
                     monsterattacks += colour(
                         LIGHTRED, damage_flavour("fire", hd, hd * 2 - 1));
+                    json_append_element(json_flavours, json_damage_flavour("acid", hd, hd * 2 - 1, LIGHTRED));
                     break;
                 case AF_PURE_FIRE:
                     monsterattacks +=
                         colour(LIGHTRED, damage_flavour("pure fire", hd * 3 / 2,
                                                         hd * 5 / 2 - 1));
+                        json_append_element(json_flavours, json_damage_flavour("pure fire",
+                                                                               hd * 3 / 2,
+                                                                               hd * 5 / 2 - 1,
+                                                                               LIGHTRED));
                     break;
                 case AF_STICKY_FLAME:
                     monsterattacks += colour(LIGHTRED, "(napalm)");
+                    json_append_element(json_flavours, json_damage_flavour("napalm", LIGHTRED));
                     break;
                 case AF_HUNGER:
                     monsterattacks += colour(BLUE, "(hunger)");
+                    json_append_element(json_flavours, json_damage_flavour("hunger", BLUE));
                     break;
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
+                    json_append_element(json_flavours, json_damage_flavour("mutation", LIGHTGREEN));
                     break;
                 case AF_POISON_PARALYSE:
                     monsterattacks += colour(LIGHTRED, "(paralyse)");
+                    json_append_element(json_flavours, json_damage_flavour("paralyse", LIGHTRED));
                     break;
                 case AF_POISON:
                     monsterattacks += colour(
                         YELLOW, damage_flavour("poison", hd * 2, hd * 4));
+                    json_append_element(json_flavours, json_damage_flavour("poison", hd * 2, hd * 4, YELLOW));
                     break;
                 case AF_POISON_STRONG:
                     monsterattacks += colour(
                         LIGHTRED, damage_flavour("strong poison", hd * 11 / 3,
                                                  hd * 13 / 2));
+                    json_append_element(json_flavours, json_damage_flavour("strong poison",
+                                                                           hd * 11 / 3, hd * 13 / 2,
+                                                                           LIGHTRED));
                     break;
                 case AF_ROT:
                     monsterattacks += colour(LIGHTRED, "(rot)");
+                    json_append_element(json_flavours, json_damage_flavour("rot", LIGHTRED));
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
+                    json_append_element(json_flavours, json_damage_flavour("vampiric", RED));
                     break;
                 case AF_KLOWN:
                     monsterattacks += colour(LIGHTBLUE, "(klown)");
+                    json_append_element(json_flavours, json_damage_flavour("klown", LIGHTBLUE));
                     break;
                 case AF_SCARAB:
                     monsterattacks += colour(LIGHTMAGENTA, "(scarab)");
+                    json_append_element(json_flavours, json_damage_flavour("scarab", LIGHTMAGENTA));
                     break;
                 case AF_DISTORT:
                     monsterattacks += colour(LIGHTBLUE, "(distort)");
+                    json_append_element(json_flavours, json_damage_flavour("distort", LIGHTBLUE));
                     break;
                 case AF_RAGE:
                     monsterattacks += colour(RED, "(rage)");
+                    json_append_element(json_flavours, json_damage_flavour("rage", RED));
                     break;
                 case AF_HOLY:
                     monsterattacks += colour(YELLOW, "(holy)");
+                    json_append_element(json_flavours, json_damage_flavour("holy", YELLOW));
                     break;
                 case AF_PAIN:
                     monsterattacks += colour(RED, "(pain)");
+                    json_append_element(json_flavours, json_damage_flavour("pain", RED));
                     break;
                 case AF_ANTIMAGIC:
                     monsterattacks += colour(LIGHTBLUE, "(antimagic)");
+                    json_append_element(json_flavours, json_damage_flavour("antimagic", LIGHTBLUE));
                     break;
                 case AF_DRAIN_INT:
                     monsterattacks += colour(BLUE, "(drain int)");
+                    json_append_element(json_flavours, json_damage_flavour("drain int", BLUE));
                     break;
                 case AF_DRAIN_STAT:
                     monsterattacks += colour(BLUE, "(drain stat)");
+                    json_append_element(json_flavours, json_damage_flavour("drain stat", BLUE));
                     break;
                 case AF_STEAL:
                     monsterattacks += colour(CYAN, "(steal)");
+                    json_append_element(json_flavours, json_damage_flavour("steal", CYAN));
                     break;
                 case AF_ENSNARE:
                     monsterattacks += colour(WHITE, "(ensnare)");
+                    json_append_element(json_flavours, json_damage_flavour("ensnare", WHITE));
                     break;
                 case AF_DROWN:
                     monsterattacks += colour(LIGHTBLUE, "(drown)");
+                    json_append_element(json_flavours, json_damage_flavour("drown", LIGHTBLUE));
                     break;
                 case AF_ENGULF:
                     monsterattacks += colour(LIGHTBLUE, "(engulf)");
+                    json_append_element(json_flavours, json_damage_flavour("engulf", LIGHTBLUE));
                     break;
                 case AF_DRAIN_SPEED:
                     monsterattacks += colour(LIGHTMAGENTA, "(drain speed)");
+                    json_append_element(json_flavours, json_damage_flavour("drain speed", LIGHTMAGENTA));
                     break;
                 case AF_VULN:
                     monsterattacks += colour(LIGHTBLUE, "(vuln)");
+                    json_append_element(json_flavours, json_damage_flavour("vuln", LIGHTBLUE));
                     break;
                 case AF_SHADOWSTAB:
                     monsterattacks += colour(MAGENTA, "(shadow stab)");
+                    json_append_element(json_flavours, json_damage_flavour("shadow stab", MAGENTA));
                     break;
                 case AF_CORRODE:
                     monsterattacks += colour(BROWN, "(corrosion)");
+                    json_append_element(json_flavours, json_damage_flavour("corrosion", BROWN));
                     break;
                 case AF_TRAMPLE:
                     monsterattacks += colour(BROWN, "(trample)");
+                    json_append_element(json_flavours, json_damage_flavour("trample", BROWN));
                     break;
                 case AF_WEAKNESS:
                     monsterattacks += colour(LIGHTRED, "(weakness)");
+                    json_append_element(json_flavours, json_damage_flavour("weakness", LIGHTRED));
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:
@@ -1106,79 +1454,86 @@ int main(int argc, char* argv[])
                     //        break;
                 }
 
+                json_append_member(json_attack, "flavours", json_flavours);
+
                 if (x == 0 && mon.has_hydra_multi_attack())
                     monsterattacks += " per head";
+
+                json_append_element(json_monsterattacks, json_attack);
             }
         }
 
-        printf("%s", monsterattacks.c_str());
+        if (json_mons == NULL)
+            printf("%s", monsterattacks.c_str());
+        else
+            json_append_member(json_mons, "attacks", json_monsterattacks);
 
         mons_check_flag((bool)(me->holiness & MH_NATURAL)
                         && (bool)(me->holiness & ~MH_NATURAL),
-                        monsterflags, "natural");
-        mons_check_flag(mon.is_holy(), monsterflags, colour(YELLOW, "holy"));
+                        monsterflags, json_monsterflags, "natural");
+        mons_check_flag(mon.is_holy(), monsterflags, json_monsterflags, "holy", YELLOW);
         mons_check_flag((bool)(me->holiness & MH_UNDEAD),
-                        monsterflags, colour(BROWN, "undead"));
+                        monsterflags, json_monsterflags, "undead", BROWN);
         mons_check_flag((bool)(me->holiness & MH_DEMONIC),
-                        monsterflags, colour(RED, "demonic"));
+                        monsterflags, json_monsterflags, "demonic", RED);
         mons_check_flag((bool)(me->holiness & MH_NONLIVING),
-                        monsterflags, colour(LIGHTCYAN, "non-living"));
-        mons_check_flag(mons_is_plant(mon), monsterflags,
-                        colour(GREEN, "plant"));
+                        monsterflags, json_monsterflags, "non-living", LIGHTCYAN);
+        mons_check_flag(mons_is_plant(mon), monsterflags, json_monsterflags,
+                        "plant", GREEN);
 
         switch (me->gmon_use)
         {
         case MONUSE_WEAPONS_ARMOUR:
-            mons_flag(monsterflags, colour(CYAN, "weapons"));
+            mons_flag(monsterflags, json_monsterflags, "weapons", CYAN);
         // intentional fall-through
         case MONUSE_STARTING_EQUIPMENT:
-            mons_flag(monsterflags, colour(CYAN, "items"));
+            mons_flag(monsterflags, json_monsterflags, "items", CYAN);
         // intentional fall-through
         case MONUSE_OPEN_DOORS:
-            mons_flag(monsterflags, colour(CYAN, "doors"));
+            mons_flag(monsterflags, json_monsterflags, "doors", CYAN);
         // intentional fall-through
         case MONUSE_NOTHING:
             break;
 
         case NUM_MONUSE: // Can't happen
-            mons_flag(monsterflags, colour(CYAN, "uses bugs"));
+            mons_flag(monsterflags, json_monsterflags, "uses bugs", CYAN);
             break;
         }
 
-        mons_check_flag(bool(me->bitfields & M_EAT_DOORS), monsterflags,
-                        colour(LIGHTRED, "eats doors"));
-        mons_check_flag(bool(me->bitfields & M_CRASH_DOORS), monsterflags,
-                        colour(LIGHTRED, "breaks doors"));
+        mons_check_flag(bool(me->bitfields & M_EAT_DOORS), monsterflags, json_monsterflags,
+                        "eats doors", LIGHTRED);
+        mons_check_flag(bool(me->bitfields & M_CRASH_DOORS), monsterflags, json_monsterflags,
+                        "breaks doors", LIGHTRED);
 
-        mons_check_flag(mons_wields_two_weapons(mon), monsterflags,
+        mons_check_flag(mons_wields_two_weapons(mon), monsterflags, json_monsterflags,
                         "two-weapon");
-        mons_check_flag(mon.is_fighter(), monsterflags, "fighter");
+        mons_check_flag(mon.is_fighter(), monsterflags, json_monsterflags, "fighter");
         if (mon.is_archer())
         {
             if (me->bitfields & M_DONT_MELEE)
-                mons_flag(monsterflags, "master archer");
+                mons_flag(monsterflags, json_monsterflags, "master archer");
             else
-                mons_flag(monsterflags, "archer");
+                mons_flag(monsterflags, json_monsterflags, "archer");
         }
-        mons_check_flag(mon.is_priest(), monsterflags, "priest");
+        mons_check_flag(mon.is_priest(), monsterflags, json_monsterflags, "priest");
 
-        mons_check_flag(me->habitat == HT_AMPHIBIOUS, monsterflags,
+        mons_check_flag(me->habitat == HT_AMPHIBIOUS, monsterflags, json_monsterflags,
                         "amphibious");
 
-        mons_check_flag(mon.evil(), monsterflags, "evil");
-        mons_check_flag(mon.is_actual_spellcaster(), monsterflags,
+        mons_check_flag(mon.evil(), monsterflags, json_monsterflags, "evil");
+        mons_check_flag(mon.is_actual_spellcaster(), monsterflags, json_monsterflags,
                         "spellcaster");
-        mons_check_flag(bool(me->bitfields & M_COLD_BLOOD), monsterflags,
+        mons_check_flag(bool(me->bitfields & M_COLD_BLOOD), monsterflags, json_monsterflags,
                         "cold-blooded");
-        mons_check_flag(bool(me->bitfields & M_SEE_INVIS), monsterflags,
+        mons_check_flag(bool(me->bitfields & M_SEE_INVIS), monsterflags, json_monsterflags,
                         "see invisible");
-        mons_check_flag(bool(me->bitfields & M_FLIES), monsterflags, "fly");
-        mons_check_flag(bool(me->bitfields & M_FAST_REGEN), monsterflags,
+        mons_check_flag(bool(me->bitfields & M_FLIES), monsterflags, json_monsterflags, "fly");
+        mons_check_flag(bool(me->bitfields & M_FAST_REGEN), monsterflags, json_monsterflags,
                         "regen");
-        mons_check_flag(mon.can_cling_to_walls(), monsterflags, "cling");
-        mons_check_flag(bool(me->bitfields & M_WEB_SENSE), monsterflags,
+        mons_check_flag(mon.can_cling_to_walls(), monsterflags, json_monsterflags, "cling");
+        mons_check_flag(bool(me->bitfields & M_WEB_SENSE), monsterflags, json_monsterflags,
                         "web sense");
-        mons_check_flag(mon.is_unbreathing(), monsterflags, "unbreathing");
+        mons_check_flag(mon.is_unbreathing(), monsterflags, json_monsterflags, "unbreathing");
 
         string spell_string = construct_spells(spell_lists, damages);
         if (shapeshifter || mon.type == MONS_PANDEMONIUM_LORD
@@ -1186,11 +1541,18 @@ int main(int argc, char* argv[])
                    && (mon.base_monster == MONS_PANDEMONIUM_LORD))
         {
             spell_string = "(random)";
+
+            JsonNode *random_spell(json_mkobject());
+            json_append_member(random_spell, "name", json_mkstring("random"));
+            json_append_element(json_spell_lists, random_spell);
         }
 
-        mons_check_flag(vault_monster, monsterflags, colour(BROWN, "vault"));
+        mons_check_flag(vault_monster, monsterflags, json_monsterflags, "vault", BROWN);
 
-        printf("%s", monsterflags.c_str());
+        if (json_mons == NULL)
+            printf("%s", monsterflags.c_str());
+        else
+            json_append_member(json_mons, "flags", json_monsterflags);
 
         if (me->resist_magic == 5000)
         {
@@ -1227,13 +1589,18 @@ int main(int argc, char* argv[])
     do                                                                         \
     {                                                                          \
         record_resist(c, lowercase_string(#x), monsterresistances,             \
-                      monstervulnerabilities, get_resist(res, MR_RES_##x));    \
+                      json_monsterresistances,                                 \
+                      monstervulnerabilities,                                  \
+                      json_monstervulnerabilities,                             \
+                      get_resist(res, MR_RES_##x));                            \
     } while (false)
 
 #define res2(c, x, y)                                                          \
     do                                                                         \
     {                                                                          \
-        record_resist(c, #x, monsterresistances, monstervulnerabilities, y);   \
+        record_resist(c, #x, monsterresistances,                               \
+                      json_monsterresistances,                                 \
+                      monstervulnerabilities, json_monstervulnerabilities, y); \
     } while (false)
 
         // Don't record regular rF as damnation vulnerability.
@@ -1257,36 +1624,69 @@ int main(int argc, char* argv[])
         res2(LIGHTRED, napalm, mon.res_sticky_flame());
         res2(LIGHTCYAN, silver, mon.how_chaotic() ? -1 : 0);
 
-        printf("%s", monsterresistances.c_str());
-        printf("%s", monstervulnerabilities.c_str());
+        if (json_mons == NULL)
+        {
+            printf("%s", monsterresistances.c_str());
+            printf("%s", monstervulnerabilities.c_str());
+        }
+        else
+        {
+            json_append_member(json_mons, "resistances", json_monsterresistances);
+            json_append_member(json_mons, "vulnerabilities", json_monstervulnerabilities);
+        }
 
         if (me->corpse_thingy != CE_NOCORPSE && me->corpse_thingy != CE_CLEAN)
         {
-            printf(" | Chunks: ");
-            switch (me->corpse_thingy)
+            if (json_mons == NULL)
             {
-            case CE_NOXIOUS:
-                printf("%s", colour(DARKGREY, "noxious").c_str());
-                break;
-            // We should't get here; including these values so we can get
-            // compiler
-            // warnings for unhandled enum values.
-            case CE_NOCORPSE:
-            case CE_CLEAN:
-                printf("???");
+                printf(" | Chunks: ");
+                switch (me->corpse_thingy)
+                {
+                case CE_NOXIOUS:
+                    printf("%s", colour(DARKGREY, "noxious").c_str());
+                    break;
+                // We should't get here; including these values so we can get
+                // compiler
+                // warnings for unhandled enum values.
+                case CE_NOCORPSE:
+                case CE_CLEAN:
+                    printf("???");
+                }
+            }
+            else
+            {
+                if (me->corpse_thingy == CE_NOXIOUS)
+                    json_append_member(json_mons, "chunks", json_mkstring("noxious"));
             }
         }
 
-        printf(" | XP: %ld", exper);
+        if (json_mons == NULL) {
+            printf(" | XP: %ld", exper);
 
-        if (!spell_string.empty())
-            printf(" | Sp: %s", spell_string.c_str());
+            if (!spell_string.empty())
+                printf(" | Sp: %s", spell_string.c_str());
 
-        printf(" | Sz: %s", monster_size(mon).c_str());
+            printf(" | Sz: %s", monster_size(mon).c_str());
 
-        printf(" | Int: %s", monster_int(mon).c_str());
+            printf(" | Int: %s", monster_int(mon).c_str());
 
-        printf(".\n");
+            printf(".\n");
+        }
+        else
+        {
+            json_append_member(json_mons, "experience", json_mknumber(exper));
+
+            json_append_member(json_mons, "spells", json_spell_lists);
+
+            json_append_member(json_mons, "spellDamages", construct_json_spell_damages(damages));
+
+            json_append_member(json_mons, "size", json_mkstring(monster_size(mon).c_str()));
+
+            json_append_member(json_mons, "intelligence", json_mkstring(monster_int(mon).c_str()));
+
+            JsonWrapper json(json_mons);
+            printf("%s\n", json.to_string().c_str());
+        }
 
         return 0;
     }
