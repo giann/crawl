@@ -2891,10 +2891,15 @@ JsonNode *json_dump_overview_screen(bool full_id)
     json_append_member(overview, "hpRegen", json_mknumber(player_regen()));
 
     // MP regen
+#if TAG_MAJOR_VERSION == 34
     const bool etheric = player_equip_unrand(UNRAND_ETHERIC_CAGE);
     const int mp_regen = player_mp_regen() //round up
                          + (etheric ? 50 : 0); // on average
     json_append_member(overview, "mpRegen", json_mknumber(mp_regen));
+#else
+    const int mp_regen = player_mp_regen(); // round up
+    json_append_member(overview, "mpRegen", json_mknumber(mp_regen));
+#endif
 
     // SeeInvis
     json_append_member(overview, "seeInvisible", json_mkbool(you.can_see_invisible(full_id)));

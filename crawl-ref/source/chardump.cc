@@ -2542,28 +2542,31 @@ static bool _write_dump(const string &fname, const dump_params &par,
         mprf(MSGCH_ERROR, "Error opening file '%s'", txt_file_name.c_str());
 
     // Json dump
-    string json_file_name = file_name + ".json";
-    FILE *json_handle = fopen_replace(json_file_name.c_str());
-
-    dprf("JSON file name: %s", json_file_name.c_str());
-
-    if (json_handle != nullptr)
+    if (Options.dump_json)
     {
-        JsonWrapper json(jpar.json);
+        string json_file_name = file_name + ".json";
+        FILE *json_handle = fopen_replace(json_file_name.c_str());
 
-        fputs(OUTS(json.to_string().c_str()), json_handle);
-        fclose(json_handle);
-        // TODO: do we care if json failed?
-        succeeded = true;
-        if (!quiet)
+        dprf("JSON file name: %s", json_file_name.c_str());
+
+        if (json_handle != nullptr)
+        {
+            JsonWrapper json(jpar.json);
+
+            fputs(OUTS(json.to_string().c_str()), json_handle);
+            fclose(json_handle);
+            // TODO: do we care if json failed?
+            succeeded = true;
+            if (!quiet)
 #ifdef DGAMELAUNCH
-            mpr("JSON Char dumped successfully.");
+                mpr("JSON Char dumped successfully.");
 #else
-            mprf("JSON Char dumped to '%s'.", json_file_name.c_str());
+                mprf("JSON Char dumped to '%s'.", json_file_name.c_str());
 #endif
+        }
+        else
+            mprf(MSGCH_ERROR, "Error opening file '%s'", json_file_name.c_str());
     }
-    else
-        mprf(MSGCH_ERROR, "Error opening file '%s'", json_file_name.c_str());
 
     return succeeded;
 }

@@ -164,7 +164,6 @@ static string shoptype_to_raw_string(shop_type s)
     case SHOP_JEWELLERY:       return "=";
     case SHOP_EVOKABLES:       return "}";
     case SHOP_BOOK:            return ":";
-    case SHOP_FOOD:            return "%";
     case SHOP_DISTILLERY:      return "!";
     case SHOP_SCROLL:          return "?";
     default:                   return "x";

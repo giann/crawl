@@ -399,6 +399,7 @@ public:
 
     int         dump_item_origins;  // Show where items came from?
     int         dump_item_origin_price;
+    bool        dump_json;          // Create a json dump as well
 
     // Order of sections in the character dump.
     vector<string> dump_order;
